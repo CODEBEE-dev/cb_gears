@@ -3366,7 +3366,7 @@ let MSGS_KEYS = Object.keys(MSGS);
 
 let LANG = localStorage.getItem('LANG');
 if (!LANG || LANG == '' || LANG == 'undefined') {
-  LANG = 'en';
+  LANG = 'ko';
 }
 
 const RTL_LANGS = ['he'];

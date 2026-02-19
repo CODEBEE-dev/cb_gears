@@ -1,4 +1,5 @@
 const path = require('path')
+const express = require('express')
 const lti = require('ltijs').Provider
 require('dotenv').config()
 
@@ -13,9 +14,10 @@ lti.setup(process.env.LTI_KEY,
     // Options
     appRoute: '/',
     loginRoute: '/login',
+    staticPath: path.join(__dirname, '..', 'public'),
     cookies: {
       secure: true,
-      sameSite: ''
+      sameSite: 'None' // iframe 사용시 반드시 설정해야 함 (연결 거부 | 무한 루프 발생 가능)
     },
     devMode: true
   }
@@ -23,8 +25,10 @@ lti.setup(process.env.LTI_KEY,
 
 // Set lti launch callback
 lti.onConnect((token, req, res) => {
+  console.log(`${token.user} 님이 접속했습니다.`)
   console.log(token)
-  return res.send('It\'s alive!')
+  
+  return res.sendFile(path.join(__dirname, '..', 'public', 'index.html'))
 })
 
 const setup = async () => {

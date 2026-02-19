@@ -27,6 +27,7 @@ lti.onConnect((token, req, res) => {
   console.log(`${token.user} 님이 접속했습니다.`)
   console.log(token)
   
+  // 파일 서빙 OR 리디렉션 가능
   return res.sendFile(path.join(__dirname, '..', 'public', 'index.html'))
 })
 

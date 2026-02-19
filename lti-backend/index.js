@@ -14,7 +14,7 @@ lti.setup(process.env.LTI_KEY,
     appRoute: '/',
     loginRoute: '/login',
     cookies: {
-      secure: false,
+      secure: true,
       sameSite: ''
     },
     devMode: true
@@ -31,12 +31,12 @@ const setup = async () => {
   await lti.deploy({ port: 3000 })
 
   await lti.registerPlatform({
-    url: '',
-    name: '',
-    clientId: '',
-    authenticationEndpoint: '',
-    accesstokenEndpoint: '',
-    authConfig: { method: '', key: '' }
+    url: process.env.MOODLE_URL,
+    name: process.env.PLATFORM_NAME,
+    clientId: process.env.PLATFORM_CLIENT_ID,
+    authenticationEndpoint: process.env.PLATFORM_AUTH_ENDPOINT,
+    accesstokenEndpoint: process.env.PLATFORM_TOKEN_ENDPOINT,
+    authConfig: { method: process.env.PLATFORM_AUTH_METHOD, key: process.env.PLATFORM_AUTH_KEY }
   })
 }
 

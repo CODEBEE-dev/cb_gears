@@ -1,5 +1,4 @@
 const path = require('path')
-const express = require('express')
 const lti = require('ltijs').Provider
 require('dotenv').config()
 

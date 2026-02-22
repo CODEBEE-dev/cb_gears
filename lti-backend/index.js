@@ -29,6 +29,20 @@ lti.onConnect((token, req, res) => {
   return res.sendFile(path.join(__dirname, '..', 'public', 'index.html'))
 })
 
+// URL 직접 접속 처리
+lti.onInvalidToken((req, res) => {
+  if (req.path === '/') {
+    console.log('[WARN] Direct access')
+    return res.sendFile(path.join(__dirname, '..', 'public', 'index.html'))
+  } else {
+    return res.send(`
+      <h1>Welcome to CodeBridge Bot</h1>
+      <p>CodeBridge LMS를 통해 접속해 주세요..!</p>
+      <a href="https://lms.codebridge.ai.kr">LMS 이동하기</a>
+      `)
+  }
+})
+
 const setup = async () => {
   try {
     const port = 48121

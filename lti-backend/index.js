@@ -1,5 +1,6 @@
 const path = require('path')
 const lti = require('ltijs').Provider
+const express = require('express')
 require('dotenv').config()
 
 // Setup provider(Tool)
@@ -20,6 +21,9 @@ lti.setup(process.env.LTI_KEY,
     devMode: false
   }
 )
+
+lti.app.use(express.json())
+lti.app.use(express.urlencoded({ extended: true }))
 
 // Set lti launch callback
 lti.onConnect((token, req, res) => {
@@ -42,6 +46,51 @@ lti.onInvalidToken((req, res) => {
       `)
   }
 })
+
+/**
+ * Sending grade
+ */
+lti.app.post('/grade', async (req, res) => {
+  try {
+    const idtoken = res.locals.token
+    const score = req.body.grade
+
+    // create grade object
+    const gradeObj = {
+      userId: idtoken.user,
+      scoreGiven: score,
+      scoreMaximum: 100,
+      activityProgress: 'Completed',
+      gradingProgress: 'FullyGraded'
+    }
+
+    // selecting lineItem ID - Moodle 성적 DB에 꽂을 레코드 찾기
+    let lineItemId = idtoken.platformContext.endpoint.lineitem
+
+    if (!lineItemId) {
+      const response = await lti.Grade.getLineItems(idtoken, { resourceLinkId: true })
+      const lineItems = response.lineItems
+      if (lineItems.length === 0) {
+        // creating line item if there is none
+        console.log('Creating new line item')
+        const newLineItem = {
+          scoreMaximum: 100,
+          label: 'Grade',
+          tag: 'grade',
+          resourceLinkId: idtoken.platformContext.resource.id
+        }
+        const lineItem = await lti.Grade.createLineItem(idtoken, newLineItem)
+        lineItemId = lineItem.id
+      } else lineItemId = lineItems[0].id
+    }
+    // sending grade
+    const responseGrade = await lti.Grade.submitScore(idtoken, lineItemId, gradeObj)
+    return res.send(responseGrade)
+  } catch (err) {
+    return res.status(500).send({ err: err.message })
+  }
+})
+
 
 const setup = async () => {
   try {

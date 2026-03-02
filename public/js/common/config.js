@@ -11,7 +11,7 @@ var appConfig = new function() {
         var nameEl = document.querySelector('header .appName');
         if (nameEl) {
             var nameSuffix = nameEl.textContent.trim();
-            nameEl.textContent = nameSuffix ? self.name + ' ' + nameSuffix : self.name;
+            nameEl.innerHTML = nameSuffix ? self.name + `<span>${nameSuffix}</span>` : self.name;
         }
 
         var favicon = document.querySelector('link[rel="icon"]');

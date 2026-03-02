@@ -6,6 +6,7 @@
   --color-primary-dark: #5781BA; /* 입력창 테두리 */
   --color-bg: #E4F0FE; /* body 배경 */
   --color-tab-inactive: #D9E3F1; /* 비활성 탭 */
+  --color-activity-bar: #C8D8F0; /* 액티비티바 배경 */
   --color-border: #bbbbbb; /* 공통 테두리 */
   --color-text-muted: #999999; /* 비활성 텍스트 */
   --color-placeholder: #95989A; /* placeholder */
@@ -39,10 +40,9 @@ body {
 }
 
 header {
-  background: #FAFAFA;
+  background: #efeeee;
   display: flex;
   flex-direction: row;
-  /* color: white; */
   padding: 0.5em 1em;
   height: var(--header-height);
   align-items: center;
@@ -88,6 +88,67 @@ header .language {
   cursor: pointer;
   user-select: none;
 }
+header nav {
+  margin-left: 1.5em;
+}
+header nav ul.panelTabs {
+  display: flex;
+  padding: 0;
+  margin: 0;
+  gap: 0.2em;
+  list-style: none;
+}
+header nav ul.panelTabs li {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2em;
+  height: 2em;
+  border-radius: 0.4em;
+  border: none;
+  background: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  user-select: none;
+  margin: 0;
+  padding: 0;
+  font-size: 1em;
+  transition: background 0.15s, color 0.15s;
+}
+header nav ul.panelTabs li:hover {
+  background: var(--color-bg);
+  color: var(--color-primary);
+}
+header nav ul.panelTabs li.active {
+  background: var(--color-primary);
+  color: white;
+  margin-top: 0;
+  font-size: 1em;
+}
+header nav ul.panelTabs li .tab-label {
+  display: none;
+}
+header nav ul.panelTabs li::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(30, 30, 30, 0.85);
+  color: white;
+  font-size: 0.7em;
+  white-space: nowrap;
+  padding: 3px 7px;
+  border-radius: 4px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  z-index: 100;
+}
+header nav ul.panelTabs li:hover::after {
+  opacity: 1;
+}
 
 
 .bold {
@@ -95,70 +156,85 @@ header .language {
 }
 
 main {
+  width: 100%;
+  height: 100%;
   flex-grow: 1;
+  display: grid;
+  grid-template-columns: 50px calc(100% - 50px);
+  gap: 1px;
+  overflow: hidden;
+  background: #efeeee;
+}
+main nav {
+  width: 50px;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-}
-
-nav {
-  display: flex;
-  border-bottom: solid 1px var(--color-border);
   align-items: center;
-  background: white;
-  flex-shrink: 0;
-}
-nav ul.panelTabs {
-  display: flex;
-  padding-left: 5px;
-  margin: 0;
-}
-nav ul.panelTabs li {
-  display: block;
-  border: solid 1px var(--color-border);
-  padding: 0.3em 1em;
-  border-radius: 0.5em 0.5em 0 0;
-  border-bottom: none;
-  margin-left: -5px;
-  background: var(--color-tab-inactive);
-  color: var(--color-text-muted);
-  cursor: pointer;
-  user-select: none;
-  white-space: nowrap;
-}
-nav ul.panelTabs li:hover {
-  background: var(--color-bg);
-}
-nav ul.panelTabs li.active {
-  z-index: 1;
-  background: white;
-  color: var(--color-primary);
-  margin-top: -5px;
-  font-size: 110%;
+  background: #FAFAFA;
+  border-right: solid 1px var(--color-border);
+  overflow: visible;
+  border-radius: 0 10px 10px 0;
+  box-sizing: border-box;
+  border: 1px solid rgba(0, 0, 0, 0.2)
 }
 nav .menuBar {
   display: flex;
-  margin-left: 0.5em;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.5em 0;
+  width: 100%;
 }
 nav .menuBar .menuItem {
-  padding: 0.3em 0.5em;
-  font-weight: bold;
-  color: gray;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 0.4em;
+  color: var(--color-text-muted);
   cursor: pointer;
   user-select: none;
+  transition: background 0.15s, color 0.15s;
 }
 nav .menuBar .menuItem:hover {
+  background: var(--color-bg);
   color: var(--color-primary);
 }
-nav .news {
-  margin-left: 2em;
-  font-weight: bold;
-  color: red;
-  cursor: pointer;
-  user-select: none;
+nav .menuBar .menuItem .activity-icon {
+  font-size: 1.7em;
+}
+nav .menuBar .menuItem .activity-label {
+  display: none;
+}
+nav .menuBar .menuItem::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: calc(100% + 8px);
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(30, 30, 30, 0.85);
+  color: white;
+  font-size: 0.75em;
+  white-space: nowrap;
+  padding: 4px 8px;
+  border-radius: 4px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s;
+  z-index: 100;
+}
+nav .menuBar .menuItem:hover::after {
+  opacity: 1;
+}
+nav .menuBar .menuItem:has(.menuDropDown):hover::after {
+  opacity: 0;
 }
 nav .panelControlsArea {
-  margin-left: auto;
+  margin-top: auto;
+  padding-bottom: 0.5em;
 }
 nav .panelControlsArea .panelControls {
   display: none;
@@ -171,6 +247,10 @@ nav .panelControlsArea .panelControls.active {
   flex-grow: 1;
   position: relative;
   overflow: hidden;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 .panels .panel {
   height: 100%;
@@ -244,6 +324,13 @@ ul.menuDropDown .tick {
 
 ul.menuDropDownRightAlign {
   top: 100%;
+}
+
+ul.menuDropDownActivityBar {
+  top: 0;
+  left: 100%;
+  width: max-content;
+  border-radius: 0 0.5em 0.5em 0.5em;
 }
 
 .blocklyEditor .disable {

@@ -35,7 +35,9 @@ function menuDropDown($menuBtn, menuItems, options) {
     $dropDown.append($li);
   });
 
-  if (options.parentIsAbsolute) {
+  if (options.align == 'activityBar') {
+    $dropDown.addClass('menuDropDownActivityBar');
+  } else if (options.parentIsAbsolute) {
     $dropDown.addClass('menuDropDownRightAlign')
   } else {
     let top = $menuBtn[0].offsetTop + $menuBtn[0].offsetHeight;
@@ -45,7 +47,7 @@ function menuDropDown($menuBtn, menuItems, options) {
   if (options.align == 'right') {
     $dropDown.css('left', 'auto');
     $dropDown.css('right', '0');
-  } else {
+  } else if (options.align != 'activityBar') {
     let left = $menuBtn[0].offsetLeft;
     $dropDown.css('left', left);
   }

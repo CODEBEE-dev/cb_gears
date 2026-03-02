@@ -31,10 +31,11 @@
   <script src="js/msg.js?v=e884f164"></script>
   <script src="js/common/widgets.js?v=8de59276"></script>
 
-  <!-- Google Font -->
+  <!-- Google Font & Icons -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20,400,1,0" rel="stylesheet">
 
   <title></title>
 </head>
@@ -44,35 +45,58 @@
     <img class="gearsIcon" src="codebridgeai_favicon.png">
     <div class="appName"></div>
     <input type="text" id="projectName" placeholder="Project Name">
+    <nav>
+      <ul class="panelTabs">
+        <li id="navBlocks" class="active" data-tooltip="Blocks">
+          <span class="material-symbols-rounded">widgets</span>
+          <span class="tab-label">Blocks</span>
+        </li>
+        <li id="navPython" class="pythonMain" data-tooltip="Python">
+          <span class="material-symbols-rounded">code</span>
+          <span class="tab-label">Python</span>
+        </li>
+        <li id="navSim" data-tooltip="Simulator">
+          <span class="material-symbols-rounded">view_in_ar</span>
+          <span class="tab-label">Simulator</span>
+        </li>
+      </ul>
+    </nav>
     <div class="language"><span class="icon-globe"></span> &#x25BE;</div>
   </header>
 
-  <nav>
-    <ul class="panelTabs">
-      <li id="navBlocks" class="active">Blocks</li>
-      <li id="navPython" class="pythonMain">
-        <span>Python</span>
-      </li>
-      <li id="navSim">Simulator</li>
-    </ul>
-    <div class="menuBar">
-      <div class="menuItem fileMenu">File</div>
-      <div class="menuItem pythonMenu">Python</div>
-      <div class="menuItem robotMenu">Robot</div>
-      <div class="menuItem worldsMenu">Worlds</div>
-      <div class="menuItem helpMenu">Help</div>
-    </div>
-    <div class="panelControlsArea">
-      <div class="panelControls active" aria-labelledby="navBlocks">
-        <div class="saveBlockly hide">Save Now</div>
-      </div>
-      <div class="panelControls" aria-labelledby="navPython">
-        <div class="savePython hide">Save Now</div>
-      </div>
-    </div>
-  </nav>
-
   <main>
+    <nav>
+      <div class="menuBar">
+        <div class="menuItem fileMenu" data-tooltip="File">
+          <span class="material-symbols-rounded activity-icon">folder_open</span>
+          <span class="activity-label">File</span>
+        </div>
+        <div class="menuItem pythonMenu" data-tooltip="Python">
+          <span class="material-symbols-rounded activity-icon">code</span>
+          <span class="activity-label">Python</span>
+        </div>
+        <div class="menuItem robotMenu" data-tooltip="Robot">
+          <span class="material-symbols-rounded activity-icon">smart_toy</span>
+          <span class="activity-label">Robot</span>
+        </div>
+        <div class="menuItem worldsMenu" data-tooltip="Worlds">
+          <span class="material-symbols-rounded activity-icon">public</span>
+          <span class="activity-label">Worlds</span>
+        </div>
+        <div class="menuItem helpMenu" data-tooltip="Help">
+          <span class="material-symbols-rounded activity-icon">help</span>
+          <span class="activity-label">Help</span>
+        </div>
+      </div>
+      <div class="panelControlsArea">
+        <div class="panelControls active" aria-labelledby="navBlocks">
+          <div class="saveBlockly hide">Save Now</div>
+        </div>
+        <div class="panelControls" aria-labelledby="navPython">
+          <div class="savePython hide">Save Now</div>
+        </div>
+      </div>
+    </nav>
     <div class="panels">
 
       <div class="blocklyEditor panel active" aria-labelledby="navBlocks">

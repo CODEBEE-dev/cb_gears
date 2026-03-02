@@ -37,12 +37,18 @@ var main = new function() {
 
   // Update text already in html
   this.updateTextLanguage = function() {
-    $('#navBlocks').text(i18n.get('#main-blocks#'));
-    $('#navSim').text(i18n.get('#main-sim#'));
-    self.$fileMenu.text(i18n.get('#main-file#'));
-    self.$robotMenu.text(i18n.get('#main-robot#'));
-    self.$worldsMenu.text(i18n.get('#main-worlds#'));
-    self.$helpMenu.text(i18n.get('#main-help#'));
+    $('#navBlocks').find('.tab-label').text(i18n.get('#main-blocks#'));
+    $('#navBlocks').attr('data-tooltip', i18n.get('#main-blocks#'));
+    $('#navSim').find('.tab-label').text(i18n.get('#main-sim#'));
+    $('#navSim').attr('data-tooltip', i18n.get('#main-sim#'));
+    self.$fileMenu.find('.activity-label').text(i18n.get('#main-file#'));
+    self.$fileMenu.attr('data-tooltip', i18n.get('#main-file#'));
+    self.$robotMenu.find('.activity-label').text(i18n.get('#main-robot#'));
+    self.$robotMenu.attr('data-tooltip', i18n.get('#main-robot#'));
+    self.$worldsMenu.find('.activity-label').text(i18n.get('#main-worlds#'));
+    self.$worldsMenu.attr('data-tooltip', i18n.get('#main-worlds#'));
+    self.$helpMenu.find('.activity-label').text(i18n.get('#main-help#'));
+    self.$helpMenu.attr('data-tooltip', i18n.get('#main-help#'));
     $('#blocklyPages').text(i18n.get('#main-main#'));
 
   };
@@ -253,7 +259,7 @@ var main = new function() {
         menuItems[6].html = '<span class="tick">&#x2713;</span> ' + menuItems[6].html;
       }
 
-      menuDropDown(self.$helpMenu, menuItems, {className: 'helpMenuDropDown'});
+      menuDropDown(self.$helpMenu, menuItems, {className: 'helpMenuDropDown', align: 'activityBar'});
     }
   };
 
@@ -406,7 +412,7 @@ var main = new function() {
         {html: i18n.get('#main-clear_position#'), line: false, callback: self.clearPosition},
       ];
 
-      menuDropDown(self.$robotMenu, menuItems, {className: 'robotMenuDropDown'});
+      menuDropDown(self.$robotMenu, menuItems, {className: 'robotMenuDropDown', align: 'activityBar'});
     }
   };
 
@@ -424,7 +430,7 @@ var main = new function() {
         {html: i18n.get('#main-world_save_file#'), line: false, callback: simPanel.saveWorld},
       ];
 
-      menuDropDown(self.$worldsMenu, menuItems, {className: 'worldsMenuDropDown'});
+      menuDropDown(self.$worldsMenu, menuItems, {className: 'worldsMenuDropDown', align: 'activityBar'});
     }
   };
 
@@ -449,7 +455,7 @@ var main = new function() {
       }
       menuItems[tickIndex].html = '<span class="tick">&#x2713;</span> ' + menuItems[tickIndex].html;
 
-      menuDropDown(self.$pythonMenu, menuItems, {className: 'pythonMenuDropDown'});
+      menuDropDown(self.$pythonMenu, menuItems, {className: 'pythonMenuDropDown', align: 'activityBar'});
     }
   };
 
@@ -490,7 +496,7 @@ var main = new function() {
         {html: i18n.get('#main-import_zip#'), line: false, callback: self.loadZipFromComputer}
       ];
 
-      menuDropDown(self.$fileMenu, menuItems, {className: 'fileMenuDropDown'});
+      menuDropDown(self.$fileMenu, menuItems, {className: 'fileMenuDropDown', align: 'activityBar'});
     }
   };
 

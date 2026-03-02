@@ -26,15 +26,17 @@
   <script src="js/msg.js"></script>
   <script src="js/common/widgets.js"></script>
 
-  <title>Robot Configurator</title>
+  <title></title>
 </head>
 
 <body>
-  <header>
-    <img class="gearsIcon" src="favicon-32.png">
-    <div class="appName">Robot Configurator</div>
-    <input type="text" id="robotName" placeholder="Robot Name">
-  </header>
+  <header></header>
+  <script>
+    appConfig.renderHeader({
+      suffix: 'Robot Configurator',
+      extra: '<input type="text" id="robotName" placeholder="Robot Name">'
+    });
+  </script>
 
   <main>
     <nav>

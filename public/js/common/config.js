@@ -4,26 +4,20 @@ var appConfig = new function() {
 
     var self = this;
 
-    // 헤더를 렌더링합니다.
-    // options.suffix  : 앱 이름 뒤에 붙는 페이지 제목 (예: 'World Builder')
-    // options.extra   : 헤더 안에 추가할 HTML 문자열 (예: input, language 선택 등)
-    this.renderHeader = function(options) {
-        options = options || {};
-        var suffix = options.suffix || '';
-        var extra = options.extra || '';
-        var displayName = suffix ? self.name + ' ' + suffix : self.name;
+    document.addEventListener('DOMContentLoaded', function() {
+        var logoEl = document.querySelector('header .gearsIcon');
+        if (logoEl) logoEl.src = self.logo;
 
-        var headerEl = document.querySelector('header');
-        if (!headerEl) return;
-
-        headerEl.innerHTML =
-            '<img class="gearsIcon" src="' + self.logo + '">' +
-            '<div class="appName">' + displayName + '</div>' +
-            extra;
+        var nameEl = document.querySelector('header .appName');
+        if (nameEl) {
+            var nameSuffix = nameEl.textContent.trim();
+            nameEl.textContent = nameSuffix ? self.name + ' ' + nameSuffix : self.name;
+        }
 
         var favicon = document.querySelector('link[rel="icon"]');
         if (favicon) favicon.href = self.logo;
 
-        document.title = displayName;
-    };
+        var pageSuffix = document.title.trim();
+        document.title = pageSuffix ? self.name + ' ' + pageSuffix : self.name;
+    });
 };

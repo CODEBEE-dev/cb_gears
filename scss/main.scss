@@ -1,3 +1,5 @@
+@import '_variables.scss';
+
 html, body {
   height: 100%;
   width: 100%;
@@ -8,19 +10,19 @@ html, body {
 }
 
 body {
-  background: #E4F0FE;
+  background: var(--color-bg);
   font-family: sans-serif;
   display: flex;
   flex-direction: column;
 }
 
 header {
-  background: #4994FB;
+  background: var(--color-primary);
   display: flex;
   flex-direction: row;
   color: white;
   padding: 0em 1em;
-  height: 2.2em;
+  height: var(--header-height);
   align-items: center;
 
   .gearsIcon {
@@ -32,8 +34,8 @@ header {
 
   #projectName, #robotName {
     margin-left: 1em;
-    background: #76AFFC;
-    border: dashed 1px #5781BA;
+    background: var(--color-primary-light);
+    border: dashed 1px var(--color-primary-dark);
     border-radius: 0.3em;
     padding: 0.3em 0.5em;
     position: relative;
@@ -41,7 +43,7 @@ header {
   }
 
   #projectName::placeholder {
-    color: #95989A;
+    color: var(--color-placeholder);
   }
 
   .language {
@@ -64,7 +66,7 @@ main {
 nav {
   margin-top: 0.5em;
   display: flex;
-  border-bottom: solid 1px #bbbbbb;
+  border-bottom: solid 1px var(--color-border);
   align-items: center;
 
   ul.panelTabs {
@@ -74,26 +76,26 @@ nav {
 
     li {
       display: block;
-      border: solid 1px #bbbbbb;
+      border: solid 1px var(--color-border);
       padding: 0.3em 1em;
       border-radius: 0.5em 0.5em 0 0;
       border-bottom: none;
       margin-left: -5px;
-      background: #D9E3F1;
-      color: #999999;
+      background: var(--color-tab-inactive);
+      color: var(--color-text-muted);
       cursor: pointer;
       user-select: none;
       white-space:nowrap;
     }
 
     li:hover {
-      background: #E4F0FE;
+      background: var(--color-bg);
     }
 
     li.active {
       z-index: 1;
       background: white;
-      color: #4994FB;
+      color: var(--color-primary);
       margin-top: -5px;
       font-size: 110%;
     }
@@ -112,7 +114,7 @@ nav {
     }
 
     .menuItem:hover {
-      color: #4994FB;
+      color: var(--color-primary);
     }
   }
 
@@ -215,8 +217,8 @@ nav {
 }
 
 ul.menuDropDown {
-  background: #E4F0FE;
-  border: solid 1px #bbbbbb;
+  background: var(--color-bg);
+  border: solid 1px var(--color-border);
   position: absolute;
   // top: 71px;
   // left: 272px;
@@ -238,7 +240,7 @@ ul.menuDropDown {
     background: white;
   }
   li.underline {
-    border-bottom: solid 1px #bbbbbb;
+    border-bottom: solid 1px var(--color-border);
   }
   .tick {
     color: green;

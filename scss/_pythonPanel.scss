@@ -1,7 +1,7 @@
 .python {
   display: flex;
   flex-direction: column;
-  background: #2F3129;
+  background: var(--python-bg);
   font-size: 125%;
   font-family: monospace;
   width: 100%;
@@ -29,10 +29,10 @@
 
       .file {
         display: flex;
-        background: #515251;
+        background: var(--python-file-bg);
         color: #999b99;
-        border-left: solid 1px #272822;
-        border-right: solid 1px #272822;
+        border-left: solid 1px var(--python-file-active);
+        border-right: solid 1px var(--python-file-active);
         padding: 0.3em;
         cursor: pointer;
         user-select: none;
@@ -44,7 +44,7 @@
       }
 
       .file.selected {
-        background-color: #272822;;
+        background-color: var(--python-file-active);
         color: rgb(255, 255, 255);
         font-weight: bold;
         .renameFile, .deleteFile {

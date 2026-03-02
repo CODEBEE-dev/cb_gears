@@ -35,6 +35,51 @@ This may not work depending on your network configuration and your firewall sett
 
 If you do not wish to allow other users from accessing the site, you should run `python -m http.server 1337 --bind 127.0.0.1` instead.
 
+UI 커스터마이징
+---
+
+### 색상 / 테마 변경
+
+`scss/_variables.scss` 파일에서 CSS 변수를 수정하면 전체 UI에 반영됩니다.
+
+```scss
+:root {
+  --color-primary:       #4994FB;  /* 헤더, 활성 탭, 다이얼로그 색상 */
+  --color-primary-light: #76AFFC;  /* 입력창 배경 */
+  --color-primary-dark:  #5781BA;  /* 입력창 테두리 */
+  --color-bg:            #E4F0FE;  /* 페이지 배경 */
+  --color-tab-inactive:  #D9E3F1;  /* 비활성 탭 */
+  --color-border:        #bbbbbb;  /* 공통 테두리 */
+  --color-text-muted:    #999999;  /* 비활성 텍스트 */
+  --color-placeholder:   #95989A;  /* placeholder */
+  --header-height:       2.2em;    /* 헤더 높이 */
+  --python-bg:           #2F3129;  /* Python 에디터 배경 */
+}
+```
+
+### 앱 이름 / 로고 변경
+
+`public/js/common/config.js` 파일에서 수정합니다.
+
+```js
+this.logo = 'codebridgeai_favicon.png';  // 로고 이미지 파일명
+this.name = 'Bridge Bot';                // 앱 이름
+```
+
+### SCSS 재컴파일
+
+`scss/` 파일 수정 후 아래 명령어로 CSS를 재컴파일해야 합니다.
+
+**1회 컴파일:**
+```bash
+npx sass --no-source-map scss/main.scss:public/css/main.css scss/widgets.scss:public/css/widgets.css
+```
+
+**파일 변경 감지 자동 컴파일 (개발 중):**
+```bash
+bash sass_watch.sh
+```
+
 Credits
 ---
 Created by A Posteriori (https://aposteriori.com.sg).

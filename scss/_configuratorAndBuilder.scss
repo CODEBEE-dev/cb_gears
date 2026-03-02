@@ -20,7 +20,7 @@
     font-size: 120%;
 
     div {
-      border: solid 2px #bbbbbb;
+      border: solid 2px var(--color-border);
       padding: 0.3em 0.5em;
       border-radius: 0.5em;
       cursor: pointer;
@@ -51,7 +51,7 @@
     }
 
     li.selected {
-      background-color: #bbbbbb;
+      background-color: var(--color-border);
     }
 
     li.ulHolder {
@@ -96,7 +96,7 @@
     font-size: 90%;
 
     div {
-      border: solid 2px #bbbbbb;
+      border: solid 2px var(--color-border);
       padding: 0.3em 0.5em;
       border-radius: 0.5em;
       cursor: pointer;

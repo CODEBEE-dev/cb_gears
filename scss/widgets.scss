@@ -80,7 +80,7 @@
     max-width: 90%;
     top: 10%;
     position: absolute;
-    background: #4994FB;
+    background: var(--dialog-bg);
     color: white;
     border-radius: 10px;
     font-size: 120%;
@@ -95,7 +95,7 @@
       padding: 0.4rem 1.2rem;
       font-size: 130%;
       font-weight: bold;
-      border-bottom: solid 2px #bbbbbb;
+      border-bottom: solid 2px var(--color-border);
     }
 
     > .dialogBody {
@@ -121,7 +121,7 @@
         border-radius: 0.3em;
         padding: 0.2em 0.5em;
         min-width: 4em;
-        border: solid 2px #bbbbbb;
+        border: solid 2px var(--color-border);
       }
 
       .push-left {
@@ -130,18 +130,18 @@
 
       .btn-success {
         color: white;
-        background-color: #28a745;
+        background-color: var(--btn-success);
       }
 
       .btn-light {
-        background-color: #f8f9fa;
+        background-color: var(--btn-light);
       }
     }
 
     select {
       font-size: 100%;
       width: 100%;
-      background: #4994FB;
+      background: var(--dialog-bg);
       color: white;
       border-color: white;
     }

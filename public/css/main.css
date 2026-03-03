@@ -1256,6 +1256,9 @@ ul.menuDropDownActivityBar {
 #arenaFrame {
   background-color: white;
   border: solid 40px;
+  display: flex;
+  flex-direction: column;
+  width: auto;
 }
 #arenaFrame .row {
   padding: 1em;

@@ -2085,7 +2085,7 @@ var builder = new function() {
 
       ];
 
-      menuDropDown(self.$fileMenu, menuItems, {className: 'fileMenuDropDown'});
+      menuDropDown(self.$fileMenu, menuItems, {className: 'fileMenuDropDown', align: 'activityBar'});
     }
   };
 
@@ -2110,7 +2110,7 @@ var builder = new function() {
         menuItems[0].html = '<span class="tick">&#x2713;</span> ' + menuItems[0].html;
       }
 
-      menuDropDown(self.$worldMenu, menuItems, {className: 'worldMenuDropDown'});
+      menuDropDown(self.$worldMenu, menuItems, {className: 'worldMenuDropDown', align: 'activityBar'});
     }
   };
 
@@ -2179,7 +2179,7 @@ var builder = new function() {
       }
       menuItems[tickIndex].html = '<span class="tick">&#x2713;</span> ' + menuItems[tickIndex].html;
 
-      menuDropDown(self.$snapMenu, menuItems, {className: 'snapMenuDropDown'});
+      menuDropDown(self.$snapMenu, menuItems, {className: 'snapMenuDropDown', align: 'activityBar'});
     }
   };
 

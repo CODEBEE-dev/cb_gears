@@ -2112,7 +2112,7 @@ var configurator = new function() {
         {html: 'Save to file', line: true, callback: self.saveRobot},
       ];
 
-      menuDropDown(self.$fileMenu, menuItems, {className: 'fileMenuDropDown'});
+      menuDropDown(self.$fileMenu, menuItems, {className: 'fileMenuDropDown', align: 'activityBar'});
     }
   };
 
@@ -2126,7 +2126,7 @@ var configurator = new function() {
         {html: 'Select Robot', line: false, callback: self.selectRobot},
       ];
 
-      menuDropDown(self.$robotMenu, menuItems, {className: 'robotMenuDropDown'});
+      menuDropDown(self.$robotMenu, menuItems, {className: 'robotMenuDropDown', align: 'activityBar'});
     }
   };
 
@@ -2189,7 +2189,7 @@ var configurator = new function() {
       }
       menuItems[tickIndex].html = '<span class="tick">&#x2713;</span> ' + menuItems[tickIndex].html;
 
-      menuDropDown(self.$snapMenu, menuItems, {className: 'snapMenuDropDown'});
+      menuDropDown(self.$snapMenu, menuItems, {className: 'snapMenuDropDown', align: 'activityBar'});
     }
   };
 

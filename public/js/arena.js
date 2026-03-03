@@ -32,7 +32,7 @@ var arena = new function() {
         {html: i18n.get('#main-world_save_file#'), line: false, callback: arenaPanel.saveWorld},
       ];
 
-      menuDropDown(self.$worldsMenu, menuItems, {className: 'worldsMenuDropDown'});
+      menuDropDown(self.$worldsMenu, menuItems, {className: 'worldsMenuDropDown', align: 'activityBar'});
     }
   };
 
@@ -65,7 +65,7 @@ var arena = new function() {
         menuItems[4].html = '<span class="tick">&#x2713;</span> ' + menuItems[4].html;
       }
 
-      menuDropDown(self.$optionsMenu, menuItems, {className: 'optionsMenuDropDown'});
+      menuDropDown(self.$optionsMenu, menuItems, {className: 'optionsMenuDropDown', align: 'activityBar'});
     }
   };
 

@@ -53,3 +53,42 @@
   top: 3em;
   right: 1em;
 }
+
+// Zelos 렌더러 테마 오버라이드
+.blocklyToolboxDiv {
+  background-color: #FFFFFF !important;
+  border-right: 1px solid #E8E8E8 !important;
+  padding-top: 8px;
+}
+
+.blocklyTreeRow {
+  border-radius: 0 20px 20px 0 !important;
+  margin-right: 8px;
+  margin-bottom: 2px;
+  padding: 6px 12px !important;
+  height: auto !important;
+  line-height: 1.4 !important;
+}
+
+.blocklyTreeLabel {
+  font-family: 'Nunito', sans-serif !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+}
+
+.blocklyTreeSelected .blocklyTreeLabel {
+  color: #FFFFFF !important;
+}
+
+.blocklyFlyoutBackground {
+  fill: #F5F5F5 !important;
+  fill-opacity: 1 !important;
+}
+
+.blocklyMainBackground {
+  fill: #F8F9FA !important;
+}
+
+.blocklyDraggable > .blocklyPath {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+}

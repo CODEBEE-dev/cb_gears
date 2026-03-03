@@ -21,6 +21,19 @@
   /* 버튼 */
   --btn-success: #28a745;
   --btn-light: #f8f9fa;
+  /* Blockly 블록 색상 */
+  --blockly-motion: #4A6FE3;
+  --blockly-sensor: #27AE8F;
+  --blockly-sound: #F4A427;
+  --blockly-control: #FFAB19;
+  --blockly-experimental: #E84F47;
+  --blockly-logic: #4C97FF;
+  --blockly-loop: #0fBD8C;
+  --blockly-math: #9C6FD6;
+  --blockly-text: #FFBF00;
+  --blockly-list: #9966FF;
+  --blockly-variable: #E84393;
+  --blockly-procedure: #7B52A0;
 }
 
 html, body {
@@ -382,6 +395,44 @@ ul.menuDropDownActivityBar {
   height: 150px;
   top: 3em;
   right: 1em;
+}
+
+.blocklyToolboxDiv {
+  background-color: #FFFFFF !important;
+  border-right: 1px solid #E8E8E8 !important;
+  padding-top: 8px;
+}
+
+.blocklyTreeRow {
+  border-radius: 0 20px 20px 0 !important;
+  margin-right: 8px;
+  margin-bottom: 2px;
+  padding: 6px 12px !important;
+  height: auto !important;
+  line-height: 1.4 !important;
+}
+
+.blocklyTreeLabel {
+  font-family: "Nunito", sans-serif !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+}
+
+.blocklyTreeSelected .blocklyTreeLabel {
+  color: #FFFFFF !important;
+}
+
+.blocklyFlyoutBackground {
+  fill: #F5F5F5 !important;
+  fill-opacity: 1 !important;
+}
+
+.blocklyMainBackground {
+  fill: #F8F9FA !important;
+}
+
+.blocklyDraggable > .blocklyPath {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
 }
 
 #renderCanvas {

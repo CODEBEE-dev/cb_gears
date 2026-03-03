@@ -1,13 +1,64 @@
 var blockly = new function() {
   var self = this;
 
-  self.theme = Blockly.Theme.defineTheme('customTheme', {
-    'base': Blockly.Themes.Classic,
-    'startHats': true
+  self.theme = Blockly.Theme.defineTheme('cbgearsTheme', {
+    'base': Blockly.Themes.Zelos,
+    'startHats': true,
+
+    'blockStyles': {
+      'motion_blocks':           { 'colourPrimary': '#4A6FE3', 'colourSecondary': '#3A5FD3', 'colourTertiary': '#2A4FC3' },
+      'sensor_blocks':           { 'colourPrimary': '#27AE8F', 'colourSecondary': '#1F9E7F', 'colourTertiary': '#178E6F' },
+      'sound_blocks':            { 'colourPrimary': '#F4A427', 'colourSecondary': '#E09417', 'colourTertiary': '#CC8400' },
+      'control_blocks':          { 'colourPrimary': '#FFAB19', 'colourSecondary': '#EC9C12', 'colourTertiary': '#CF8B17' },
+      'experimental_blocks':     { 'colourPrimary': '#E84F47', 'colourSecondary': '#D8403A', 'colourTertiary': '#C8312B' },
+      'logic_blocks':            { 'colourPrimary': '#4C97FF', 'colourSecondary': '#4280D7', 'colourTertiary': '#3373CC' },
+      'loop_blocks':             { 'colourPrimary': '#0fBD8C', 'colourSecondary': '#0DA57A', 'colourTertiary': '#0B8E69' },
+      'math_blocks':             { 'colourPrimary': '#9C6FD6', 'colourSecondary': '#8A5FC6', 'colourTertiary': '#7A4FB6' },
+      'text_blocks':             { 'colourPrimary': '#FFBF00', 'colourSecondary': '#E6AC00', 'colourTertiary': '#CC9900' },
+      'list_blocks':             { 'colourPrimary': '#9966FF', 'colourSecondary': '#855CD6', 'colourTertiary': '#774DCB' },
+      'variable_blocks':         { 'colourPrimary': '#E84393', 'colourSecondary': '#D43583', 'colourTertiary': '#C02773' },
+      'variable_dynamic_blocks': { 'colourPrimary': '#E84393', 'colourSecondary': '#D43583', 'colourTertiary': '#C02773' },
+      'procedure_blocks':        { 'colourPrimary': '#7B52A0', 'colourSecondary': '#6B4290', 'colourTertiary': '#5B3280' },
+      'hat_blocks':              { 'colourPrimary': '#FFAB19', 'colourSecondary': '#EC9C12', 'colourTertiary': '#CF8B17', 'hat': 'cap' }
+    },
+
+    'categoryStyles': {
+      'motion_category':       { 'colour': '#4A6FE3' },
+      'sensor_category':       { 'colour': '#27AE8F' },
+      'sound_category':        { 'colour': '#F4A427' },
+      'control_category':      { 'colour': '#FFAB19' },
+      'experimental_category': { 'colour': '#E84F47' },
+      'logic_category':        { 'colour': '#4C97FF' },
+      'loop_category':         { 'colour': '#0fBD8C' },
+      'math_category':         { 'colour': '#9C6FD6' },
+      'text_category':         { 'colour': '#FFBF00' },
+      'list_category':         { 'colour': '#9966FF' },
+      'variable_category':     { 'colour': '#E84393' },
+      'procedure_category':    { 'colour': '#7B52A0' }
+    },
+
+    'componentStyles': {
+      'workspaceBackgroundColour': '#F8F9FA',
+      'toolboxBackgroundColour':   '#FFFFFF',
+      'toolboxForegroundColour':   '#333333',
+      'flyoutBackgroundColour':    '#F5F5F5',
+      'flyoutOpacity':             1,
+      'scrollbarColour':           '#CCCCCC',
+      'scrollbarOpacity':          0.4,
+      'insertionMarkerColour':     '#FFFFFF',
+      'insertionMarkerOpacity':    0.3
+    },
+
+    'fontStyle': {
+      'family': 'Nunito, sans-serif',
+      'weight': '600',
+      'size':   11
+    }
   });
 
   var options = {
     toolbox : null,
+    renderer: 'zelos',
     zoom: {
       controls: true
     },
@@ -22,7 +73,7 @@ var blockly = new function() {
     horizontalLayout : false,
     toolboxPosition : 'start',
     css : true,
-    media: 'blockly-9.0.0/media',
+    media: 'blockly-12.3.0/media',
     rtl : RTL,
     scrollbars : true,
     sounds : true,
@@ -37,14 +88,8 @@ var blockly = new function() {
 
   // Run on page load
   this.init = function() {
-    Blockly.geras.Renderer.prototype.makeConstants_ = function() {
-      var constants = new Blockly.geras.ConstantProvider();
-      constants.ADD_START_HATS = true;
-      return constants;
-    };
-
     const script = document.createElement('script');
-    script.src = 'blockly-9.0.0/msg/js/' + LANG + '.js';
+    script.src = 'blockly-12.3.0/msg/' + LANG + '.js';
     script.addEventListener('load', function() {
       self.loadCustomBlocks()
         .then(self.loadToolBox)

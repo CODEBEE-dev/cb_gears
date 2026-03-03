@@ -2,7 +2,7 @@
   "type": "when_started",
   "message0": "#blk-when_started#",
   "nextStatement": null,
-  "colour": 65,
+  "style": "control_blocks",
   "tooltip": "",
   "helpUrl": ""
 },
@@ -32,7 +32,7 @@
   ],
   "previousStatement": null,
   "nextStatement": null,
-  "colour": 65,
+  "style": "control_blocks",
   "tooltip": "#blk-sleep_tooltip#",
   "helpUrl": ""
 },
@@ -61,7 +61,7 @@
   ],
   "previousStatement": null,
   "nextStatement": null,
-  "colour": 230,
+  "style": "motion_blocks",
   "tooltip": "#blk-stop_tooltip#",
   "helpUrl": ""
 },
@@ -136,7 +136,7 @@
   ],
   "previousStatement": null,
   "nextStatement": null,
-  "colour": 230,
+  "style": "motion_blocks",
   "tooltip": "#blk-stop_motor_tooltip#",
   "helpUrl": ""
 },
@@ -176,7 +176,7 @@
   "inputsInline": true,
   "previousStatement": null,
   "nextStatement": null,
-  "colour": 230,
+  "style": "motion_blocks",
   "tooltip": "#blk-move_steering_tooltip#",
   "helpUrl": ""
 },
@@ -246,7 +246,7 @@
   "inputsInline": true,
   "previousStatement": null,
   "nextStatement": null,
-  "colour": 230,
+  "style": "motion_blocks",
   "tooltip": "#blk-move_steering_tooltip#",
   "helpUrl": ""
 },
@@ -254,7 +254,7 @@
   "type": "exit",
   "message0": "#blk-exit_program#",
   "previousStatement": null,
-  "colour": 65,
+  "style": "control_blocks",
   "tooltip": "#blk-exit_tooltip#",
   "helpUrl": ""
 },
@@ -310,7 +310,7 @@
     }
   ],
   "output": "Number",
-  "colour": 230,
+  "style": "motion_blocks",
   "tooltip": "#blk-position_tooltip#",
   "helpUrl": ""
 },
@@ -366,7 +366,7 @@
     }
   ],
   "output": "Number",
-  "colour": 230,
+  "style": "motion_blocks",
   "tooltip": "#blk-speed_tooltip#",
   "helpUrl": ""
 },
@@ -427,7 +427,7 @@
   ],
   "previousStatement": null,
   "nextStatement": null,
-  "colour": 230,
+  "style": "motion_blocks",
   "tooltip": "#blk-reset_motor_tooltip#",
   "helpUrl": ""
 },
@@ -467,7 +467,7 @@
   "inputsInline": true,
   "previousStatement": null,
   "nextStatement": null,
-  "colour": 230,
+  "style": "motion_blocks",
   "tooltip": "#blk-move_tank_tooltip#",
   "helpUrl": ""
 },
@@ -537,7 +537,7 @@
   "inputsInline": true,
   "previousStatement": null,
   "nextStatement": null,
-  "colour": 230,
+  "style": "motion_blocks",
   "tooltip": "#blk-move_tank_for_tooltip#",
   "helpUrl": ""
 },
@@ -632,7 +632,7 @@
   ],
   "inputsInline": true,
   "output": null,
-  "colour": 160,
+  "style": "sensor_blocks",
   "tooltip": "",
   "helpUrl": "https://github.com/QuirkyCort/gears/wiki/Color-Sensor"
 },
@@ -707,7 +707,7 @@
   ],
   "inputsInline": true,
   "output": null,
-  "colour": 160,
+  "style": "sensor_blocks",
   "tooltip": "",
   "helpUrl": "https://github.com/QuirkyCort/gears/wiki/Ultrasonic-Sensor"
 },
@@ -782,7 +782,7 @@
   ],
   "inputsInline": true,
   "output": null,
-  "colour": 160,
+  "style": "sensor_blocks",
   "tooltip": "",
   "helpUrl": "https://github.com/QuirkyCort/gears/wiki/Laser-Range-Sensor"
 },
@@ -843,7 +843,7 @@
   ],
   "inputsInline": true,
   "output": null,
-  "colour": 160,
+  "style": "sensor_blocks",
   "tooltip": "Returns a list of distances in cm",
   "helpUrl": ""
 },
@@ -938,7 +938,7 @@
   ],
   "inputsInline": true,
   "output": null,
-  "colour": 160,
+  "style": "sensor_blocks",
   "tooltip": "",
   "helpUrl": "https://github.com/QuirkyCort/gears/wiki/Gyro-Sensor"
 },
@@ -1000,7 +1000,7 @@
   "inputsInline": true,
   "previousStatement": null,
   "nextStatement": null,
-  "colour": 160,
+  "style": "sensor_blocks",
   "tooltip": "#blk-reset_gyro_tooltip#",
   "helpUrl": "https://github.com/QuirkyCort/gears/wiki/Gyro-Sensor"
 },
@@ -1080,7 +1080,7 @@
   ],
   "previousStatement": null,
   "nextStatement": null,
-  "colour": 230,
+  "style": "motion_blocks",
   "tooltip": "#blk-run_motor_tooltip#",
   "helpUrl": ""
 },
@@ -1204,7 +1204,7 @@
   ],
   "previousStatement": null,
   "nextStatement": null,
-  "colour": 230,
+  "style": "motion_blocks",
   "tooltip": "#blk-run_motor_for_tooltip#",
   "helpUrl": ""
 },
@@ -1306,7 +1306,7 @@
   ],
   "previousStatement": null,
   "nextStatement": null,
-  "colour": 230,
+  "style": "motion_blocks",
   "tooltip": "#blk-run_motor_to_tooltip#",
   "helpUrl": ""
 },
@@ -1335,7 +1335,7 @@
   ],
   "previousStatement": null,
   "nextStatement": null,
-  "colour": 20,
+  "style": "sound_blocks",
   "tooltip": "#blk-say_tooltip#",
   "helpUrl": ""
 },
@@ -1360,7 +1360,7 @@
   ],
   "previousStatement": null,
   "nextStatement": null,
-  "colour": 20,
+  "style": "sound_blocks",
   "tooltip": "#blk-beep_tooltip#",
   "helpUrl": ""
 },
@@ -1395,7 +1395,7 @@
   ],
   "previousStatement": null,
   "nextStatement": null,
-  "colour": 20,
+  "style": "sound_blocks",
   "tooltip": "#blk-play_tone_tooltip#",
   "helpUrl": ""
 },
@@ -1403,7 +1403,7 @@
   "type": "time",
   "message0": "#blk-time#",
   "output": null,
-  "colour": 65,
+  "style": "control_blocks",
   "tooltip": "#blk-time_tooltip#",
   "helpUrl": ""
 },
@@ -1485,7 +1485,7 @@
     }
   ],
   "output": null,
-  "colour": 160,
+  "style": "sensor_blocks",
   "tooltip": "#blk-gps_tooltip#",
   "helpUrl": "https://github.com/QuirkyCort/gears/wiki/GPS-Sensor"
 },
@@ -1546,7 +1546,7 @@
   ],
   "previousStatement": null,
   "nextStatement": null,
-  "colour": 20,
+  "style": "sound_blocks",
   "tooltip": "",
   "helpUrl": "https://github.com/QuirkyCort/gears/wiki/Pen"
 },
@@ -1607,7 +1607,7 @@
   ],
   "previousStatement": null,
   "nextStatement": null,
-  "colour": 20,
+  "style": "sound_blocks",
   "tooltip": "",
   "helpUrl": "https://github.com/QuirkyCort/gears/wiki/Pen"
 },
@@ -1684,7 +1684,7 @@
   "inputsInline": true,
   "previousStatement": null,
   "nextStatement": null,
-  "colour": 20,
+  "style": "sound_blocks",
   "tooltip": "",
   "helpUrl": "https://github.com/QuirkyCort/gears/wiki/Pen"
 },
@@ -1751,7 +1751,7 @@
   "inputsInline": true,
   "previousStatement": null,
   "nextStatement": null,
-  "colour": 20,
+  "style": "sound_blocks",
   "tooltip": "",
   "helpUrl": "https://github.com/QuirkyCort/gears/wiki/Pen"
 },
@@ -1825,7 +1825,7 @@
     }
   ],
   "output": "Boolean",
-  "colour": 160,
+  "style": "sensor_blocks",
   "tooltip": "",
   "helpUrl": "https://github.com/QuirkyCort/gears/wiki/Touch-Sensor"
 },
@@ -1904,7 +1904,7 @@
   ],
   "previousStatement": null,
   "nextStatement": null,
-  "colour": 160,
+  "style": "sensor_blocks",
   "tooltip": "",
   "helpUrl": "https://github.com/QuirkyCort/gears/wiki/Touch-Sensor"
 },
@@ -1954,7 +1954,7 @@
   ],
   "previousStatement": null,
   "nextStatement": null,
-  "colour": 330,
+  "style": "experimental_blocks",
   "tooltip": "#blk-radio_send_tooltip#",
   "helpUrl": "https://github.com/QuirkyCort/gears/wiki/Radio"
 },
@@ -1969,7 +1969,7 @@
     }
   ],
   "output": null,
-  "colour": 330,
+  "style": "experimental_blocks",
   "tooltip": "#blk-radio_available_tooltip#",
   "helpUrl": "https://github.com/QuirkyCort/gears/wiki/Radio"
 },
@@ -1984,7 +1984,7 @@
     }
   ],
   "output": null,
-  "colour": 330,
+  "style": "experimental_blocks",
   "tooltip": "#blk-radio_read_tooltip#",
   "helpUrl": "https://github.com/QuirkyCort/gears/wiki/Radio"
 },
@@ -1999,7 +1999,7 @@
     }
   ],
   "output": null,
-  "colour": 330,
+  "style": "experimental_blocks",
   "tooltip": "#blk-radio_read_content_tooltip#",
   "helpUrl": "https://github.com/QuirkyCort/gears/wiki/Radio"
 },
@@ -2015,7 +2015,7 @@
   ],
   "previousStatement": null,
   "nextStatement": null,
-  "colour": 330,
+  "style": "experimental_blocks",
   "tooltip": "#blk-radio_empty_tooltip#",
   "helpUrl": "https://github.com/QuirkyCort/gears/wiki/Radio"
 },
@@ -2105,7 +2105,7 @@
     }
   ],
   "output": null,
-  "colour": 160,
+  "style": "sensor_blocks",
   "tooltip": "#blk-object_tracker_tooltip#",
   "helpUrl": ""
 },
@@ -2208,7 +2208,7 @@
   ],
   "previousStatement": null,
   "nextStatement": null,
-  "colour": 230,
+  "style": "motion_blocks",
   "tooltip": "#blk-set_movement_motors_tooltip#",
   "helpUrl": ""
 },
@@ -2259,7 +2259,7 @@
   ],
   "previousStatement": null,
   "nextStatement": null,
-  "colour": 160,
+  "style": "sensor_blocks",
   "tooltip": "",
   "helpUrl": ""
 },
@@ -2309,7 +2309,7 @@
     }
   ],
   "output": "Boolean",
-  "colour": 160,
+  "style": "sensor_blocks",
   "tooltip": "",
   "helpUrl": ""
 },
@@ -2367,7 +2367,7 @@
     }
   ],
   "output": "Number",
-  "colour": 160,
+  "style": "sensor_blocks",
   "tooltip": "",
   "helpUrl": ""
 },
@@ -2383,7 +2383,7 @@
   ],
   "previousStatement": null,
   "nextStatement": null,
-  "colour": 65,
+  "style": "control_blocks",
   "tooltip": "",
   "helpUrl": ""
 },
@@ -2394,7 +2394,7 @@
   "inputsInline": true,
   "previousStatement": null,
   "nextStatement": null,
-  "colour": 230,
+  "style": "motion_blocks",
   "tooltip": "",
   "helpUrl": ""
 },
@@ -2405,7 +2405,7 @@
   "inputsInline": true,
   "previousStatement": null,
   "nextStatement": null,
-  "colour": 230,
+  "style": "motion_blocks",
   "tooltip": "",
   "helpUrl": ""
 },
@@ -2416,7 +2416,7 @@
   "inputsInline": true,
   "previousStatement": null,
   "nextStatement": null,
-  "colour": 230,
+  "style": "motion_blocks",
   "tooltip": "",
   "helpUrl": ""
 },
@@ -2427,7 +2427,7 @@
   "inputsInline": true,
   "previousStatement": null,
   "nextStatement": null,
-  "colour": 230,
+  "style": "motion_blocks",
   "tooltip": "",
   "helpUrl": ""
 },
@@ -2471,7 +2471,7 @@
     }
   ],
   "output": "Boolean",
-  "colour": 160,
+  "style": "sensor_blocks",
   "tooltip": "",
   "helpUrl": ""
 },
@@ -2549,7 +2549,7 @@
   ],
   "previousStatement": null,
   "nextStatement": null,
-  "colour": 160,
+  "style": "sensor_blocks",
   "tooltip": "#blk-camera_capture_image_tooltip#",
   "helpUrl": "https://github.com/QuirkyCort/gears/wiki/Camera-Sensor"
 },
@@ -2609,7 +2609,7 @@
     }
   ],
   "output": "Array",
-  "colour": 160,
+  "style": "sensor_blocks",
   "tooltip": "#blk-camera_get_rgb_tooltip#",
   "helpUrl": "https://github.com/QuirkyCort/gears/wiki/Camera-Sensor"
 },
@@ -2669,7 +2669,7 @@
     }
   ],
   "output": "Array",
-  "colour": 160,
+  "style": "sensor_blocks",
   "tooltip": "#blk-camera_get_hsv_tooltip#",
   "helpUrl": "https://github.com/QuirkyCort/gears/wiki/Camera-Sensor"
 },
@@ -2764,7 +2764,7 @@
     }
   ],
   "output": "Array",
-  "colour": 160,
+  "style": "sensor_blocks",
   "tooltip": "#blk-camera_find_blobs_tooltip#",
   "helpUrl": "https://github.com/QuirkyCort/gears/wiki/Camera-Sensor"
 },
@@ -2796,7 +2796,7 @@
   "inputsInline": true,
   "previousStatement": null,
   "nextStatement": null,
-  "colour": 20,
+  "style": "sound_blocks",
   "tooltip": "#blk-plotter_init_tooltip#",
   "helpUrl": ""
 },
@@ -2816,7 +2816,7 @@
   "inputsInline": true,
   "previousStatement": null,
   "nextStatement": null,
-  "colour": 20,
+  "style": "sound_blocks",
   "tooltip": "#blk-plotter_showHide_tooltip#",
   "helpUrl": ""
 },
@@ -2827,7 +2827,7 @@
   "inputsInline": true,
   "previousStatement": null,
   "nextStatement": null,
-  "colour": 20,
+  "style": "sound_blocks",
   "tooltip": "#blk-plotter_clear_tooltip#",
   "helpUrl": ""
 },
@@ -2850,7 +2850,7 @@
   "inputsInline": true,
   "previousStatement": null,
   "nextStatement": null,
-  "colour": 20,
+  "style": "sound_blocks",
   "tooltip": "#blk-plotter_setColor_tooltip#",
   "helpUrl": ""
 },
@@ -2867,7 +2867,7 @@
   "inputsInline": true,
   "previousStatement": null,
   "nextStatement": null,
-  "colour": 20,
+  "style": "sound_blocks",
   "tooltip": "#blk-plotter_setPointSize_tooltip#",
   "helpUrl": ""
 },
@@ -2889,7 +2889,7 @@
   "inputsInline": true,
   "previousStatement": null,
   "nextStatement": null,
-  "colour": 20,
+  "style": "sound_blocks",
   "tooltip": "#blk-plotter_drawPoint_tooltip#",
   "helpUrl": ""
 },
@@ -2921,7 +2921,7 @@
   "inputsInline": true,
   "previousStatement": null,
   "nextStatement": null,
-  "colour": 20,
+  "style": "sound_blocks",
   "tooltip": "#blk-plotter_drawLine_tooltip#",
   "helpUrl": ""
 },
@@ -2948,7 +2948,7 @@
   "inputsInline": true,
   "previousStatement": null,
   "nextStatement": null,
-  "colour": 20,
+  "style": "sound_blocks",
   "tooltip": "#blk-plotter_drawTriangle_tooltip#",
   "helpUrl": ""
 },
@@ -2973,7 +2973,7 @@
   "inputsInline": true,
   "previousStatement": null,
   "nextStatement": null,
-  "colour": 20,
+  "style": "sound_blocks",
   "tooltip": "#blk-plotter_drawGrid_tooltip#",
   "helpUrl": ""
 }

@@ -66,16 +66,25 @@ this.logo = 'codebridgeai_favicon.png';  // 로고 이미지 파일명
 this.name = 'Bridge Bot';                // 앱 이름
 ```
 
-### SCSS 재컴파일
+### CSS 수정
 
-`scss/` 파일 수정 후 아래 명령어로 CSS를 재컴파일해야 합니다.
+> ⚠️ **`public/css/main.css` 는 직접 편집합니다. SCSS 빌드로 덮어쓰지 마세요.**
+>
+> `scss/main.scss` 는 과거 버전의 소스 파일로, 현재 `main.css` 와 내용이 다릅니다.
+> 빌드하면 헤더, 액티비티바, Blockly 테마 등 현재 작업이 모두 사라집니다.
+
+UI 스타일 수정은 `public/css/main.css` 를 직접 편집하세요.
+
+### widgets.css 재컴파일 (필요 시)
+
+`scss/widgets.scss` 수정 후에만 아래 명령어를 사용합니다.
 
 **1회 컴파일:**
 ```bash
-npx sass --no-source-map scss/main.scss:public/css/main.css scss/widgets.scss:public/css/widgets.css
+npx sass --no-source-map scss/widgets.scss:public/css/widgets.css
 ```
 
-**파일 변경 감지 자동 컴파일 (개발 중):**
+**파일 변경 감지 자동 컴파일:**
 ```bash
 bash sass_watch.sh
 ```

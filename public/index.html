@@ -67,6 +67,10 @@
   <main>
     <nav>
       <div class="menuBar">
+        <div id="blocklyPages" class="menuItem pagesMenu blocksOnly" data-tooltip="Pages">
+          <span class="material-symbols-rounded activity-icon">menu</span>
+          <span class="activity-label">Pages</span>
+        </div>
         <div class="menuItem fileMenu" data-tooltip="File">
           <span class="material-symbols-rounded activity-icon">folder_open</span>
           <span class="activity-label">File</span>
@@ -102,7 +106,6 @@
       <div class="blocklyEditor panel active" aria-labelledby="navBlocks">
         <div id="blocklyDiv" style="height: 100%; width: 100%;"></div>
         <div id="blocklyHiddenDiv" style="height: 100%; width: 100%; position: absolute; top: -10000px;"></div>
-        <div id="blocklyPages"><span class="currentPage">Main</span></div>
       </div>
 
       <div class="panel" aria-labelledby="navPython">

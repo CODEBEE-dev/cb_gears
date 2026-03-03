@@ -2427,6 +2427,10 @@ let MSGS = {
     it: 'Principale',
     ko: 'Main',
   },
+  '#main-pages#': {
+    en: 'Pages',
+    ko: '페이지',
+  },
   '#main-project_name#': {
     en: 'Project Name',
     es: 'Nombre del Proyecto',

@@ -13,6 +13,7 @@ var blocklyPanel = new function() {
     self.$pagesMenu.click(self.togglePagesMenu);
 
     self.loadPagesOptions();
+    self.$pagesMenu.addClass('visible');
 
     setInterval(blockly.saveLocalStorage, 2 * 1000);
   };
@@ -61,10 +62,13 @@ var blocklyPanel = new function() {
       ];
 
       for (let i=0; i<self.pages.length; i++) {
-        menuItems.push({html: self.pages[i], line: false, callback: self.loadPageCB});
+        let label = self.pages[i] == self.currentPage
+          ? '<span class="tick">&#x2713;</span> ' + self.pages[i]
+          : self.pages[i];
+        menuItems.push({html: label, line: false, callback: self.loadPageCB});
       }
 
-      menuDropDown(self.$pagesMenu, menuItems, {className: 'pagesMenuDropDown', align: 'right', parentIsAbsolute: true});
+      menuDropDown(self.$pagesMenu, menuItems, {className: 'pagesMenuDropDown', align: 'activityBar'});
     }
   };
 
@@ -196,7 +200,6 @@ var blocklyPanel = new function() {
   this.loadPage = function(page) {
     blockly.assignOrphenToPage(self.currentPage);
     self.currentPage = page;
-    self.$pagesMenu.find('span.currentPage').text(page);
     blockly.showPage(self.currentPage);
   };
 
@@ -209,6 +212,7 @@ var blocklyPanel = new function() {
       self.setDisable(false);
     }
     self.$panel.removeClass('hide');
+    self.$pagesMenu.addClass('visible');
     window.dispatchEvent(new Event('resize'));
   };
 
@@ -217,6 +221,7 @@ var blocklyPanel = new function() {
     Blockly.DropDownDiv.hide()
     Blockly.WidgetDiv.hide()
     self.$panel.addClass('hide');
+    self.$pagesMenu.removeClass('visible');
   };
 
   // Disable blockly by covering with blank div

@@ -422,21 +422,11 @@ ul.menuDropDownActivityBar {
   cursor: pointer;
   user-select: none;
 }
-.blocklyEditor #blocklyPages {
-  position: absolute;
-  top: 0.5em;
-  right: 1em;
-  border: solid 1px #bbbbbb;
-  border-radius: 0.5em;
-  padding: 0.5em;
-  color: gray;
-  user-select: none;
-  cursor: pointer;
+nav .menuBar .menuItem.blocksOnly {
+  display: none;
 }
-.blocklyEditor #blocklyPages ul.menuDropDown {
-  right: 0;
-  left: auto;
-  width: max-content;
+nav .menuBar .menuItem.blocksOnly.visible {
+  display: flex;
 }
 
 .blocklyEditor.hide {

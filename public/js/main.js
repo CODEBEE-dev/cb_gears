@@ -49,7 +49,8 @@ var main = new function() {
     self.$worldsMenu.attr('data-tooltip', i18n.get('#main-worlds#'));
     self.$helpMenu.find('.activity-label').text(i18n.get('#main-help#'));
     self.$helpMenu.attr('data-tooltip', i18n.get('#main-help#'));
-    $('#blocklyPages').text(i18n.get('#main-main#'));
+    $('#blocklyPages').find('.activity-label').text(i18n.get('#main-pages#'));
+    $('#blocklyPages').attr('data-tooltip', i18n.get('#main-pages#'));
     self.$projectName.attr('placeholder', i18n.get('#main-project_name#'));
 
     const langNames = {

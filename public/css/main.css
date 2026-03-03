@@ -320,22 +320,27 @@ nav .panelControlsArea .panelControls.active {
 
 .dialogWindow .selectRobot .description {
   display: flex;
-  border: solid 1px white;
+  border: solid 1px var(--color-border);
+  border-radius: 0.4em;
   margin-top: 0.5em;
+  overflow: hidden;
 }
 .dialogWindow .selectRobot .description .thumbnail {
   width: 200px;
   height: 200px;
 }
 .dialogWindow .selectRobot .description .text {
-  border-left: solid 1px white;
+  border-left: solid 1px var(--color-border);
   padding: 0 1em;
   flex-shrink: 1;
+  color: #444;
 }
 .dialogWindow .selectRobot .configurations {
-  border: solid 1px white;
+  border: solid 1px var(--color-border);
+  border-radius: 0.4em;
   margin-top: 0.5em;
   padding: 0 0.5em;
+  color: #444;
 }
 
 ul.menuDropDown {
@@ -831,20 +836,24 @@ ul.menuDropDownActivityBar {
 
 .dialogWindow .selectWorld .description {
   display: flex;
-  border: solid 1px white;
+  border: solid 1px var(--color-border);
+  border-radius: 0.4em;
   margin-top: 0.5em;
+  overflow: hidden;
 }
 .dialogWindow .selectWorld .description .thumbnail {
   width: 200px;
   height: 200px;
 }
 .dialogWindow .selectWorld .description .text {
-  border-left: solid 1px white;
+  border-left: solid 1px var(--color-border);
   padding: 0 1em;
   flex-shrink: 1;
+  color: #444;
 }
 .dialogWindow .selectWorld .configurations {
-  border: solid 1px white;
+  border: solid 1px var(--color-border);
+  border-radius: 0.4em;
   margin-top: 0.5em;
   padding: 0 0.5em;
   overflow-x: hidden;
@@ -854,12 +863,15 @@ ul.menuDropDownActivityBar {
 }
 .dialogWindow .selectWorld .configurations .configuration input[type=text], .dialogWindow .selectWorld .configurations .configuration input[type=file] {
   font-size: 100%;
-  background: none;
-  border: solid 1px white;
-  color: white;
+  background: #fff;
+  border: solid 1px #ccc;
+  border-radius: 0.3em;
+  color: #333;
+  padding: 0.2em 0.4em;
+  outline: none;
 }
 .dialogWindow .selectWorld .configurations .configuration .configurationTitle {
-  color: lightgray;
+  color: #777;
   margin-bottom: 0.1em;
 }
 .dialogWindow .selectWorld .configurations .configuration .slider {
@@ -1559,14 +1571,17 @@ ul.menuDropDownActivityBar {
 .dialogWindow .selectImage .search input, .dialogWindow .selectModel .search input, .dialogWindow .editAnimationKeys .search input {
   font-size: 100%;
   width: 100%;
-  background: none;
-  color: white;
-  border: solid 1px white;
-  padding: 0 0.2em;
+  background: #fff;
+  color: #333;
+  border: solid 1px #ccc;
+  border-radius: 0.3em;
+  padding: 0.2em 0.4em;
   margin-left: 0.5em;
+  outline: none;
 }
 .dialogWindow .selectImage .images, .dialogWindow .selectImage .items, .dialogWindow .selectModel .images, .dialogWindow .selectModel .items, .dialogWindow .editAnimationKeys .images, .dialogWindow .editAnimationKeys .items {
-  border: solid 1px white;
+  border: solid 1px var(--color-border);
+  border-radius: 0.4em;
   margin-top: 0.5em;
   padding: 0.5em;
   overflow-y: auto;
@@ -1576,22 +1591,25 @@ ul.menuDropDownActivityBar {
   display: flex;
 }
 .dialogWindow .selectImage .images .row .description, .dialogWindow .selectImage .items .row .description, .dialogWindow .selectModel .images .row .description, .dialogWindow .selectModel .items .row .description, .dialogWindow .editAnimationKeys .images .row .description, .dialogWindow .editAnimationKeys .items .row .description {
-  border: solid 1px white;
+  border: solid 1px var(--color-border);
   flex-grow: 1;
   padding: 0 0.5em;
+  color: #333;
 }
 .dialogWindow .selectImage .images .row .select, .dialogWindow .selectImage .items .row .select, .dialogWindow .selectModel .images .row .select, .dialogWindow .selectModel .items .row .select, .dialogWindow .editAnimationKeys .images .row .select, .dialogWindow .editAnimationKeys .items .row .select {
-  border: solid 1px white;
+  border: solid 1px var(--color-border);
   padding: 0.5em;
+  color: #333;
+  cursor: pointer;
 }
 .dialogWindow .selectImage .images .row.hide, .dialogWindow .selectImage .items .row.hide, .dialogWindow .selectModel .images .row.hide, .dialogWindow .selectModel .items .row.hide, .dialogWindow .editAnimationKeys .images .row.hide, .dialogWindow .editAnimationKeys .items .row.hide {
   display: none;
 }
 .dialogWindow .selectImage table, .dialogWindow .selectModel table, .dialogWindow .editAnimationKeys table {
-  border: solid 1px white;
+  border: solid 1px var(--color-border);
 }
 .dialogWindow .selectImage table th, .dialogWindow .selectModel table th, .dialogWindow .editAnimationKeys table th {
-  border: solid 1px white;
+  border: solid 1px var(--color-border);
 }
 .dialogWindow .selectImage table th, .dialogWindow .selectImage table td, .dialogWindow .selectModel table th, .dialogWindow .selectModel table td, .dialogWindow .editAnimationKeys table th, .dialogWindow .editAnimationKeys table td {
   width: 3em;

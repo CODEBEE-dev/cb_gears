@@ -1,31 +1,39 @@
 @keyframes show {
   0% {
-    transform: translateY(100vh) scaleX(0.1);
+    opacity: 0;
+    transform: translateY(-12px) scale(0.97);
   }
   100% {
-    transform: translateY(0) scaleX(1);
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
 @keyframes hide {
   from {
-    transform: scale(1, 1);
+    opacity: 1;
+    transform: scale(1);
   }
   to {
-    transform: scale(0, 0);
+    opacity: 0;
+    transform: scale(0.95);
   }
 }
 @keyframes toast {
   0% {
-    transform: scale(0, 0);
+    opacity: 0;
+    transform: translateY(-8px) scale(0.95);
   }
   10% {
-    transform: scale(1, 1);
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
-  90% {
-    transform: scale(1, 1);
+  85% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
   100% {
-    transform: scale(0, 0);
+    opacity: 0;
+    transform: translateY(-8px) scale(0.95);
   }
 }
 .animatedHide {
@@ -52,27 +60,26 @@
 .toastMsg {
   z-index: 2000;
   animation-name: toast;
-  animation-duration: 1s;
-  animation-timing-function: linear;
+  animation-duration: 2.5s;
+  animation-timing-function: ease;
   animation-fill-mode: forwards;
   position: fixed;
-  font-size: 130%;
-  width: 60%;
-  left: 0;
-  right: 0;
-  margin: auto;
+  font-size: 0.95em;
+  font-family: "Nunito", sans-serif;
+  width: auto;
+  max-width: 60%;
+  left: 50%;
+  transform: translateX(-50%);
   top: 3%;
-  border-radius: 10px;
-  padding-left: 1em;
-  padding-right: 1em;
-  padding-top: 0.5em;
-  padding-bottom: 0.5em;
+  border-radius: 8px;
+  padding: 0.6em 1.4em;
   text-align: center;
-  box-shadow: 5px 5px 10px black;
-  background: grey;
-  color: white;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+  background: #333;
+  color: #fff;
 }
 
+/* ── Dialog ── */
 .dialogScreen {
   z-index: 1000;
   position: fixed;
@@ -80,77 +87,116 @@
   left: 0;
   height: 100%;
   width: 100%;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(2px);
   font-size: 100%;
   display: flex;
-  align-items: center;
-  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
 }
 .dialogScreen > .dialogWindow {
   animation-name: show;
-  animation-duration: 0.2s;
-  animation-timing-function: linear;
-  animation-fill-mode: forwards;
+  animation-duration: 0.18s;
+  animation-timing-function: ease-out;
+  animation-fill-mode: both;
   width: 40em;
-  max-width: 90%;
-  top: 10%;
+  max-width: 92%;
+  top: 8%;
   position: absolute;
-  background: var(--dialog-bg);
-  color: white;
-  border-radius: 10px;
-  font-size: 120%;
-  max-height: 80%;
-  overflow-y: auto;
-  margin: auto;
-  border: solid 2px white;
+  background: #ffffff;
+  color: #222;
+  border-radius: 12px;
+  font-size: 100%;
+  max-height: 82%;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18), 0 2px 8px rgba(0, 0, 0, 0.10);
+  border: 1px solid rgba(0, 0, 0, 0.08);
 }
 .dialogScreen > .dialogWindow > .dialogTitle {
-  padding: 0.4rem 1.2rem;
-  font-size: 130%;
-  font-weight: bold;
-  border-bottom: solid 2px var(--color-border);
+  padding: 1rem 1.4rem 0.8rem;
+  font-size: 1.1em;
+  font-weight: 700;
+  font-family: "Nunito", sans-serif;
+  color: #1a1a2e;
+  border-bottom: 1px solid #eee;
+  flex-shrink: 0;
 }
 .dialogScreen > .dialogWindow > .dialogBody {
-  padding: 0.8rem 1.2rem;
+  padding: 1rem 1.4rem;
   overflow-y: auto;
+  flex-grow: 1;
+  color: #333;
+  font-size: 0.97em;
+  line-height: 1.6;
 }
-.dialogScreen > .dialogWindow > .dialogBody input {
+.dialogScreen > .dialogWindow > .dialogBody input[type="text"],
+.dialogScreen > .dialogWindow > .dialogBody input[type="number"],
+.dialogScreen > .dialogWindow > .dialogBody input[type="file"] {
   font-size: 100%;
+  border: 1px solid #ccc;
+  border-radius: 0.35em;
+  padding: 0.25em 0.5em;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.dialogScreen > .dialogWindow > .dialogBody input[type="text"]:focus,
+.dialogScreen > .dialogWindow > .dialogBody input[type="number"]:focus {
+  border-color: var(--color-primary);
 }
 .dialogScreen > .dialogWindow > .dialogButtonsRow {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
   width: 100%;
-  padding: 0.5em 1em;
+  padding: 0.75em 1.2em;
   box-sizing: border-box;
+  border-top: 1px solid #eee;
+  gap: 0.5em;
+  flex-shrink: 0;
 }
 .dialogScreen > .dialogWindow > .dialogButtonsRow > button {
-  margin-left: 5px;
-  font-size: 100%;
+  font-size: 0.9em;
+  font-family: "Nunito", sans-serif;
+  font-weight: 600;
   border: none;
-  border-radius: 0.3em;
-  padding: 0.2em 0.5em;
-  min-width: 4em;
-  border: solid 2px var(--color-border);
+  border-radius: 0.4em;
+  padding: 0.45em 1.2em;
+  min-width: 5em;
+  cursor: pointer;
+  transition: background 0.15s, box-shadow 0.15s;
+  outline: none;
+}
+.dialogScreen > .dialogWindow > .dialogButtonsRow > button:hover {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
 }
 .dialogScreen > .dialogWindow > .dialogButtonsRow .push-left {
   margin-right: auto;
 }
 .dialogScreen > .dialogWindow > .dialogButtonsRow .btn-success {
-  color: white;
-  background-color: var(--btn-success);
+  color: #fff;
+  background-color: var(--color-primary);
+}
+.dialogScreen > .dialogWindow > .dialogButtonsRow .btn-success:hover {
+  background-color: #1e279a;
 }
 .dialogScreen > .dialogWindow > .dialogButtonsRow .btn-light {
-  background-color: var(--btn-light);
+  color: #444;
+  background-color: #f0f0f0;
+  border: 1px solid #ddd;
+}
+.dialogScreen > .dialogWindow > .dialogButtonsRow .btn-light:hover {
+  background-color: #e4e4e4;
 }
 .dialogScreen > .dialogWindow select {
   font-size: 100%;
   width: 100%;
-  background: var(--dialog-bg);
-  color: white;
-  border-color: white;
+  background: #fff;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 0.35em;
+  padding: 0.3em 0.4em;
 }
 
 .animateClick {

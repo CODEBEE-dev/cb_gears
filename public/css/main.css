@@ -86,20 +86,51 @@ header .gearsIcon {
 }
 header #projectName, header #robotName {
   margin-left: 1em;
-  background: var(--color-primary-light);
-  border: dashed 1px var(--color-primary-dark);
-  border-radius: 0.3em;
-  padding: 0.3em 0.5em;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid var(--color-border);
+  border-radius: 0.4em;
+  padding: 0.3em 0.7em;
   position: relative;
-  color: white;
+  color: #333;
+  font-family: "Nunito", sans-serif;
+  font-size: 0.9em;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  min-width: 12em;
 }
-header #projectName::placeholder {
-  color: var(--color-placeholder);
+header #projectName:focus, header #robotName:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(38, 52, 163, 0.15);
+}
+header #projectName::placeholder, header #robotName::placeholder {
+  color: var(--color-text-muted);
+  font-style: italic;
 }
 header .language {
   margin-left: auto;
   cursor: pointer;
   user-select: none;
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+  padding: 0.3em 0.5em;
+  border-radius: 0.4em;
+  color: #555;
+  font-size: 0.9em;
+  transition: background 0.15s, color 0.15s;
+}
+header .language:hover {
+  background: var(--color-bg);
+  color: var(--color-primary);
+}
+header .language .material-symbols-rounded {
+  font-size: 24px;
+}
+header .language .lang-label {
+  font-family: "Nunito", sans-serif;
+  font-size: 0.85em;
+  font-weight: 600;
+  letter-spacing: 0.02em;
 }
 header nav {
   margin-left: 1.5em;
@@ -308,42 +339,61 @@ nav .panelControlsArea .panelControls.active {
 }
 
 ul.menuDropDown {
-  background: var(--color-bg);
+  background: #fff;
   border: solid 1px var(--color-border);
   position: absolute;
   z-index: 9999;
   display: flex;
   flex-direction: column;
   margin: 0;
-  padding: 0;
-  border-radius: 0 0 0.5em 0.5em;
+  padding: 0.3em 0;
+  border-radius: 0.5em;
   overflow: hidden;
-  box-shadow: 0px 10px 6px 0px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.08);
+  min-width: 10em;
+  list-style: none;
 }
 ul.menuDropDown li {
-  display: block;
-  color: gray;
-  padding: 0.5em;
+  display: flex;
+  align-items: center;
+  color: #333;
+  padding: 0.5em 1em;
+  font-size: 0.9em;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.1s, color 0.1s;
 }
 ul.menuDropDown li:hover {
-  background: white;
+  background: var(--color-bg);
+  color: var(--color-primary);
 }
 ul.menuDropDown li.underline {
-  border-bottom: solid 1px var(--color-border);
+  border-bottom: solid 1px #eee;
+  margin-bottom: 0.3em;
+  padding-bottom: 0.8em;
 }
 ul.menuDropDown .tick {
-  color: green;
+  color: var(--color-primary);
+  margin-right: 0.4em;
+}
+
+/* 언어 드롭다운 전용 */
+ul.languageMenuDropDown {
+  min-width: 9em;
+}
+ul.languageMenuDropDown li {
+  gap: 0.5em;
 }
 
 ul.menuDropDownRightAlign {
-  top: 100%;
+  top: calc(100% + 4px);
 }
 
 ul.menuDropDownActivityBar {
   top: 0;
   left: 100%;
   width: max-content;
-  border-radius: 0 0.5em 0.5em 0.5em;
+  border-radius: 0.5em;
 }
 
 .blocklyEditor .disable {

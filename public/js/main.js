@@ -50,6 +50,15 @@ var main = new function() {
     self.$helpMenu.find('.activity-label').text(i18n.get('#main-help#'));
     self.$helpMenu.attr('data-tooltip', i18n.get('#main-help#'));
     $('#blocklyPages').text(i18n.get('#main-main#'));
+    self.$projectName.attr('placeholder', i18n.get('#main-project_name#'));
+
+    const langNames = {
+      de: 'Deutsch', el: 'Ελληνικά', en: 'English', es: 'Español',
+      fr: 'Français', ko: '한국어', he: 'עברית', nl: 'Nederlands',
+      pt: 'Português', tlh: 'tlhIngan', ru: 'Русский', hu: 'Magyar', it: 'Italiano'
+    };
+    self.$languageMenu.find('.lang-label').remove();
+    self.$languageMenu.append('<span class="lang-label">' + (langNames[LANG] || LANG) + '</span>');
 
   };
 
@@ -64,20 +73,25 @@ var main = new function() {
         window.location.reload();
       }
 
+      const tick = '<span class="tick">&#x2713;</span> ';
+      function langHtml(name, code) {
+        return (LANG === code ? tick : '') + name;
+      }
+
       let menuItems = [
-        {html: 'Deutsch', line: false, callback: function() { setLang('de'); }},
-        {html: 'Ελληνικά', line: false, callback: function() { setLang('el'); }},
-        {html: 'English', line: false, callback: function() { setLang('en'); }},
-        {html: 'Español', line: false, callback: function() { setLang('es'); }},
-        {html: 'Français', line: false, callback: function() { setLang('fr'); }},
-        {html: '한국어', line: false, callback: function() { setLang('ko'); }},
-        {html: 'עברית', line: false, callback: function() { setLang('he'); }},
-        {html: 'Nederlands', line: false, callback: function() { setLang('nl'); }},
-        {html: 'Português', line: false, callback: function() { setLang('pt'); }},
-        {html: 'tlhIngan', line: false, callback: function() { setLang('tlh'); }},
-        {html: 'Русский', line: false, callback: function() { setLang('ru'); }},
-        {html: 'Magyar', line: false, callback: function() { setLang('hu'); }},
-        {html: 'Italiano', line: false, callback: function() { setLang('it'); }},
+        {html: langHtml('Deutsch', 'de'), line: false, callback: function() { setLang('de'); }},
+        {html: langHtml('Ελληνικά', 'el'), line: false, callback: function() { setLang('el'); }},
+        {html: langHtml('English', 'en'), line: false, callback: function() { setLang('en'); }},
+        {html: langHtml('Español', 'es'), line: false, callback: function() { setLang('es'); }},
+        {html: langHtml('Français', 'fr'), line: false, callback: function() { setLang('fr'); }},
+        {html: langHtml('한국어', 'ko'), line: false, callback: function() { setLang('ko'); }},
+        {html: langHtml('עברית', 'he'), line: false, callback: function() { setLang('he'); }},
+        {html: langHtml('Nederlands', 'nl'), line: false, callback: function() { setLang('nl'); }},
+        {html: langHtml('Português', 'pt'), line: false, callback: function() { setLang('pt'); }},
+        {html: langHtml('tlhIngan', 'tlh'), line: false, callback: function() { setLang('tlh'); }},
+        {html: langHtml('Русский', 'ru'), line: false, callback: function() { setLang('ru'); }},
+        {html: langHtml('Magyar', 'hu'), line: false, callback: function() { setLang('hu'); }},
+        {html: langHtml('Italiano', 'it'), line: false, callback: function() { setLang('it'); }},
       ];
 
       menuDropDown(self.$languageMenu, menuItems, {className: 'languageMenuDropDown', align: 'right'});

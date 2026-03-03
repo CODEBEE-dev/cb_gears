@@ -54,41 +54,76 @@
   right: 1em;
 }
 
-// Zelos 렌더러 테마 오버라이드
-.blocklyToolboxDiv {
+// Zelos 렌더러 테마 오버라이드 (Blockly 12.3.0 클래스 기준)
+
+// 툴박스 컨테이너
+.blocklyToolbox {
   background-color: #FFFFFF !important;
   border-right: 1px solid #E8E8E8 !important;
-  padding-top: 8px;
+  padding: 8px 0 !important;
 }
 
-.blocklyTreeRow {
+// 카테고리 항목
+.blocklyToolboxCategory {
   border-radius: 0 20px 20px 0 !important;
-  margin-right: 8px;
-  margin-bottom: 2px;
-  padding: 6px 12px !important;
-  height: auto !important;
-  line-height: 1.4 !important;
+  margin-right: 8px !important;
+  margin-bottom: 2px !important;
+  padding: 6px 10px 6px 8px !important;
+  cursor: pointer !important;
+  transition: background 0.15s, box-shadow 0.15s !important;
+
+  &:hover:not(.blocklyToolboxSelected) {
+    background: rgba(0, 0, 0, 0.04) !important;
+  }
 }
 
-.blocklyTreeLabel {
+// 선택된 카테고리
+.blocklyToolboxSelected {
+  border-radius: 0 20px 20px 0 !important;
+  box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.15) !important;
+}
+
+// 카테고리 아이콘 (색상 점)
+.blocklyToolboxCategoryIcon {
+  width: 10px !important;
+  height: 10px !important;
+  border-radius: 50% !important;
+  margin-right: 8px !important;
+  flex-shrink: 0 !important;
+}
+
+// 카테고리 라벨 텍스트
+.blocklyToolboxCategoryLabel {
   font-family: 'Nunito', sans-serif !important;
   font-weight: 600 !important;
   font-size: 13px !important;
+  color: #444444 !important;
 }
 
-.blocklyTreeSelected .blocklyTreeLabel {
+// 선택된 카테고리 라벨
+.blocklyToolboxSelected .blocklyToolboxCategoryLabel {
   color: #FFFFFF !important;
 }
 
+// 카테고리 구분선
+.blocklyTreeSeparator {
+  border-top: 1px solid #EEEEEE !important;
+  margin: 4px 12px !important;
+  height: 0 !important;
+}
+
+// 플라이아웃 배경 (SVG)
 .blocklyFlyoutBackground {
   fill: #F5F5F5 !important;
   fill-opacity: 1 !important;
 }
 
+// 워크스페이스 배경 (SVG)
 .blocklyMainBackground {
   fill: #F8F9FA !important;
 }
 
+// 블록 드롭섀도
 .blocklyDraggable > .blocklyPath {
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
 }

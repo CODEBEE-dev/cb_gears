@@ -2488,7 +2488,7 @@
   "inputsInline": true,
   "previousStatement": null,
   "nextStatement": null,
-  "colour": "#000000",
+  "style": "control_blocks",
   "tooltip": "#blk-comment_tooltip#",
   "helpUrl": ""
 },

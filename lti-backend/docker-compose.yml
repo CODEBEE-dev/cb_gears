@@ -1,0 +1,22 @@
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: cb-mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+      LTI_DB_NAME: ${LTI_DB_NAME}
+      LTI_DB_USER: ${LTI_DB_USER}
+      LTI_DB_PASSWORD: ${LTI_DB_PASSWORD}
+    volumes:
+      - /opt/mongodb/data:/data/db
+      - /opt/mongodb/log:/var/log/mongodb
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh:ro
+    ports:
+      - "127.0.0.1:27017:27017"
+    networks:
+      - lti-network
+networks:
+  lti-network:
+    driver: bridge

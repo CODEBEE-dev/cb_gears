@@ -322,5 +322,30 @@
 
     loadWhenReady();
   </script>
+  <script>
+    /** 
+     * 요청시 URL에 ltik 포함되어야 정상정인 요청
+    */
+    async function testing_grade(grade) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const ltik = urlParams.get('ltik');
+
+      try {
+        const response = await fetch(`/grade?ltik=${ltik}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            grade: grade
+          })
+        });
+        const data = await response.json();
+        console.log(data);
+      } catch (err) {
+        console.error(err)
+      }
+    }
+  </script>
 </body>
 </html>

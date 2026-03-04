@@ -1,2 +1,5 @@
 tools
 scss/.sass-cache
+
+# Database data (Docker volumes)
+data/

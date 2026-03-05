@@ -154,6 +154,23 @@ nav {
   .panel.active {
     z-index: 0;
   }
+
+  &.splitSim {
+    display: grid;
+    grid-template-columns: 60% 40%;
+    transition: grid-template-columns 0.3s ease;
+
+    .panel.active {
+      position: relative;
+      z-index: 0;
+    }
+
+    #simPanel.splitActive {
+      position: relative;
+      z-index: 0;
+      border-left: 1px solid var(--color-border, #ddd);
+    }
+  }
 }
 
 .saveBlockly, .savePython {

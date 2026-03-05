@@ -1,3 +1,18 @@
+.simSplitToggle {
+  position: absolute;
+  top: 0.3em;
+  right: 0.3em;
+  cursor: pointer;
+  opacity: 0.4;
+  font-size: 1.4em;
+  z-index: 10;
+  color: var(--color-text, #333);
+  user-select: none;
+
+  &:hover { opacity: 0.8; }
+  &.active { opacity: 1; color: var(--color-primary); }
+}
+
 .blocklyEditor {
   .disable {
     position: absolute;

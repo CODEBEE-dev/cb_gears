@@ -222,6 +222,13 @@ var blocklyPanel = new function() {
     Blockly.WidgetDiv.hide()
     self.$panel.addClass('hide');
     self.$pagesMenu.removeClass('visible');
+    if (simPanel.splitSimOpen) {
+      simPanel.splitSimOpen = false;
+      $('.panels').removeClass('splitSim');
+      $('#simPanel').removeClass('splitActive');
+      $('#simSplitToggle').removeClass('active');
+      if (! skulpt.running) { babylon.engine.stopRenderLoop(); }
+    }
   };
 
   // Disable blockly by covering with blank div

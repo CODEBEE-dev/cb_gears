@@ -18,15 +18,17 @@ var babylon = new function() {
       self.loadMeshes(self.scene);
     });
 
-    // Register a render loop to repeatedly render the scene
-    // self.engine.runRenderLoop(function () {
-    //   self.scene.render();
-    // });
-
     // Watch for browser/canvas resize events
     window.addEventListener('resize', function () {
       self.engine.resize();
     });
+
+    // Start render loop if split sim is already open on load
+    if (typeof simPanel !== 'undefined' && simPanel.splitSimOpen) {
+      self.engine.runRenderLoop(function() {
+        self.scene.render();
+      });
+    }
 
   };
 
@@ -206,6 +208,7 @@ var babylon = new function() {
       typeof main == 'undefined'
       || main.$navs.siblings('.active').attr('id') == 'navSim'
       || main.$navs.siblings('.active').attr('id') == 'navArena'
+      || (typeof simPanel !== 'undefined' && simPanel.splitSimOpen)
     ) {
       self.engine.runRenderLoop(function () {
         self.scene.render();

@@ -38,7 +38,6 @@ var main = new function() {
     $('.panels').addClass('splitSim');
     $('#simPanel').addClass('splitActive');
     $('#simSplitToggle').addClass('active');
-    simPanel.updateSplitToggleArrow();
 
     self.showWhatsNew();
   };
@@ -818,18 +817,17 @@ var main = new function() {
     }
 
     // Close split view when switching to full-screen Sim tab
-    if (match === 'navSim' && simPanel.splitSimOpen) {
-      simPanel.splitSimOpen = false;
+    // Hide split visually when going to full-screen Sim, keep flag intact
+    if (match === 'navSim') {
       $('.panels').removeClass('splitSim');
       $('#simPanel').removeClass('splitActive');
-      $('#simSplitToggle').removeClass('active');
     }
 
-    // Hide toggle button on Sim full-screen, show on Blocks tab
-    if (match === 'navSim') {
-      $('#simSplitToggle').hide();
-    } else if (match === 'navBlocks') {
+    // Show toggle button only on Blocks tab
+    if (match === 'navBlocks') {
       $('#simSplitToggle').show();
+    } else {
+      $('#simSplitToggle').hide();
     }
 
     function getPanelByNav(nav) {

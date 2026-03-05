@@ -139,6 +139,7 @@ var simPanel = new function() {
     babylon.engine.runRenderLoop(function(){
       babylon.scene.render();
     });
+    babylon.engine.resize();
   };
 
   // Toggle split view: show simulator alongside the blocks panel

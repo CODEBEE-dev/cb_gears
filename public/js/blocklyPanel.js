@@ -213,7 +213,18 @@ var blocklyPanel = new function() {
     }
     self.$panel.removeClass('hide');
     self.$pagesMenu.addClass('visible');
-    window.dispatchEvent(new Event('resize'));
+    // Restore split sim if it was open
+    if (simPanel.splitSimOpen) {
+      $('.panels').addClass('splitSim');
+      $('#simPanel').addClass('splitActive');
+      $('#simSplitToggle').addClass('active');
+      setTimeout(function() {
+        babylon.engine.resize();
+        window.dispatchEvent(new Event('resize'));
+      }, 170);
+    } else {
+      window.dispatchEvent(new Event('resize'));
+    }
   };
 
   // Run when panel is inactive
@@ -222,13 +233,10 @@ var blocklyPanel = new function() {
     Blockly.WidgetDiv.hide()
     self.$panel.addClass('hide');
     self.$pagesMenu.removeClass('visible');
-    if (simPanel.splitSimOpen) {
-      simPanel.splitSimOpen = false;
-      $('.panels').removeClass('splitSim');
-      $('#simPanel').removeClass('splitActive');
-      $('#simSplitToggle').removeClass('active');
-      if (! skulpt.running) { babylon.engine.stopRenderLoop(); }
-    }
+    // Hide split visually but keep splitSimOpen flag intact
+    $('.panels').removeClass('splitSim');
+    $('#simPanel').removeClass('splitActive');
+    if (! skulpt.running) { babylon.engine.stopRenderLoop(); }
   };
 
   // Disable blockly by covering with blank div

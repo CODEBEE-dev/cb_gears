@@ -18,6 +18,7 @@ var main = new function() {
     self.updateTextLanguage();
 
     self.$navs.click(self.tabClicked);
+    $('#simSplitToggle').click(simPanel.toggleSplitSim);
     self.$fileMenu.click(self.toggleFileMenu);
     self.$pythonMenu.click(self.togglePythonMenu);
     self.$robotMenu.click(self.toggleRobotMenu);
@@ -31,6 +32,12 @@ var main = new function() {
     window.addEventListener('beforeunload', self.checkUnsaved);
     blocklyPanel.onActive();
     self.loadProjectName();
+
+    // Default: open split sim view on load
+    simPanel.splitSimOpen = true;
+    $('.panels').addClass('splitSim');
+    $('#simPanel').addClass('splitActive');
+    $('#simSplitToggle').addClass('active');
 
     self.showWhatsNew();
   };
@@ -807,6 +814,20 @@ var main = new function() {
       var match = tabNav;
     } else {
       var match = $(this)[0].id;
+    }
+
+    // Close split view when switching to full-screen Sim tab
+    // Hide split visually when going to full-screen Sim, keep flag intact
+    if (match === 'navSim') {
+      $('.panels').removeClass('splitSim');
+      $('#simPanel').removeClass('splitActive');
+    }
+
+    // Show toggle button only on Blocks tab
+    if (match === 'navBlocks') {
+      $('#simSplitToggle').show();
+    } else {
+      $('#simSplitToggle').hide();
     }
 
     function getPanelByNav(nav) {

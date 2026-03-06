@@ -8,6 +8,7 @@ var simPanel = new function() {
   self.touchDevice = false;
   self.drag = false;
   self.showFPS = false;
+  self.splitSimOpen = false;
 
   // Run on page load
   this.init = function() {
@@ -127,7 +128,7 @@ var simPanel = new function() {
 
   // Run when the simPanel in inactive
   this.onInActive = function() {
-    if (! skulpt.running) {
+    if (! skulpt.running && ! self.splitSimOpen) {
       babylon.engine.stopRenderLoop();
     }
   };
@@ -138,6 +139,37 @@ var simPanel = new function() {
     babylon.engine.runRenderLoop(function(){
       babylon.scene.render();
     });
+    babylon.engine.resize();
+  };
+
+  // Toggle split view: show simulator alongside the blocks panel
+  this.toggleSplitSim = function() {
+    self.splitSimOpen = !self.splitSimOpen;
+    $('#simSplitToggle').toggleClass('active', self.splitSimOpen);
+
+    if (self.splitSimOpen) {
+      $('.panels').addClass('splitSim');
+      $('#simPanel').addClass('splitActive');
+      if (babylon.engine._activeRenderLoops.length === 0) {
+        babylon.engine.runRenderLoop(function() {
+          babylon.scene.render();
+        });
+      }
+      setTimeout(function() {
+        babylon.engine.resize();
+        window.dispatchEvent(new Event('resize'));
+      }, 170);
+    } else {
+      $('.panels').removeClass('splitSim');
+      $('#simPanel').removeClass('splitActive');
+      setTimeout(function() {
+        babylon.engine.resize();
+        window.dispatchEvent(new Event('resize'));
+      }, 170);
+      if (! skulpt.running) {
+        babylon.engine.stopRenderLoop();
+      }
+    }
   };
 
   // Setup virtual joystick

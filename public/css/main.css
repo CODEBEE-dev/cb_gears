@@ -352,6 +352,148 @@ nav .panelControlsArea .panelControls.active {
   color: var(--color-primary);
 }
 
+/* Python split layout: code(60%) + AI Tutor(40%) */
+.pythonSplitContainer {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+.pythonSplitContainer .python {
+  flex: 6;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.aiTutorPanel {
+  flex: 4;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #1e1e2e;
+  border-left: 1px solid #444;
+  color: #cdd6f4;
+  font-family: sans-serif;
+  transition: flex 0.2s ease;
+}
+.aiTutorPanel.hide {
+  display: none;
+}
+/* When showing sim in python tab, simPanel overlays right 40% */
+.panels.pythonSplitSim #simPanel.pythonSplitActive {
+  position: absolute !important;
+  right: 0;
+  top: 0;
+  width: 40% !important;
+  height: 100% !important;
+  z-index: 1 !important;
+  border-left: 1px solid #ddd;
+}
+.panels.pythonSplitSim .panel[aria-labelledby="navPython"] {
+  width: 100%;
+}
+.panels.pythonSplitSim .panel[aria-labelledby="navPython"] .pythonSplitContainer .python {
+  width: 60%;
+  flex: none;
+}
+.aiTutorHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.6em 1em;
+  background: #181825;
+  font-weight: bold;
+  font-size: 0.95em;
+  border-bottom: 1px solid #444;
+  flex-shrink: 0;
+}
+.aiTutorMessages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.8em 1em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6em;
+}
+.aiTutorInput {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.4em;
+  padding: 0.6em 0.8em;
+  border-top: 1px solid #444;
+  background: #181825;
+  flex-shrink: 0;
+}
+#aiTutorTextarea {
+  flex: 1;
+  resize: none;
+  background: #313244;
+  color: #cdd6f4;
+  border: 1px solid #555;
+  border-radius: 0.4em;
+  padding: 0.5em;
+  font-family: sans-serif;
+  font-size: 0.9em;
+  min-height: 2.5em;
+  max-height: 8em;
+  overflow-y: auto;
+}
+#aiTutorTextarea::placeholder {
+  color: #6c7086;
+}
+#aiTutorSend {
+  background: var(--color-primary);
+  border: none;
+  border-radius: 0.4em;
+  color: white;
+  cursor: pointer;
+  padding: 0.45em 0.6em;
+  display: flex;
+  align-items: center;
+}
+#aiTutorSend:hover {
+  opacity: 0.85;
+}
+/* Python tab toggle button */
+.pythonSplitToggle {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  z-index: 200;
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: white;
+  border: 1px solid #ddd;
+  border-right: none;
+  border-radius: 6px 0 0 6px;
+  padding: 0.5em 0.3em;
+  box-shadow: -2px 0 6px rgba(0,0,0,0.12);
+  color: #555;
+  font-size: 1.1em;
+  opacity: 0.7;
+  transition: opacity 0.2s, color 0.2s;
+}
+.pythonSplitToggle:hover {
+  opacity: 1;
+}
+.pythonSplitToggle {
+  opacity: 1;
+}
+.pythonSplitToggle .toggleTutorIcon,
+.pythonSplitToggle .toggleSimIcon {
+  color: #aaa;
+  transition: color 0.2s;
+}
+.pythonSplitToggle .toggleTutorIcon.active,
+.pythonSplitToggle .toggleSimIcon.active {
+  color: var(--color-primary);
+}
+
 .saveBlockly, .savePython {
   font-weight: bold;
   color: gray;

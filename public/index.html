@@ -109,11 +109,24 @@
       </div>
 
       <div class="panel" aria-labelledby="navPython">
-        <div class="python">
-          <div id="pythonCode"></div>
-          <div id="filesRow">
-            <div id="filesList"></div>
-            <div id="addNewFile"><span class="icon-plus"></span></div>
+        <div class="pythonSplitContainer">
+          <div class="python">
+            <div id="pythonCode"></div>
+            <div id="filesRow">
+              <div id="filesList"></div>
+              <div id="addNewFile"><span class="icon-plus"></span></div>
+            </div>
+          </div>
+          <div id="aiTutorPanel" class="aiTutorPanel">
+            <div class="aiTutorHeader">
+              <span class="material-symbols-rounded">forum</span>
+              <span>AI Tutor</span>
+            </div>
+            <div class="aiTutorMessages"></div>
+            <div class="aiTutorInput">
+              <textarea id="aiTutorTextarea" placeholder="Ask AI Tutor..."></textarea>
+              <button id="aiTutorSend"><span class="material-symbols-rounded">send</span></button>
+            </div>
           </div>
         </div>
       </div>
@@ -205,6 +218,10 @@
 
       <div id="simSplitToggle" class="simSplitToggle active">
         <span class="material-symbols-rounded">view_in_ar</span>
+      </div>
+      <div id="pythonSplitToggle" class="pythonSplitToggle" style="display:none;">
+        <span class="material-symbols-rounded toggleTutorIcon active">forum</span>
+        <span class="material-symbols-rounded toggleSimIcon hide">view_in_ar</span>
       </div>
     </div>
   </main>

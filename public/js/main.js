@@ -19,6 +19,7 @@ var main = new function() {
 
     self.$navs.click(self.tabClicked);
     $('#simSplitToggle').click(simPanel.toggleSplitSim);
+    $('#pythonSplitToggle').click(simPanel.togglePythonSplitSim);
     self.$fileMenu.click(self.toggleFileMenu);
     self.$pythonMenu.click(self.togglePythonMenu);
     self.$robotMenu.click(self.toggleRobotMenu);
@@ -821,13 +822,31 @@ var main = new function() {
     if (match === 'navSim') {
       $('.panels').removeClass('splitSim');
       $('#simPanel').removeClass('splitActive');
+      $('.panels').removeClass('pythonSplitSim');
+      $('#simPanel').removeClass('pythonSplitActive');
     }
 
-    // Show toggle button only on Blocks tab
+    // When leaving Python tab, hide python sim split
+    if (match !== 'navPython') {
+      if ($('.panels').hasClass('pythonSplitSim')) {
+        $('.panels').removeClass('pythonSplitSim');
+        $('#simPanel').removeClass('pythonSplitActive');
+        if (!skulpt.running) {
+          babylon.engine.stopRenderLoop();
+        }
+      }
+    }
+
+    // Show toggle buttons by tab
     if (match === 'navBlocks') {
       $('#simSplitToggle').show();
+      $('#pythonSplitToggle').hide();
+    } else if (match === 'navPython') {
+      $('#simSplitToggle').hide();
+      $('#pythonSplitToggle').show();
     } else {
       $('#simSplitToggle').hide();
+      $('#pythonSplitToggle').hide();
     }
 
     function getPanelByNav(nav) {

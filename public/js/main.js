@@ -826,15 +826,21 @@ var main = new function() {
       $('#simPanel').removeClass('pythonSplitActive');
     }
 
-    // When leaving Python tab, hide python sim split
+    // When leaving Python tab, hide python sim split and reset AI Tutor state
     if (match !== 'navPython') {
       if ($('.panels').hasClass('pythonSplitSim')) {
-        $('.panels').removeClass('pythonSplitSim');
-        $('#simPanel').removeClass('pythonSplitActive');
         if (!skulpt.running) {
           babylon.engine.stopRenderLoop();
         }
       }
+      // Always clean up python split state
+      $('.panels').removeClass('pythonSplitSim');
+      $('#simPanel').removeClass('pythonSplitActive');
+      // Reset pythonSplitToggle to AI Tutor mode regardless of previous state
+      $('#aiTutorPanel').removeClass('hide');
+      $('#pythonSplitToggle .toggleSimIcon').addClass('hide').removeClass('active');
+      $('#pythonSplitToggle .toggleTutorIcon').removeClass('hide').addClass('active');
+      $('#pythonSplitToggle').removeClass('simMode');
     }
 
     // Show toggle buttons by tab

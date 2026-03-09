@@ -218,6 +218,11 @@ var blocklyPanel = new function() {
       $('.panels').addClass('splitSim');
       $('#simPanel').addClass('splitActive');
       $('#simSplitToggle').addClass('active');
+      if (babylon.engine._activeRenderLoops.length === 0) {
+        babylon.engine.runRenderLoop(function() {
+          babylon.scene.render();
+        });
+      }
       setTimeout(function() {
         babylon.engine.resize();
         window.dispatchEvent(new Event('resize'));

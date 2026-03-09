@@ -12,7 +12,7 @@ let MSGS = {
     ru: 'Движение',
     hu: 'Mozgás',
     it: 'Movimento',
-    ko: '로봇 움직이기',
+    ko: '로봇이동',
   },
   '#blk-motor#': {
     en: 'Motor',
@@ -27,7 +27,7 @@ let MSGS = {
     ru: 'Двигатель',
     hu: 'Motor',
     it: 'Motore',
-    ko: '모터 회전하기',
+    ko: '모터제어',
   },
   '#blk-sensors#': {
     en: 'Sensors',
@@ -42,7 +42,7 @@ let MSGS = {
     ru: 'Датчики',
     hu: 'Szenzor',
     it: 'Sensore',
-    ko: '센서 감지하기',
+    ko: '센서제어',
   },
   '#blk-sound#': {
     en: 'Sound',
@@ -57,7 +57,7 @@ let MSGS = {
     ru: 'Звук',
     hu: 'Hang',
     it: 'Suono',
-    ko: '소리 재생하기',
+    ko: '사운드',
   },
   '#blk-pen-category#': {
     en: 'Pen',
@@ -68,7 +68,7 @@ let MSGS = {
     pt: 'Caneta',
     de: 'Stift',
     it: 'penna',
-    ko: '그림 그리기',
+    ko: '로봇펜',
   },
   '#blk-experimental-category#': {
     en: 'Experimental',
@@ -77,7 +77,7 @@ let MSGS = {
     ru: 'В разработке',
     pt: 'Experimental',
     it: 'Sperimentale',
-    ko: '실험실',
+    ko: '고급기능',
   },
   '#blk-control#': {
     en: 'Control',
@@ -92,7 +92,7 @@ let MSGS = {
     ru: 'Управление',
     hu: 'Vezérlés',
     it: 'controllo',
-    ko: '흐름제어문',
+    ko: '제어문',
   },
   '#blk-logic#': {
     en: 'Logic',
@@ -107,7 +107,7 @@ let MSGS = {
     ru: 'Условия',
     hu: 'Logika',
     it: 'logica',
-    ko: '논리구문',
+    ko: '판단문',
   },
   '#blk-loops#': {
     en: 'Loops',
@@ -137,7 +137,7 @@ let MSGS = {
     ru: 'Математика',
     hu: 'Matematika',
     it: 'Matematica',
-    ko: '수학',
+    ko: '수학함수',
   },
   '#blk-text#': {
     en: 'Text',
@@ -152,7 +152,7 @@ let MSGS = {
     ru: 'Текст',
     hu: 'Szöveg',
     it: 'Testo',
-    ko: '문자',
+    ko: '문자함수',
   },
   '#blk-lists#': {
     en: 'Lists',
@@ -197,7 +197,7 @@ let MSGS = {
     ru: 'Функции',
     hu: 'Függvények',
     it: 'funzioni',
-    ko: '함수',
+    ko: '사용자함수',
   },
   '#blk-when_started#': {
     en: 'When Started',
@@ -3378,6 +3378,204 @@ let MSGS = {
     hu: 'A Python kód módosításai nem konvertálhatók vissza blokkokká!',
     it: 'Le modifiche al codice Python non possono essere riconvertite in blocchi!',
     ko: '파이썬 코드 변경 사항은 블록으로 다시 변환할 수 없습니다.',
+  },
+
+  // Builder (World Builder) 메뉴 번역
+  '#builder-new_world#': {
+    en: 'New World',
+    ko: '새 월드',
+  },
+  '#builder-load_world#': {
+    en: 'Load world from file',
+    ko: '월드: 파일에서 불러오기',
+  },
+  '#builder-save_world#': {
+    en: 'Save world to file',
+    ko: '월드: 파일에 저장하기',
+  },
+  '#builder-load_object#': {
+    en: 'Load object from file',
+    ko: '오브젝트: 파일에서 불러오기',
+  },
+  '#builder-save_object#': {
+    en: 'Save object to file',
+    ko: '오브젝트: 파일에 저장하기',
+  },
+  '#builder-animate#': {
+    en: 'Animate',
+    ko: '애니메이션',
+  },
+  '#builder-no_snapping#': {
+    en: 'No Snapping',
+    ko: '스냅 없음',
+  },
+  '#builder-snap_02#': {
+    en: 'Snap to 0.2cm',
+    ko: '0.2cm 스냅',
+  },
+  '#builder-snap_04_technic#': {
+    en: 'Snap to 0.4cm (Lego Technic)',
+    ko: '0.4cm 스냅 (레고 테크닉)',
+  },
+  '#builder-snap_lego#': {
+    en: 'Snap to Lego (xy: 0.4, z: 0.48)',
+    ko: '레고 스냅 (xy: 0.4, z: 0.48)',
+  },
+  '#builder-snap_05#': {
+    en: 'Snap to 0.5cm',
+    ko: '0.5cm 스냅',
+  },
+  '#builder-snap_10#': {
+    en: 'Snap to 1cm',
+    ko: '1cm 스냅',
+  },
+  '#builder-snap_50#': {
+    en: 'Snap to 5cm',
+    ko: '5cm 스냅',
+  },
+  '#builder-drop_to_ground#': {
+    en: 'Drop to ground',
+    ko: '바닥에 내리기',
+  },
+  '#builder-add_key#': {
+    en: 'Add Key',
+    ko: '키 추가',
+  },
+  '#builder-edit#': {
+    en: 'Edit',
+    ko: '편집',
+  },
+  '#builder-key_time#': {
+    en: 'Key Time (s):',
+    ko: '키 시간 (초):',
+  },
+  '#builder-app_name#': {
+    en: 'World Builder',
+    ko: '월드 빌더',
+  },
+  '#builder-add#': {
+    en: 'Add',
+    ko: '추가',
+  },
+  '#builder-clone#': {
+    en: 'Clone',
+    ko: '복제',
+  },
+  '#builder-delete#': {
+    en: 'Delete',
+    ko: '삭제',
+  },
+  '#builder-undo#': {
+    en: 'Undo',
+    ko: '되돌리기',
+  },
+  '#builder-image_url_help#': {
+    en: 'URL for image texture. Will not work with most webhosts; Imgur will work.',
+    ko: '이미지 텍스처 URL. 대부분의 웹호스트에서는 작동하지 않으나 Imgur는 작동합니다.',
+  },
+  '#builder-new_world_confirm#': {
+    en: 'Create a new empty world? You will lose all unsaved changes.',
+    ko: '새 빈 월드를 만드시겠습니까? 저장되지 않은 모든 변경 사항이 삭제됩니다.',
+  },
+  '#builder-only_custom_world#': {
+    en: 'Only "custom" worlds can be edited in the world builder.',
+    ko: '"사용자 정의(custom)" 월드만 월드 빌더에서 편집할 수 있습니다.',
+  },
+  '#builder-this_world_is#': {
+    en: 'This json file is for a',
+    ko: '이 JSON 파일은',
+  },
+  '#builder-world_type#': {
+    en: 'world.',
+    ko: '월드 파일입니다.',
+  },
+  '#builder-snap_label#': {
+    en: 'Snap',
+    ko: '스냅',
+  },
+
+  // Configurator (Robot Configurator) 메뉴 번역
+  '#configurator-app_name#': {
+    en: 'Robot Configurator',
+    ko: '로봇 구성 도구',
+  },
+  '#configurator-robot_name#': {
+    en: 'Robot Name',
+    ko: '로봇 이름',
+  },
+  '#configurator-load_robot#': {
+    en: 'Load from file',
+    ko: '로봇: 파일에서 불러오기',
+  },
+  '#configurator-save_robot#': {
+    en: 'Save to file',
+    ko: '로봇: 파일에 저장하기',
+  },
+  '#configurator-select_robot#': {
+    en: 'Select Robot',
+    ko: '로봇 선택',
+  },
+  '#configurator-no_snapping#': {
+    en: 'No Snapping',
+    ko: '스냅 없음',
+  },
+  '#configurator-snap_25#': {
+    en: 'Snap to 0.25cm',
+    ko: '0.25cm 스냅',
+  },
+  '#configurator-snap_04_technic#': {
+    en: 'Snap to 0.4cm (Lego Technic)',
+    ko: '0.4cm 스냅 (레고 테크닉)',
+  },
+  '#configurator-snap_lego#': {
+    en: 'Snap to Lego (xy: 0.4, z: 0.48)',
+    ko: '레고 스냅 (xy: 0.4, z: 0.48)',
+  },
+  '#configurator-snap_05#': {
+    en: 'Snap to 0.5cm',
+    ko: '0.5cm 스냅',
+  },
+  '#configurator-snap_10#': {
+    en: 'Snap to 1cm',
+    ko: '1cm 스냅',
+  },
+  '#configurator-robot_position#': {
+    en: 'Robot Position',
+    ko: '로봇 위치',
+  },
+  '#configurator-add#': {
+    en: 'Add',
+    ko: '추가',
+  },
+  '#configurator-delete#': {
+    en: 'Delete',
+    ko: '삭제',
+  },
+  '#configurator-undo#': {
+    en: 'Undo',
+    ko: '되돌리기',
+  },
+
+  // Arena 페이지 번역
+  '#arena-app_name#': {
+    en: 'Arena',
+    ko: '아레나',
+  },
+  '#arena-bots#': {
+    en: 'Bots',
+    ko: '봇',
+  },
+  '#arena-arena_tab#': {
+    en: 'Arena',
+    ko: '아레나',
+  },
+  '#arena-options#': {
+    en: 'Options',
+    ko: '옵션',
+  },
+  '#arena-worlds#': {
+    en: 'Worlds',
+    ko: '월드',
   },
 };
 let MSGS_KEYS = Object.keys(MSGS);

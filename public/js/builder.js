@@ -188,7 +188,7 @@ var builder = new function() {
         type: 'buttons',
         buttons: [
           {
-            label: 'Drop to ground',
+            label: '#builder-drop_to_ground#',
             callback: 'moveToGround'
           }
         ]
@@ -261,7 +261,7 @@ var builder = new function() {
         option: 'imageURL',
         type: 'strText',
         reset: true,
-        help: 'URL for image texture. Will not work with most webhosts; Imgur will work.'
+        help: '#builder-image_url_help#'
       },
       {
         option: 'physicsOptions',
@@ -362,7 +362,7 @@ var builder = new function() {
         type: 'buttons',
         buttons: [
           {
-            label: 'Drop to ground',
+            label: '#builder-drop_to_ground#',
             callback: 'moveToGround'
           }
         ]
@@ -423,7 +423,7 @@ var builder = new function() {
         option: 'imageURL',
         type: 'strText',
         reset: true,
-        help: 'URL for image texture. Will not work with most webhosts; Imgur will work.'
+        help: '#builder-image_url_help#'
       },
       {
         option: 'physicsOptions',
@@ -524,7 +524,7 @@ var builder = new function() {
         type: 'buttons',
         buttons: [
           {
-            label: 'Drop to ground',
+            label: '#builder-drop_to_ground#',
             callback: 'moveToGround'
           }
         ]
@@ -585,7 +585,7 @@ var builder = new function() {
         option: 'imageURL',
         type: 'strText',
         reset: true,
-        help: 'URL for image texture. Will not work with most webhosts; Imgur will work.'
+        help: '#builder-image_url_help#'
       },
       {
         option: 'physicsOptions',
@@ -686,7 +686,7 @@ var builder = new function() {
         type: 'buttons',
         buttons: [
           {
-            label: 'Drop to ground',
+            label: '#builder-drop_to_ground#',
             callback: 'moveToGround'
           }
         ]
@@ -1028,6 +1028,21 @@ var builder = new function() {
 
     self.saveHistory();
     self.resetScene();
+    self.updateTextLanguage();
+  };
+
+  // Update text language
+  this.updateTextLanguage = function() {
+    self.$fileMenu.find('.activity-label').text(i18n.get('#main-file#'));
+    self.$fileMenu.attr('data-tooltip', i18n.get('#main-file#'));
+    self.$worldMenu.find('.activity-label').text(i18n.get('#sim-world#'));
+    self.$worldMenu.attr('data-tooltip', i18n.get('#sim-world#'));
+    self.$snapMenu.find('.activity-label').text(i18n.get('#builder-snap_label#'));
+    self.$snapMenu.attr('data-tooltip', i18n.get('#builder-snap_label#'));
+    self.$addObject.text(i18n.get('#builder-add#'));
+    self.$cloneObject.text(i18n.get('#builder-clone#'));
+    self.$deleteObject.text(i18n.get('#builder-delete#'));
+    self.$undo.text(i18n.get('#builder-undo#'));
   };
 
   // Setup drag
@@ -1433,16 +1448,16 @@ var builder = new function() {
       }
     ];
 
-    $buttonsBox.append('<span>Key Time (s):</span>');
+    $buttonsBox.append('<span>' + i18n.get('#builder-key_time#') + '</span>');
     $buttonsBox.append($keyTime);
 
     let $button = $('<button></button>');
-    $button.text('Add Key');
+    $button.text(i18n.get('#builder-add_key#'));
     $button.click(addKey);
     $buttonsBox.append($button);
 
     $button = $('<button></button>');
-    $button.text('Edit');
+    $button.text(i18n.get('#builder-edit#'));
     $button.click(edit);
     $buttonsBox.append($button);
     $buttonsBox.append('<span>&nbsp;</span>');
@@ -2032,7 +2047,7 @@ var builder = new function() {
   // New world using defaults
   this.newWorld = function() {
     let options = {
-      message: 'Create a new empty world? You will lose all unsaved changes.',
+      message: i18n.get('#builder-new_world_confirm#'),
     };
     confirmDialog(options, function(){
       self.worldOptions = JSON.parse(JSON.stringify(worlds[0].defaultOptions));
@@ -2054,8 +2069,8 @@ var builder = new function() {
         let loadedJson = JSON.parse(this.result);
 
         if (loadedJson.worldName != 'custom') {
-          let msg = 'Only "custom" worlds can be edited in the world builder.<br>';
-          msg += 'This json file is for a "' + loadedJson.worldName + '" world.';
+          let msg = i18n.get('#builder-only_custom_world#') + '<br>';
+          msg += i18n.get('#builder-this_world_is#') + ' "' + loadedJson.worldName + '" ' + i18n.get('#builder-world_type#');
           showErrorModal(msg);
           return;
         }
@@ -2077,11 +2092,11 @@ var builder = new function() {
       e.stopPropagation();
 
       let menuItems = [
-        {html: 'New World', line: true, callback: self.newWorld},
-        {html: 'Load world from file', line: false, callback: self.loadWorldLocal},
-        {html: 'Save world to file', line: true, callback: self.saveWorld},
-        {html: 'Load object from file', line: false, callback: self.loadObjectLocal},
-        {html: 'Save object to file', line: false, callback: self.saveObject},
+        {html: i18n.get('#builder-new_world#'), line: true, callback: self.newWorld},
+        {html: i18n.get('#builder-load_world#'), line: false, callback: self.loadWorldLocal},
+        {html: i18n.get('#builder-save_world#'), line: true, callback: self.saveWorld},
+        {html: i18n.get('#builder-load_object#'), line: false, callback: self.loadObjectLocal},
+        {html: i18n.get('#builder-save_object#'), line: false, callback: self.saveObject},
 
       ];
 
@@ -2104,7 +2119,7 @@ var builder = new function() {
       }
 
       let menuItems = [
-        {html: i18n.get('Animate'), line: false, callback: toggleAnimate }
+        {html: i18n.get('#builder-animate#'), line: false, callback: toggleAnimate }
       ];
       if (babylon.world.animate) {
         menuItems[0].html = '<span class="tick">&#x2713;</span> ' + menuItems[0].html;
@@ -2153,13 +2168,13 @@ var builder = new function() {
       }
 
       let menuItems = [
-        {html: 'No Snapping', line: false, callback: snapNone},
-        {html: 'Snap to 0.2cm', line: false, callback: snap02},
-        {html: 'Snap to 0.4cm (Lego Technic)', line: false, callback: snapTechnic},
-        {html: 'Snap to Lego (xy: 0.4, z: 0.48)', line: false, callback: snapLego},
-        {html: 'Snap to 0.5cm', line: false, callback: snap05},
-        {html: 'Snap to 1cm', line: false, callback: snap10},
-        {html: 'Snap to 5cm', line: false, callback: snap50},
+        {html: i18n.get('#builder-no_snapping#'), line: false, callback: snapNone},
+        {html: i18n.get('#builder-snap_02#'), line: false, callback: snap02},
+        {html: i18n.get('#builder-snap_04_technic#'), line: false, callback: snapTechnic},
+        {html: i18n.get('#builder-snap_lego#'), line: false, callback: snapLego},
+        {html: i18n.get('#builder-snap_05#'), line: false, callback: snap05},
+        {html: i18n.get('#builder-snap_10#'), line: false, callback: snap10},
+        {html: i18n.get('#builder-snap_50#'), line: false, callback: snap50},
       ];
       var tickIndex = 0;
       if (self.snapStep[2] == 0) {

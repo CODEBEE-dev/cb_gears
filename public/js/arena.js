@@ -18,6 +18,8 @@ var arena = new function() {
     self.$navs.click(self.tabClicked);
 
     self.$optionsMenu.click(self.toggleOptionsMenu);
+
+    self.updateTextLanguage();
   };
 
   // Toggle worlds menu
@@ -100,6 +102,18 @@ var arena = new function() {
         robot.showLabel();
       });
     }
+  };
+
+  // Update text language
+  this.updateTextLanguage = function() {
+    $('#navBots').find('.tab-label').text(i18n.get('#arena-bots#'));
+    $('#navBots').attr('data-tooltip', i18n.get('#arena-bots#'));
+    $('#navArena').find('.tab-label').text(i18n.get('#arena-arena_tab#'));
+    $('#navArena').attr('data-tooltip', i18n.get('#arena-arena_tab#'));
+    self.$optionsMenu.find('.activity-label').text(i18n.get('#arena-options#'));
+    self.$optionsMenu.attr('data-tooltip', i18n.get('#arena-options#'));
+    self.$worldsMenu.find('.activity-label').text(i18n.get('#arena-worlds#'));
+    self.$worldsMenu.attr('data-tooltip', i18n.get('#arena-worlds#'));
   };
 
   // Clicked on tab

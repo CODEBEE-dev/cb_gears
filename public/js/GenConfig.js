@@ -9,7 +9,7 @@ function GenConfig(caller, $settingsArea) {
     $title.text(opt.option);
 
     if (opt.help) {
-      $toolTip.find('.tooltiptext').text(opt.help);
+      $toolTip.find('.tooltiptext').text(i18n.get(opt.help));
       $title.append($toolTip);
     }
     if (opt.helpSide) {
@@ -37,7 +37,7 @@ function GenConfig(caller, $settingsArea) {
 
     for (let button of opt.buttons) {
       let $button = $('<button></button>');
-      $button.text(button.label);
+      $button.text(i18n.get(button.label));
       $button.click(function() {
         caller[button.callback](opt, currentOptions);
       });

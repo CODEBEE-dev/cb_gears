@@ -36,7 +36,47 @@ var aiTutor = new function() {
     '- 코드 예시는 반드시 ```python ... ``` 형식의 코드 블록으로 작성합니다.\n' +
     '- 답변은 간결하게 유지하되, 이해에 필요한 내용은 빠짐없이 포함합니다.\n' +
     '- 학생의 현재 코드가 제공된 경우 그 코드를 기준으로 답변합니다.\n' +
-    '- 모르는 내용은 모른다고 솔직하게 말합니다.';
+    '- 모르는 내용은 모른다고 솔직하게 말합니다.\n\n' +
+    '## 코드 작성 규칙\n' +
+    'Bridge Bot Python 코드는 항상 아래의 기본 구조를 전제로 합니다.\n' +
+    '이 구조는 환경에 자동으로 로드되므로, 코드 생성 시 이 부분은 포함하지 않고 ' +
+    '`# Here is where your code starts` 이후에 들어갈 코드만 작성합니다.\n\n' +
+    '```python\n' +
+    '#!/usr/bin/env python3\n' +
+    '\n' +
+    'import time\n' +
+    'import math\n' +
+    'from ev3dev2.motor import *\n' +
+    'from ev3dev2.sound import Sound\n' +
+    'from ev3dev2.button import Button\n' +
+    'from ev3dev2.sensor import *\n' +
+    'from ev3dev2.sensor.lego import *\n' +
+    'from ev3dev2.sensor.virtual import *\n' +
+    '\n' +
+    'motorA = LargeMotor(OUTPUT_A)\n' +
+    'motorB = LargeMotor(OUTPUT_B)\n' +
+    'left_motor = motorA\n' +
+    'right_motor = motorB\n' +
+    'tank_drive = MoveTank(OUTPUT_A, OUTPUT_B)\n' +
+    'steering_drive = MoveSteering(OUTPUT_A, OUTPUT_B)\n' +
+    '\n' +
+    'spkr = Sound()\n' +
+    'btn = Button()\n' +
+    'radio = Radio()\n' +
+    'obtr = ObjectTracker()\n' +
+    '\n' +
+    'color_sensor_in1 = ColorSensor(INPUT_1)\n' +
+    'ultrasonic_sensor_in2 = UltrasonicSensor(INPUT_2)\n' +
+    'gyro_sensor_in3 = GyroSensor(INPUT_3)\n' +
+    'gps_sensor_in4 = GPSSensor(INPUT_4)\n' +
+    'pen_in5 = Pen(INPUT_5)\n' +
+    '\n' +
+    'motorC = LargeMotor(OUTPUT_C) # Magnet\n' +
+    '\n' +
+    '# Here is where your code starts\n' +
+    '```\n' +
+    '\n' +
+    '코드 생성 시 위 기본 구조 이후에 올 코드만 작성하며, import 문이나 모터/센서 초기화는 중복하여 작성하지 않습니다.';
 
   // ── 상태 변수 ───────────────────────────────────────────────────────────────
   self.engine = null;

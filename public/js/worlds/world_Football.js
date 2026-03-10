@@ -1,3 +1,146 @@
+i18n.append({
+  '#football-shortDescription#': {
+    en: 'Football Arena',
+    ko: '축구 경기장',
+  },
+  '#football-longDescription#': {
+    en: "<p>A 2 on 2 football game! Kick the ball into the opponent's goal, but be careful not to leave your own goal undefended for too long.</p>" +
+        "<p>An invisible wall in the center of the field separates the two teams. Grab and kick the ball with the electromagnet.</p>" +
+        '<p>You can use this world in single robot mode to prepare your program before running it in the arena.</p>',
+    ko: '<p>2대2 축구 게임입니다! 공을 상대 골대에 넣으세요. 단, 자신의 골대를 너무 오래 비워두지 않도록 주의하세요.</p>' +
+        '<p>필드 중앙의 투명한 벽이 두 팀을 분리합니다. 전자석으로 공을 잡고 차세요.</p>' +
+        '<p>이 맵을 단일 로봇 모드로 사용하여 아레나에서 실행하기 전에 프로그램을 준비할 수 있습니다.</p>',
+  },
+  '#football-timeLimit#': {
+    en: 'Time Limit',
+    ko: '시간 제한',
+  },
+  '#football-stopRobots#': {
+    en: 'Stop robots when time is up',
+    ko: '시간 종료 시 로봇 정지',
+  },
+  '#football-timeLimitHelp#': {
+    en: 'Only works in the arena. Stop all robot motors when time is up.',
+    ko: '아레나에서만 작동합니다. 시간이 종료되면 모든 로봇 모터를 정지시킵니다.',
+  },
+  '#football-randomSeed#': {
+    en: 'Random Seed',
+    ko: '무작위 시드',
+  },
+  '#football-randomSeedHelp#': {
+    en: 'Leave this blank to let gears pick its own random seed.',
+    ko: '비워두면 gears가 자동으로 무작위 시드를 선택합니다.',
+  },
+  '#football-startPos#': {
+    en: 'Starting Position (Single Player Mode)',
+    ko: '시작 위치 (싱글 플레이어 모드)',
+  },
+  '#football-startPosHelp#': {
+    en: 'This option does nothing in Arena mode.',
+    ko: '아레나 모드에서는 이 옵션이 적용되지 않습니다.',
+  },
+  '#football-fieldLength#': {
+    en: 'Length of field (cm)',
+    ko: '필드 길이 (cm)',
+  },
+  '#football-fieldLengthHelp#': {
+    en: 'Goal to goal distance',
+    ko: '골대 간 거리',
+  },
+  '#football-fieldWidth#': {
+    en: 'Width of field (cm)',
+    ko: '필드 너비 (cm)',
+  },
+  '#football-fieldWidthHelp#': {
+    en: 'Sideline to sideline distance',
+    ko: '사이드라인 간 거리',
+  },
+  '#football-goalWidth#': {
+    en: 'Width of goal (cm)',
+    ko: '골대 너비 (cm)',
+  },
+  '#football-shotClock#': {
+    en: 'Shot Clock Duration (s)',
+    ko: '샷 클락 시간 (초)',
+  },
+  '#football-ballStartPos#': {
+    en: 'Ball Starting Position (x, y)',
+    ko: '공 시작 위치 (x, y)',
+  },
+  '#football-ballStartPosHelp#': {
+    en: 'The starting position of the ball at the beginning of the match and after scoring a goal. Enter using this format "x, y" (without quotes). Default is center of the field  "0, 0".',
+    ko: '경기 시작 및 득점 후 공의 시작 위치입니다. "x, y" 형식으로 입력하세요 (따옴표 제외). 기본값은 필드 중앙 "0, 0"입니다.',
+  },
+  '#football-ballHeading#': {
+    en: 'Ball Heading (degrees)',
+    ko: '공 방향 (도)',
+  },
+  '#football-ballHeadingHelp#': {
+    en: 'The heading of the ball at the beginning of the match and after scoring a goal.',
+    ko: '경기 시작 및 득점 후 공의 방향입니다.',
+  },
+  '#football-randomFlip#': {
+    en: 'Randomly Flip Ball Heading',
+    ko: '공 방향 무작위 반전',
+  },
+  '#football-randomFlipLabel#': {
+    en: 'Random Flipping',
+    ko: '무작위 반전',
+  },
+  '#football-randomFlipHelp#': {
+    en: 'The ball should randomly choose between (heading) and (heading + 180 degrees)',
+    ko: '공이 (방향)과 (방향 + 180도) 중 무작위로 선택합니다.',
+  },
+  '#football-ballSpeedMin#': {
+    en: 'Ball Minimum Speed (cm/s)',
+    ko: '공 최소 속도 (cm/s)',
+  },
+  '#football-ballSpeedMinHelp#': {
+    en: 'The minimum speed of the ball at the beginning of the match and after scoring a goal',
+    ko: '경기 시작 및 득점 후 공의 최소 속도입니다.',
+  },
+  '#football-ballSpeedRange#': {
+    en: 'Ball Speed Range (cm/s)',
+    ko: '공 속도 범위 (cm/s)',
+  },
+  '#football-ballSpeedRangeHelp#': {
+    en: 'The range in speed of the ball at the beginning of the match and after scoring a goal.',
+    ko: '경기 시작 및 득점 후 공의 속도 범위입니다.',
+  },
+  '#football-ballDamping#': {
+    en: 'Ball Damping',
+    ko: '공 감쇠',
+  },
+  '#football-ballDampingHelp#': {
+    en: 'Amount of damping force slowing a rolling ball down. (float between 0 and 1 inclusive)',
+    ko: '구르는 공을 감속시키는 감쇠력입니다. (0 이상 1 이하의 소수)',
+  },
+  '#football-ballFriction#': {
+    en: 'Ball Friction',
+    ko: '공 마찰력',
+  },
+  '#football-ballFrictionHelp#': {
+    en: 'Friction coefficient of the ball. Slows a rolling ball down.',
+    ko: '공의 마찰 계수입니다. 구르는 공을 감속시킵니다.',
+  },
+  '#football-time#': {
+    en: 'Time: ',
+    ko: '시간: ',
+  },
+  '#football-teamA#': {
+    en: 'Team A : ',
+    ko: '팀 A : ',
+  },
+  '#football-teamB#': {
+    en: ' : Team B',
+    ko: ' : 팀 B',
+  },
+  '#football-shotClockLabel#': {
+    en: 'Shot Clock: ',
+    ko: '샷 클락: ',
+  },
+});
+
 var world_Football = new function() {
   World_Base.call(this);
   this.parent = {};
@@ -8,30 +151,27 @@ var world_Football = new function() {
   var self = this;
 
   this.name = 'football';
-  this.shortDescription = 'Football Arena';
-  this.longDescription =
-    "<p>A 2 on 2 football game! Kick the ball into the opponent's goal, but be careful not to leave your own goal undefended for too long.</p>" +
-    "<p>An invisible wall in the center of the field separates the two teams. Grab and kick the ball with the electromagnet.</p>" +
-    '<p>You can use this world in single robot mode to prepare your program before running it in the arena.</p>';
+  this.shortDescription = i18n.get('#football-shortDescription#');
+  this.longDescription = i18n.get('#football-longDescription#');
   this.thumbnail = 'images/worlds/football.jpg';
 
   this.optionsConfigurations = [
     {
       option: 'timeLimit',
-      title: 'Time Limit',
+      title: i18n.get('#football-timeLimit#'),
       type: 'checkbox',
-      label: 'Stop robots when time is up',
-      help: 'Only works in the arena. Stop all robot motors when time is up.'
+      label: i18n.get('#football-stopRobots#'),
+      help: i18n.get('#football-timeLimitHelp#')
     },
     {
       option: 'seed',
-      title: 'Random Seed',
+      title: i18n.get('#football-randomSeed#'),
       type: 'text',
-      help: 'Leave this blank to let gears pick its own random seed.'
+      help: i18n.get('#football-randomSeedHelp#')
     },
     {
       option: 'startPos',
-      title: 'Starting Position (Single Player Mode)',
+      title: i18n.get('#football-startPos#'),
       type: 'select',
       options: [
         ['Player 0', '0'],
@@ -39,29 +179,29 @@ var world_Football = new function() {
         ['Player 2', '2'],
         ['Player 3', '3'],
       ],
-      help: 'This option does nothing in Arena mode.'
+      help: i18n.get('#football-startPosHelp#')
     },
     {
       option: 'lengthInterior',
-      title: 'Length of field (cm)',
+      title: i18n.get('#football-fieldLength#'),
       type: 'slider',
       min: '100',
       max: '1000',
       step: '10',
-      help: 'Goal to goal distance'
+      help: i18n.get('#football-fieldLengthHelp#')
     },
     {
       option: 'widthInterior',
-      title: 'Width of field (cm)',
+      title: i18n.get('#football-fieldWidth#'),
       type: 'slider',
       min: '100',
       max: '1000',
       step: '10',
-      help: 'Sideline to sideline distance'
+      help: i18n.get('#football-fieldWidthHelp#')
     },
     {
       option: 'widthGoal',
-      title: 'Width of goal (cm)',
+      title: i18n.get('#football-goalWidth#'),
       type: 'slider',
       min: '10',
       max: '1000',
@@ -69,7 +209,7 @@ var world_Football = new function() {
     },
     {
       option: 'shotClockDuration',
-      title: 'Shot Clock Duration (s)',
+      title: i18n.get('#football-shotClock#'),
       type: 'slider',
       min: '1',
       max: '120',
@@ -77,55 +217,55 @@ var world_Football = new function() {
     },
     {
       option: 'startBallPosXYZStr',
-      title: ' Ball Starting Position (x, y)',
+      title: i18n.get('#football-ballStartPos#'),
       type: 'text',
-      help: 'The starting position of the ball at the beginning of the match and after scoring a goal. Enter using this format "x, y" (without quotes). Default is center of the field  "0, 0".'
+      help: i18n.get('#football-ballStartPosHelp#')
     },
     {
       option: 'startBallHeading',
-      title: 'Ball Heading (degrees)',
+      title: i18n.get('#football-ballHeading#'),
       type: 'slider',
       min: '-180',
       max: '180',
       step: '10',
-      help: 'The heading of the ball at the beginning of the match and after scoring a goal.'
+      help: i18n.get('#football-ballHeadingHelp#')
     },
     {
       option: 'randomFlipBallHeading',
-      title: 'Randomly Flip Ball Heading ',
+      title: i18n.get('#football-randomFlip#'),
       type: 'checkbox',
-      label: 'Random Flipping',
-      help: 'The ball should randomly choose between (heading) and (heading + 180 degrees)'
+      label: i18n.get('#football-randomFlipLabel#'),
+      help: i18n.get('#football-randomFlipHelp#')
     },
     {
       option: 'ballSpeedMin',
-      title: 'Ball Minimum Speed (cm/s)',
+      title: i18n.get('#football-ballSpeedMin#'),
       type: 'slider',
       min: '0',
       max: '300',
       step: '25',
-      help: 'The minimum speed of the ball at the beginning of the match and after scoring a goal'
+      help: i18n.get('#football-ballSpeedMinHelp#')
     },
     {
       option: 'ballSpeedRange',
-      title: 'Ball Speed Range (cm/s)',
+      title: i18n.get('#football-ballSpeedRange#'),
       type: 'slider',
       min: '0',
       max: '300',
       step: '25',
-      help: 'The range in speed of the ball at the beginning of the match and after scoring a goal.'
+      help: i18n.get('#football-ballSpeedRangeHelp#')
     },
     {
       option: 'ballDampingStr',
-      title: 'Ball Damping',
+      title: i18n.get('#football-ballDamping#'),
       type: 'text',
-      help: 'Amount of damping force slowing a rolling ball down. (float between 0 and 1 inclusive)'
+      help: i18n.get('#football-ballDampingHelp#')
     },
     {
       option: 'ballFrictionStr',
-      title: 'Ball Friction',
+      title: i18n.get('#football-ballFriction#'),
       type: 'text',
-      help: 'Friction coefficient of the ball. Slows a rolling ball down.'
+      help: i18n.get('#football-ballFrictionHelp#')
     }
 
   ];
@@ -523,16 +663,15 @@ var world_Football = new function() {
 
       time = sign + Math.floor(time/60) + ':' + ('0' + time % 60).slice(-2);
     }
-    time = 'Time: ' + time;
+    time = i18n.get('#football-time#') + time;
 
     let p0 = 'P0: ' + self.game.p0;
     let p1 = 'P1: ' + self.game.p1;
     let p2 = 'P2: ' + self.game.p2;
     let p3 = 'P3: ' + self.game.p3;
-    let teamA = 'Team A : ' + self.game.teamA;
-    let teamB = self.game.teamB + ' : Team B';
-    //let shotClock = 'Shot Clock: ' + self.game.shotClock;
-    let shotClock = 'Shot Clock: ' + Math.floor(self.options.shotClockDuration - self.game.shotClock / 1000);
+    let teamA = i18n.get('#football-teamA#') + self.game.teamA;
+    let teamB = self.game.teamB + i18n.get('#football-teamB#');
+    let shotClock = i18n.get('#football-shotClockLabel#') + Math.floor(self.options.shotClockDuration - self.game.shotClock / 1000);
     function updateIfChanged(text, $dom) {
       if (typeof $dom == 'undefined') {
         return;

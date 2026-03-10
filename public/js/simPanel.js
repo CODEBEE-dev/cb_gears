@@ -142,6 +142,47 @@ var simPanel = new function() {
     babylon.engine.resize();
   };
 
+  // Toggle split view in Python tab: AI Tutor <-> Simulator
+  this.togglePythonSplitSim = function() {
+    var showSim = !$('.panels').hasClass('pythonSplitSim');
+
+    if (showSim) {
+      // Switch to simulator: hide AI Tutor, show sim panel
+      $('.panels').addClass('pythonSplitSim');
+      $('#simPanel').addClass('pythonSplitActive');
+      $('#aiTutorPanel').addClass('hide');
+      // 현재 활성: 시뮬레이터
+      $('#pythonSplitToggle .toggleTutorIcon').addClass('hide').removeClass('active');
+      $('#pythonSplitToggle .toggleSimIcon').removeClass('hide').addClass('active');
+      $('#pythonSplitToggle').addClass('simMode');
+      if (babylon.engine._activeRenderLoops.length === 0) {
+        babylon.engine.runRenderLoop(function() {
+          babylon.scene.render();
+        });
+      }
+      setTimeout(function() {
+        babylon.engine.resize();
+        window.dispatchEvent(new Event('resize'));
+      }, 170);
+    } else {
+      // Switch back to AI Tutor
+      $('.panels').removeClass('pythonSplitSim');
+      $('#simPanel').removeClass('pythonSplitActive');
+      $('#aiTutorPanel').removeClass('hide');
+      // 현재 활성: AI Tutor
+      $('#pythonSplitToggle .toggleSimIcon').addClass('hide').removeClass('active');
+      $('#pythonSplitToggle .toggleTutorIcon').removeClass('hide').addClass('active');
+      $('#pythonSplitToggle').removeClass('simMode');
+      setTimeout(function() {
+        babylon.engine.resize();
+        window.dispatchEvent(new Event('resize'));
+      }, 170);
+      if (!skulpt.running) {
+        babylon.engine.stopRenderLoop();
+      }
+    }
+  };
+
   // Toggle split view: show simulator alongside the blocks panel
   this.toggleSplitSim = function() {
     self.splitSimOpen = !self.splitSimOpen;

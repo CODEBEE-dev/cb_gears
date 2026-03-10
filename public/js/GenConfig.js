@@ -6,10 +6,10 @@ function GenConfig(caller, $settingsArea) {
   this.getTitle = function(opt) {
     let $title = $('<div class="configurationTitle"></div>');
     let $toolTip = $('<span> </span><div class="tooltip">?<div class="tooltiptext"></div></div>');
-    $title.text(opt.option);
+    $title.text(opt.label ? i18n.get(opt.label) : opt.option);
 
     if (opt.help) {
-      $toolTip.find('.tooltiptext').text(opt.help);
+      $toolTip.find('.tooltiptext').text(i18n.get(opt.help));
       $title.append($toolTip);
     }
     if (opt.helpSide) {
@@ -37,7 +37,7 @@ function GenConfig(caller, $settingsArea) {
 
     for (let button of opt.buttons) {
       let $button = $('<button></button>');
-      $button.text(button.label);
+      $button.text(i18n.get(button.label));
       $button.click(function() {
         caller[button.callback](opt, currentOptions);
       });
@@ -595,7 +595,7 @@ function GenConfig(caller, $settingsArea) {
     opt.options.forEach(function(option){
       let $opt = $('<option></option>');
       $opt.prop('value', option[1]);
-      $opt.text(option[0]);
+      $opt.text(i18n.get(option[0]));
       if (option[1] == currentVal) {
         $opt.attr('selected', true);
       }

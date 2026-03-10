@@ -1,10 +1,64 @@
+i18n.append({
+  '#sumo-shortDescription#': {
+    en: 'Sumo Challenges',
+    ko: '스모 도전',
+  },
+  '#sumo-longDescription#': {
+    en: '<p>Push the opponents off the stage!</p>',
+    ko: '<p>상대방을 무대 밖으로 밀어내세요!</p>',
+  },
+  '#sumo-selectChallenge#': {
+    en: 'Select Challenge',
+    ko: '도전 선택',
+  },
+  '#sumo-fixedDummies#': {
+    en: 'Fixed Dummies',
+    ko: '고정 더미',
+  },
+  '#sumo-randomDummies#': {
+    en: 'Random Dummies',
+    ko: '무작위 더미',
+  },
+  '#sumo-noBorder#': {
+    en: 'No Border',
+    ko: '경계 없음',
+  },
+  '#sumo-pillars#': {
+    en: 'Pillars',
+    ko: '기둥',
+  },
+  '#sumo-fixedDummiesHTML#': {
+    en: '<p class="bold">Training world with dummies in fixed position.</p>' +
+        '<p>The dummies are always in the same position. Push them off without falling off yourself.<p>',
+    ko: '<p class="bold">더미가 고정된 위치에 있는 훈련 맵입니다.</p>' +
+        '<p>더미는 항상 같은 위치에 있습니다. 자신은 떨어지지 않으면서 더미를 밀어내세요.<p>',
+  },
+  '#sumo-randomDummiesHTML#': {
+    en: '<p class="bold">Training world with dummies in random position.</p>' +
+        '<p>The dummies are randomly placed. Can your robot find them all?<p>',
+    ko: '<p class="bold">더미가 무작위 위치에 있는 훈련 맵입니다.</p>' +
+        '<p>더미는 무작위로 배치됩니다. 로봇이 모두 찾아낼 수 있을까요?<p>',
+  },
+  '#sumo-noBorderHTML#': {
+    en: '<p class="bold">Borderless ring.</p>' +
+        '<p>How to avoid falling off without a border?<p>',
+    ko: '<p class="bold">경계가 없는 링입니다.</p>' +
+        '<p>경계 없이 어떻게 떨어지지 않을 수 있을까요?<p>',
+  },
+  '#sumo-pillarsHTML#': {
+    en: '<p class="bold">Ring with pillars.</p>' +
+        '<p>This sumo ring has pillars?<p>',
+    ko: '<p class="bold">기둥이 있는 링입니다.</p>' +
+        '<p>이 스모 링에는 기둥이 있습니다!<p>',
+  },
+});
+
 var world_Sumo = new function() {
   var self = this;
 
   this.name = 'sumo';
-  this.shortDescription = 'Sumo Challenges';
-  this.longDescription =
-    '<p>Push the opponents off the stage!</p>';
+  this.shortDescription = i18n.get('#sumo-shortDescription#');
+  this.longDescription = i18n.get('#sumo-longDescription#');
   this.thumbnail = 'images/worlds/sumo.jpg';
 
   this.options = {};
@@ -15,27 +69,19 @@ var world_Sumo = new function() {
   this.optionsConfigurations = [
     {
       option: 'image',
-      title: 'Select Challenge',
+      title: i18n.get('#sumo-selectChallenge#'),
       type: 'selectWithHTML',
       options: [
-        ['Fixed Dummies', 'fixedDummies'],
-        ['Random Dummies', 'randomDummies'],
-        ['No Border', 'randomNoRed'],
-        ['Pillars', 'fixedPillars'],
+        [i18n.get('#sumo-fixedDummies#'), 'fixedDummies'],
+        [i18n.get('#sumo-randomDummies#'), 'randomDummies'],
+        [i18n.get('#sumo-noBorder#'), 'randomNoRed'],
+        [i18n.get('#sumo-pillars#'), 'fixedPillars'],
       ],
       optionsHTML: {
-        fixedDummies:
-          '<p class="bold">Training world with dummies in fixed position.</p>' +
-          '<p>The dummies are always in the same position. Push them off without falling off yourself.<p>',
-        randomDummies:
-          '<p class="bold">Training world with dummies in random position.</p>' +
-          '<p>The dummies are randomly placed. Can your robot find them all?<p>',
-        randomNoRed:
-          '<p class="bold">Borderless ring.</p>' +
-          '<p>How to avoid falling off without a border?<p>',
-        fixedPillars:
-          '<p class="bold">Ring with pillars.</p>' +
-          '<p>This sumo ring has pillars?<p>',
+        fixedDummies:  i18n.get('#sumo-fixedDummiesHTML#'),
+        randomDummies: i18n.get('#sumo-randomDummiesHTML#'),
+        randomNoRed:   i18n.get('#sumo-noBorderHTML#'),
+        fixedPillars:  i18n.get('#sumo-pillarsHTML#'),
       }
     }
   ];

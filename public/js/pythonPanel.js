@@ -44,6 +44,10 @@ var pythonPanel = new function() {
       self.loadPythonFromBlockly();
     }
     self.$pythonCode.removeClass('hide');
+    // AI Tutor 모델 로드 트리거 (엔진이 없을 때만)
+    if (typeof aiTutor !== 'undefined') {
+      aiTutor.ensureModelLoaded();
+    }
   };
 
   // Run when panel is inactive

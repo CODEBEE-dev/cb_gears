@@ -12,7 +12,7 @@ let MSGS = {
     ru: 'Движение',
     hu: 'Mozgás',
     it: 'Movimento',
-    ko: '로봇 움직이기',
+    ko: '로봇이동',
   },
   '#blk-motor#': {
     en: 'Motor',
@@ -27,7 +27,7 @@ let MSGS = {
     ru: 'Двигатель',
     hu: 'Motor',
     it: 'Motore',
-    ko: '모터 회전하기',
+    ko: '모터제어',
   },
   '#blk-sensors#': {
     en: 'Sensors',
@@ -42,7 +42,7 @@ let MSGS = {
     ru: 'Датчики',
     hu: 'Szenzor',
     it: 'Sensore',
-    ko: '센서 감지하기',
+    ko: '센서제어',
   },
   '#blk-sound#': {
     en: 'Sound',
@@ -57,7 +57,7 @@ let MSGS = {
     ru: 'Звук',
     hu: 'Hang',
     it: 'Suono',
-    ko: '소리 재생하기',
+    ko: '사운드',
   },
   '#blk-pen-category#': {
     en: 'Pen',
@@ -68,7 +68,7 @@ let MSGS = {
     pt: 'Caneta',
     de: 'Stift',
     it: 'penna',
-    ko: '그림 그리기',
+    ko: '로봇펜',
   },
   '#blk-experimental-category#': {
     en: 'Experimental',
@@ -77,7 +77,7 @@ let MSGS = {
     ru: 'В разработке',
     pt: 'Experimental',
     it: 'Sperimentale',
-    ko: '실험실',
+    ko: '고급기능',
   },
   '#blk-control#': {
     en: 'Control',
@@ -92,7 +92,7 @@ let MSGS = {
     ru: 'Управление',
     hu: 'Vezérlés',
     it: 'controllo',
-    ko: '흐름제어문',
+    ko: '제어문',
   },
   '#blk-logic#': {
     en: 'Logic',
@@ -107,7 +107,7 @@ let MSGS = {
     ru: 'Условия',
     hu: 'Logika',
     it: 'logica',
-    ko: '논리구문',
+    ko: '판단문',
   },
   '#blk-loops#': {
     en: 'Loops',
@@ -137,7 +137,7 @@ let MSGS = {
     ru: 'Математика',
     hu: 'Matematika',
     it: 'Matematica',
-    ko: '수학',
+    ko: '수학함수',
   },
   '#blk-text#': {
     en: 'Text',
@@ -152,7 +152,7 @@ let MSGS = {
     ru: 'Текст',
     hu: 'Szöveg',
     it: 'Testo',
-    ko: '문자',
+    ko: '문자함수',
   },
   '#blk-lists#': {
     en: 'Lists',
@@ -197,7 +197,7 @@ let MSGS = {
     ru: 'Функции',
     hu: 'Függvények',
     it: 'funzioni',
-    ko: '함수',
+    ko: '사용자함수',
   },
   '#blk-when_started#': {
     en: 'When Started',
@@ -3378,6 +3378,388 @@ let MSGS = {
     hu: 'A Python kód módosításai nem konvertálhatók vissza blokkokká!',
     it: 'Le modifiche al codice Python non possono essere riconvertite in blocchi!',
     ko: '파이썬 코드 변경 사항은 블록으로 다시 변환할 수 없습니다.',
+  },
+
+  // Builder (World Builder) 메뉴 번역
+  '#builder-new_world#': {
+    en: 'New World',
+    ko: '새 월드',
+  },
+  '#builder-load_world#': {
+    en: 'Load world from file',
+    ko: '월드: 파일에서 불러오기',
+  },
+  '#builder-save_world#': {
+    en: 'Save world to file',
+    ko: '월드: 파일에 저장하기',
+  },
+  '#builder-load_object#': {
+    en: 'Load object from file',
+    ko: '오브젝트: 파일에서 불러오기',
+  },
+  '#builder-save_object#': {
+    en: 'Save object to file',
+    ko: '오브젝트: 파일에 저장하기',
+  },
+  '#builder-animate#': {
+    en: 'Animate',
+    ko: '애니메이션',
+  },
+  '#builder-no_snapping#': {
+    en: 'No Snapping',
+    ko: '스냅 없음',
+  },
+  '#builder-snap_02#': {
+    en: 'Snap to 0.2cm',
+    ko: '0.2cm 스냅',
+  },
+  '#builder-snap_04_technic#': {
+    en: 'Snap to 0.4cm (Lego Technic)',
+    ko: '0.4cm 스냅 (레고 테크닉)',
+  },
+  '#builder-snap_lego#': {
+    en: 'Snap to Lego (xy: 0.4, z: 0.48)',
+    ko: '레고 스냅 (xy: 0.4, z: 0.48)',
+  },
+  '#builder-snap_05#': {
+    en: 'Snap to 0.5cm',
+    ko: '0.5cm 스냅',
+  },
+  '#builder-snap_10#': {
+    en: 'Snap to 1cm',
+    ko: '1cm 스냅',
+  },
+  '#builder-snap_50#': {
+    en: 'Snap to 5cm',
+    ko: '5cm 스냅',
+  },
+  '#builder-drop_to_ground#': {
+    en: 'Drop to ground',
+    ko: '바닥에 내리기',
+  },
+  '#builder-add_key#': {
+    en: 'Add Key',
+    ko: '키 추가',
+  },
+  '#builder-edit#': {
+    en: 'Edit',
+    ko: '편집',
+  },
+  '#builder-key_time#': {
+    en: 'Key Time (s):',
+    ko: '키 시간 (초):',
+  },
+  '#builder-app_name#': {
+    en: 'World Builder',
+    ko: '월드 빌더',
+  },
+  '#builder-add#': {
+    en: 'Add',
+    ko: '추가',
+  },
+  '#builder-clone#': {
+    en: 'Clone',
+    ko: '복제',
+  },
+  '#builder-delete#': {
+    en: 'Delete',
+    ko: '삭제',
+  },
+  '#builder-undo#': {
+    en: 'Undo',
+    ko: '되돌리기',
+  },
+  '#builder-image_url_help#': {
+    en: 'URL for image texture. Will not work with most webhosts; Imgur will work.',
+    ko: '이미지 텍스처 URL. 대부분의 웹호스트에서는 작동하지 않으나 Imgur는 작동합니다.',
+  },
+  '#builder-new_world_confirm#': {
+    en: 'Create a new empty world? You will lose all unsaved changes.',
+    ko: '새 빈 월드를 만드시겠습니까? 저장되지 않은 모든 변경 사항이 삭제됩니다.',
+  },
+  '#builder-only_custom_world#': {
+    en: 'Only "custom" worlds can be edited in the world builder.',
+    ko: '"사용자 정의(custom)" 월드만 월드 빌더에서 편집할 수 있습니다.',
+  },
+  '#builder-this_world_is#': {
+    en: 'This json file is for a',
+    ko: '이 JSON 파일은',
+  },
+  '#builder-world_type#': {
+    en: 'world.',
+    ko: '월드 파일입니다.',
+  },
+  '#builder-snap_label#': {
+    en: 'Snap',
+    ko: '스냅',
+  },
+
+  // Builder - object list items
+  '#builder-list-ground#': { en: 'Ground', ko: '바닥' },
+  '#builder-list-wall#': { en: 'Wall', ko: '벽' },
+  '#builder-list-timer#': { en: 'Timer', ko: '타이머' },
+  '#builder-list-robot#': { en: 'Robot', ko: '로봇' },
+  '#builder-list-animation#': { en: 'Animation', ko: '애니메이션' },
+  '#builder-list-objects#': { en: 'Objects', ko: '오브젝트' },
+  // Builder - option labels
+  '#builder-label-imageURL#': { en: 'Image URL', ko: '이미지 URL' },
+  '#builder-label-groundType#': { en: 'Ground Type', ko: '바닥 유형' },
+  '#builder-label-imageScale#': { en: 'Image Scale', ko: '이미지 크기' },
+  '#builder-label-uScale#': { en: 'U Scale', ko: 'U 반복' },
+  '#builder-label-vScale#': { en: 'V Scale', ko: 'V 반복' },
+  '#builder-label-groundFriction#': { en: 'Ground Friction', ko: '바닥 마찰력' },
+  '#builder-label-groundRestitution#': { en: 'Ground Restitution', ko: '바닥 탄성' },
+  '#builder-label-wall#': { en: 'Wall', ko: '벽 표시' },
+  '#builder-label-wallHeight#': { en: 'Wall Height', ko: '벽 높이' },
+  '#builder-label-wallThickness#': { en: 'Wall Thickness', ko: '벽 두께' },
+  '#builder-label-wallColor#': { en: 'Wall Color', ko: '벽 색상' },
+  '#builder-label-wallFriction#': { en: 'Wall Friction', ko: '벽 마찰력' },
+  '#builder-label-wallRestitution#': { en: 'Wall Restitution', ko: '벽 탄성' },
+  '#builder-label-timer#': { en: 'Timer', ko: '타이머' },
+  '#builder-label-timerDuration#': { en: 'Timer Duration', ko: '타이머 시간 (초)' },
+  '#builder-label-timerEnd#': { en: 'Timer End', ko: '타이머 종료 시' },
+  '#builder-label-startPosXYZ#': { en: 'Start Position', ko: '시작 위치' },
+  '#builder-label-startRot#': { en: 'Start Rotation', ko: '시작 방향' },
+  '#builder-label-restartAnimationOnRun#': { en: 'Restart Animation on Run', ko: '실행 시 애니메이션 재시작' },
+  '#builder-label-position#': { en: 'Position', ko: '위치' },
+  '#builder-label-rotation#': { en: 'Rotation', ko: '회전' },
+  '#builder-label-animationMode#': { en: 'Animation Mode', ko: '애니메이션 모드' },
+  '#builder-label-animationKeys#': { en: 'Animation Keys', ko: '애니메이션 키' },
+  '#builder-label-size#': { en: 'Size', ko: '크기' },
+  '#builder-label-color#': { en: 'Color', ko: '색상' },
+  '#builder-label-imageType#': { en: 'Image Type', ko: '이미지 유형' },
+  '#builder-label-physicsOptions#': { en: 'Physics', ko: '물리' },
+  '#builder-label-physics_mass#': { en: 'Mass', ko: '질량' },
+  '#builder-label-physics_friction#': { en: 'Friction', ko: '마찰력' },
+  '#builder-label-physics_restitution#': { en: 'Restitution', ko: '탄성' },
+  '#builder-label-physics_dampLinear#': { en: 'Linear Damping', ko: '직선 감쇠' },
+  '#builder-label-physics_dampAngular#': { en: 'Angular Damping', ko: '회전 감쇠' },
+  '#builder-label-physics_group#': { en: 'Physics Group', ko: '물리 그룹' },
+  '#builder-label-physics_mask#': { en: 'Physics Mask', ko: '물리 마스크' },
+  '#builder-label-magnetic#': { en: 'Magnetic', ko: '자성' },
+  '#builder-label-laserDetection#': { en: 'Laser Detection', ko: '레이저 감지' },
+  '#builder-label-ultrasonicDetection#': { en: 'Ultrasonic Detection', ko: '초음파 감지' },
+  '#builder-label-receiveShadows#': { en: 'Receive Shadows', ko: '그림자 받기' },
+  '#builder-label-castShadows#': { en: 'Cast Shadows', ko: '그림자 드리우기' },
+  '#builder-label-modelURL#': { en: 'Model URL', ko: '모델 URL' },
+  '#builder-label-modelScale#': { en: 'Model Scale', ko: '모델 크기' },
+  '#builder-label-modelAnimation#': { en: 'Model Animation', ko: '모델 애니메이션' },
+  '#builder-label-hide#': { en: 'Hide', ko: '숨기기' },
+  '#builder-label-speed#': { en: 'Speed', ko: '속도' },
+  '#builder-label-maxForce#': { en: 'Max Force', ko: '최대 힘' },
+  '#builder-label-attachID#': { en: 'Attach ID', ko: '연결 ID' },
+
+  // Builder - help texts
+  '#builder-help-ground_image_url#': {
+    en: 'URL for ground image. Will not work with most webhosts; Imgur will work.',
+    ko: '바닥 이미지 URL. 대부분의 웹호스트에서는 작동하지 않으나 Imgur는 작동합니다.',
+  },
+  '#builder-help-ground_type#': {
+    en: 'Walls only work with a Box ground. If None is selected, there will be no ground! This is only useful if a custom object is added to act as the ground.',
+    ko: '벽은 Box 바닥에서만 작동합니다. None을 선택하면 바닥이 없어집니다! 사용자 오브젝트를 바닥으로 사용할 때만 유용합니다.',
+  },
+  '#builder-help-image_scale#': {
+    en: 'Scales the image (eg. when set to 2, each pixel will equal 2mm).',
+    ko: '이미지를 확대/축소합니다 (예: 2로 설정하면 각 픽셀이 2mm가 됩니다).',
+  },
+  '#builder-help-u_scale#': {
+    en: 'Repeats the image horizontally (eg. when set to 2, each image will appear twice).',
+    ko: '이미지를 가로로 반복합니다 (예: 2로 설정하면 이미지가 2번 나타납니다).',
+  },
+  '#builder-help-v_scale#': {
+    en: 'Repeats the image vertically (eg. when set to 2, each image will appear twice).',
+    ko: '이미지를 세로로 반복합니다 (예: 2로 설정하면 이미지가 2번 나타납니다).',
+  },
+  '#builder-help-ground_restitution#': {
+    en: 'Affects the bounciness of the ground. Higher number will increase bounciness.',
+    ko: '바닥의 탄성에 영향을 줍니다. 숫자가 높을수록 더 잘 튕깁니다.',
+  },
+  '#builder-help-wall_color#': {
+    en: 'Color in hex',
+    ko: '16진수 색상 코드',
+  },
+  '#builder-help-wall_restitution#': {
+    en: 'Affects the bounciness of the wall. Higher number will increase bounciness.',
+    ko: '벽의 탄성에 영향을 줍니다. 숫자가 높을수록 더 잘 튕깁니다.',
+  },
+  '#builder-help-animation_mode#': {
+    en: 'Loop: Restart from beginning. Alternate: Alternate between back and forth.',
+    ko: 'Loop: 처음부터 반복. Alternate: 앞뒤로 왔다 갔다 반복.',
+  },
+  '#builder-help-animation_keys#': {
+    en: 'Position object, set time, and add key. You need at least two keys for animation to work.',
+    ko: '오브젝트를 배치하고 시간을 설정한 후 키를 추가합니다. 애니메이션이 작동하려면 최소 두 개의 키가 필요합니다.',
+  },
+  '#builder-help-color#': {
+    en: 'Color in hex',
+    ko: '16진수 색상 코드',
+  },
+  '#builder-help-physics_mass#': {
+    en: 'Default for moveable objects is 100. Set this to 0 to make it a fixed object.',
+    ko: '이동 가능한 오브젝트의 기본값은 100입니다. 0으로 설정하면 고정 오브젝트가 됩니다.',
+  },
+  '#builder-help-physics_friction#': {
+    en: 'Default for objects is 0.1, while the ground is 1.0 by default.',
+    ko: '오브젝트의 기본값은 0.1이며, 바닥의 기본값은 1.0입니다.',
+  },
+  '#builder-help-physics_restitution#': {
+    en: 'Affects the bounciness of the object. Higher number will increase bounciness.',
+    ko: '오브젝트의 탄성에 영향을 줍니다. 숫자가 높을수록 더 잘 튕깁니다.',
+  },
+  '#builder-help-physics_damp_linear#': {
+    en: 'Dampens linear movements.',
+    ko: '직선 이동을 감쇠합니다.',
+  },
+  '#builder-help-physics_damp_angular#': {
+    en: 'Dampens rotations.',
+    ko: '회전을 감쇠합니다.',
+  },
+  '#builder-help-physics_group#': {
+    en: 'Sets the physics group bitmask (default is 1). Use together with mask.',
+    ko: '물리 그룹 비트마스크를 설정합니다 (기본값: 1). mask와 함께 사용합니다.',
+  },
+  '#builder-help-physics_mask#': {
+    en: 'A bitmask which sets which physics group this object will interact with. Default is -1 (all groups).',
+    ko: '이 오브젝트가 상호작용할 물리 그룹을 설정하는 비트마스크입니다. 기본값은 -1 (모든 그룹)입니다.',
+  },
+  '#builder-help-laser_detection#': {
+    en: 'Defaults to invisible for physicless objects, and normal for all others.',
+    ko: '물리가 없는 오브젝트는 기본적으로 투명, 나머지는 기본값으로 normal입니다.',
+  },
+  '#builder-help-model_url#': {
+    en: 'URL for GLTF (.glb/.gltf) models. Will not work with most webhosts; Github will work.',
+    ko: 'GLTF (.glb/.gltf) 모델 URL. 대부분의 웹호스트에서는 작동하지 않으나 Github는 작동합니다.',
+  },
+  '#builder-help-hinge_hide#': {
+    en: 'If set, the hinge will be hidden',
+    ko: '설정하면 힌지가 숨겨집니다.',
+  },
+  '#builder-help-hinge_speed#': {
+    en: 'Rotation speed in radians per second',
+    ko: '초당 라디안 단위의 회전 속도',
+  },
+  '#builder-help-hinge_maxforce#': {
+    en: 'Maximum force applied to achieve the specified speed',
+    ko: '지정된 속도를 달성하기 위해 적용되는 최대 힘',
+  },
+  '#builder-help-hinge_attachid#': {
+    en: 'Mesh ID to attach to. Can only be used if there are no child meshes.',
+    ko: '연결할 메시 ID. 자식 메시가 없는 경우에만 사용할 수 있습니다.',
+  },
+  '#builder-help-balljoint_hide#': {
+    en: 'If set, the joint will be hidden',
+    ko: '설정하면 조인트가 숨겨집니다.',
+  },
+  // Builder - select option labels
+  '#builder-opt-box#': { en: 'Box', ko: '박스' },
+  '#builder-opt-cylinder#': { en: 'Cylinder', ko: '원기둥' },
+  '#builder-opt-none#': { en: 'None', ko: '없음' },
+  '#builder-opt-count_up#': { en: 'Count up from zero', ko: '0부터 카운트 업' },
+  '#builder-opt-count_down#': { en: 'Count down from duration', ko: '시간부터 카운트 다운' },
+  '#builder-opt-continue#': { en: 'Continue running', ko: '계속 실행' },
+  '#builder-opt-stop_timer#': { en: 'Stop the timer only', ko: '타이머만 정지' },
+  '#builder-opt-stop_robot#': { en: 'Stop the timer and robot', ko: '타이머와 로봇 모두 정지' },
+  '#builder-opt-loop#': { en: 'Loop', ko: '루프' },
+  '#builder-opt-alternate#': { en: 'Alternate', ko: '앞뒤 반복' },
+  '#builder-opt-repeat#': { en: 'Repeat on every face', ko: '모든 면에 반복' },
+  '#builder-opt-top#': { en: 'Only on top face', ko: '윗면에만' },
+  '#builder-opt-front#': { en: 'Only on front face', ko: '앞면에만' },
+  '#builder-opt-all#': { en: 'Map across all faces', ko: '모든 면에 걸쳐 매핑' },
+  '#builder-opt-fixed#': { en: 'Fixed', ko: '고정' },
+  '#builder-opt-moveable#': { en: 'Moveable', ko: '이동 가능' },
+  '#builder-opt-physicsless#': { en: 'Physicsless', ko: '물리 없음' },
+  '#builder-opt-custom#': { en: 'Custom', ko: '사용자 정의' },
+  '#builder-opt-default#': { en: 'Default', ko: '기본값' },
+  '#builder-opt-invisible#': { en: 'Invisible (Ray passes through)', ko: '투명 (레이 통과)' },
+  '#builder-opt-absorb#': { en: 'Absorb with no reflection', ko: '반사 없이 흡수' },
+  '#builder-opt-normal#': { en: 'Normal', ko: '일반' },
+  // Builder - runtime messages
+  '#builder-loading_model#': { en: 'Loading Model...', ko: '모델 불러오는 중...' },
+  '#builder-no_animations#': { en: 'No animations in this model', ko: '이 모델에 애니메이션이 없습니다' },
+  '#builder-not_valid_number#': { en: 'Not a valid number', ko: '유효한 숫자가 아닙니다' },
+
+  // Configurator (Robot Configurator) 메뉴 번역
+  '#configurator-app_name#': {
+    en: 'Robot Configurator',
+    ko: '로봇 구성 도구',
+  },
+  '#configurator-robot_name#': {
+    en: 'Robot Name',
+    ko: '로봇 이름',
+  },
+  '#configurator-load_robot#': {
+    en: 'Load from file',
+    ko: '로봇: 파일에서 불러오기',
+  },
+  '#configurator-save_robot#': {
+    en: 'Save to file',
+    ko: '로봇: 파일에 저장하기',
+  },
+  '#configurator-select_robot#': {
+    en: 'Select Robot',
+    ko: '로봇 선택',
+  },
+  '#configurator-no_snapping#': {
+    en: 'No Snapping',
+    ko: '스냅 없음',
+  },
+  '#configurator-snap_25#': {
+    en: 'Snap to 0.25cm',
+    ko: '0.25cm 스냅',
+  },
+  '#configurator-snap_04_technic#': {
+    en: 'Snap to 0.4cm (Lego Technic)',
+    ko: '0.4cm 스냅 (레고 테크닉)',
+  },
+  '#configurator-snap_lego#': {
+    en: 'Snap to Lego (xy: 0.4, z: 0.48)',
+    ko: '레고 스냅 (xy: 0.4, z: 0.48)',
+  },
+  '#configurator-snap_05#': {
+    en: 'Snap to 0.5cm',
+    ko: '0.5cm 스냅',
+  },
+  '#configurator-snap_10#': {
+    en: 'Snap to 1cm',
+    ko: '1cm 스냅',
+  },
+  '#configurator-robot_position#': {
+    en: 'Robot Position',
+    ko: '로봇 위치',
+  },
+  '#configurator-add#': {
+    en: 'Add',
+    ko: '추가',
+  },
+  '#configurator-delete#': {
+    en: 'Delete',
+    ko: '삭제',
+  },
+  '#configurator-undo#': {
+    en: 'Undo',
+    ko: '되돌리기',
+  },
+
+  // Arena 페이지 번역
+  '#arena-app_name#': {
+    en: 'Arena',
+    ko: '아레나',
+  },
+  '#arena-bots#': {
+    en: 'Bots',
+    ko: '봇',
+  },
+  '#arena-arena_tab#': {
+    en: 'Arena',
+    ko: '아레나',
+  },
+  '#arena-options#': {
+    en: 'Options',
+    ko: '옵션',
+  },
+  '#arena-worlds#': {
+    en: 'Worlds',
+    ko: '월드',
   },
 };
 let MSGS_KEYS = Object.keys(MSGS);

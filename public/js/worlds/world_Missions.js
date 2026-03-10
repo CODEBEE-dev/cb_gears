@@ -1,3 +1,98 @@
+i18n.append({
+  '#missions-shortDescription#': {
+    en: 'Missions (FLL, WRO, etc)',
+    ko: '미션 (FLL, WRO 등)',
+  },
+  '#missions-longDescription#': {
+    en: '<p>This world contains various missions.</p>' +
+        '<p>Currently, we only have missions based on First Lego League (FLL) and World Robot Olympiad (WRO), but we welcome contributions of any types of missions.</p>' +
+        '<p>Contributed missions should be constructed using json only (ie. no javascript) to be suitable for inclusion here.</p>',
+    ko: '<p>이 맵에는 다양한 미션이 포함되어 있습니다.</p>' +
+        '<p>현재는 FLL(퍼스트 레고 리그)과 WRO(세계 로봇 올림피아드) 기반 미션만 있지만, 어떤 종류의 미션 기여도 환영합니다.</p>' +
+        '<p>기여하는 미션은 JSON만 사용하여 구성해야 합니다(자바스크립트 제외).</p>',
+  },
+  '#missions-selectMission#': {
+    en: 'Select Mission',
+    ko: '미션 선택',
+  },
+  '#missions-wall#': {
+    en: 'Wall',
+    ko: '벽',
+  },
+  '#missions-wallPresent#': {
+    en: 'Wall Present',
+    ko: '벽 있음',
+  },
+  '#missions-timer#': {
+    en: 'Timer',
+    ko: '타이머',
+  },
+  '#missions-showTimer#': {
+    en: 'Show Timer',
+    ko: '타이머 표시',
+  },
+  '#missions-missions#': {
+    en: 'Missions',
+    ko: '미션',
+  },
+  '#missions-missionObjectsPresent#': {
+    en: 'Mission Objects Present',
+    ko: '미션 오브젝트 표시',
+  },
+  '#missions-missionObjectsHelp#': {
+    en: 'Mission objects are only available for some missions.',
+    ko: '미션 오브젝트는 일부 미션에서만 사용할 수 있습니다.',
+  },
+  '#missions-wallHeight#': {
+    en: 'Wall Height (cm)',
+    ko: '벽 높이 (cm)',
+  },
+  '#missions-wallThickness#': {
+    en: 'Wall Thickness (cm)',
+    ko: '벽 두께 (cm)',
+  },
+  '#missions-startPos#': {
+    en: 'Starting Position',
+    ko: '시작 위치',
+  },
+  '#missions-missionDefault#': {
+    en: 'Mission Default',
+    ko: '미션 기본값',
+  },
+  '#missions-center#': {
+    en: 'Center',
+    ko: '중앙',
+  },
+  '#missions-bottomLeft#': {
+    en: 'Bottom Left',
+    ko: '왼쪽 아래',
+  },
+  '#missions-bottomCenter#': {
+    en: 'Bottom Center',
+    ko: '아래 중앙',
+  },
+  '#missions-bottomRight#': {
+    en: 'Bottom Right',
+    ko: '오른쪽 아래',
+  },
+  '#missions-startPosXY#': {
+    en: 'Starting Position (x, y)',
+    ko: '시작 위치 (x, y)',
+  },
+  '#missions-startPosXYHelp#': {
+    en: 'Enter using this format "x, y" (in cm, without quotes) and it will override the above. Center of image is "0, 0".',
+    ko: '"x, y" 형식으로 입력하면 (cm 단위, 따옴표 제외) 위 설정을 덮어씁니다. 이미지 중앙이 "0, 0"입니다.',
+  },
+  '#missions-startRot#': {
+    en: 'Starting Rotation (degrees)',
+    ko: '시작 방향 (도)',
+  },
+  '#missions-startRotHelp#': {
+    en: 'Set the starting rotation in degrees. Positive rotation is clockwise.',
+    ko: '시작 방향을 도(°) 단위로 설정합니다. 양수 값은 시계 방향입니다.',
+  },
+});
+
 var world_Missions = new function() {
   World_Base.call(this);
   this.parent = {};
@@ -8,17 +103,14 @@ var world_Missions = new function() {
   var self = this;
 
   this.name = 'missions';
-  this.shortDescription = 'Missions (FLL, WRO, etc)';
-  this.longDescription =
-    '<p>This world contains various missions.</p>' +
-    '<p>Currently, we only have missions based on First Lego League (FLL) and World Robot Olympiad (WRO), but we welcome contributions of any types of missions.</p>' +
-    '<p>Contributed missions should be constructed using json only (ie. no javascript) to be suitable for inclusion here.</p>';
+  this.shortDescription = i18n.get('#missions-shortDescription#');
+  this.longDescription = i18n.get('#missions-longDescription#');
   this.thumbnail = 'images/worlds/missions.jpg';
 
   this.optionsConfigurations = [
     {
       option: 'jsonFile',
-      title: 'Select Mission',
+      title: i18n.get('#missions-selectMission#'),
       type: 'select',
       options: [
         ['2026 WRO (Elementary)', 'worlds/missions/WRO/WRO-2026-Elementary.json?v=e728d1d8'],
@@ -63,26 +155,26 @@ var world_Missions = new function() {
     },
     {
       option: 'wall',
-      title: 'Wall',
+      title: i18n.get('#missions-wall#'),
       type: 'checkbox',
-      label: 'Wall Present'
+      label: i18n.get('#missions-wallPresent#')
     },
     {
       option: 'showTimer',
-      title: 'Timer',
+      title: i18n.get('#missions-timer#'),
       type: 'checkbox',
-      label: 'Show Timer'
+      label: i18n.get('#missions-showTimer#')
     },
     {
       option: 'missions',
-      title: 'Missions',
+      title: i18n.get('#missions-missions#'),
       type: 'checkbox',
-      label: 'Mission Objects Present',
-      help: 'Mission objects are only available for some missions.'
+      label: i18n.get('#missions-missionObjectsPresent#'),
+      help: i18n.get('#missions-missionObjectsHelp#')
     },
     {
       option: 'wallHeight',
-      title: 'Wall Height (cm)',
+      title: i18n.get('#missions-wallHeight#'),
       type: 'slider',
       min: '0',
       max: '30',
@@ -90,7 +182,7 @@ var world_Missions = new function() {
     },
     {
       option: 'wallThickness',
-      title: 'Wall Thickness (cm)',
+      title: i18n.get('#missions-wallThickness#'),
       type: 'slider',
       min: '0',
       max: '30',
@@ -98,14 +190,14 @@ var world_Missions = new function() {
     },
     {
       option: 'startPos',
-      title: 'Starting Position',
+      title: i18n.get('#missions-startPos#'),
       type: 'select',
       options: [
-        ['Mission Default', 'missionDefault'],
-        ['Center', 'center'],
-        ['Bottom Left', 'bottomLeft'],
-        ['Bottom Center', 'bottomCenter'],
-        ['Bottom Right', 'bottomRight'],
+        [i18n.get('#missions-missionDefault#'), 'missionDefault'],
+        [i18n.get('#missions-center#'), 'center'],
+        [i18n.get('#missions-bottomLeft#'), 'bottomLeft'],
+        [i18n.get('#missions-bottomCenter#'), 'bottomCenter'],
+        [i18n.get('#missions-bottomRight#'), 'bottomRight'],
         ['Player 0', 'P0'],
         ['Player 1', 'P1'],
         ['Player 2', 'P2'],
@@ -114,15 +206,15 @@ var world_Missions = new function() {
     },
     {
       option: 'startPosXYZStr',
-      title: 'Starting Position (x, y)',
+      title: i18n.get('#missions-startPosXY#'),
       type: 'text',
-      help: 'Enter using this format "x, y" (in cm, without quotes) and it will override the above. Center of image is "0, 0".'
+      help: i18n.get('#missions-startPosXYHelp#')
     },
     {
       option: 'startRotStr',
-      title: 'Starting Rotation (degrees)',
+      title: i18n.get('#missions-startRot#'),
       type: 'text',
-      help: 'Set the starting rotation in degrees. Positive rotation is clockwise.'
+      help: i18n.get('#missions-startRotHelp#')
     }
   ];
 

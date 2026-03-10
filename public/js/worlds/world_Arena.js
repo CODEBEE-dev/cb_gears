@@ -1,11 +1,110 @@
+i18n.append({
+  '#arena-shortDescription#': {
+    en: 'Multi-Robot Arena',
+    ko: '멀티 로봇 아레나',
+  },
+  '#arena-longDescription#': {
+    en: '<p>These are arena worlds, meant for multiple robots either competing or cooperating with each other.</p>' +
+        '<p>You can use this world in single robot mode to prepare your program, before running it in the arena.</p>',
+    ko: '<p>이 맵은 아레나 월드로, 여러 로봇이 서로 경쟁하거나 협력하는 환경입니다.</p>' +
+        '<p>아레나에서 실행하기 전에 단일 로봇 모드를 이용하여 프로그램을 준비할 수 있습니다.</p>',
+  },
+  '#arena-selectChallenge#': {
+    en: 'Select Challenge',
+    ko: '도전 과제 선택',
+  },
+  '#arena-paintballIslands#': {
+    en: 'Paintball Islands',
+    ko: '페인트볼 아일랜드',
+  },
+  '#arena-colorCollector#': {
+    en: 'Color Collector',
+    ko: '색깔 수집',
+  },
+  '#arena-sumo#': {
+    en: 'Sumo',
+    ko: '스모',
+  },
+  '#arena-islandHTML#': {
+    en: '<p>Every robot is on its own island. ' +
+        'You have 2 mins to hit your opponent with your paintballs, while avoiding being hit yourself. ' +
+        'Be careful not to fall off! Robots that have fallen off their island are disqualified.</p>' +
+        '<ul><li>Hitting an opponent with your paintball will gain you 2 points.</li>' +
+        '<li>Being hit with a paintball will deduct 1 point from your score.</li></ul>',
+    ko: '<p>각 로봇은 자신의 섬 위에 있습니다. ' +
+        '2분 동안 상대를 페인트볼로 맞추되, 자신은 맞지 않도록 피해야 합니다. ' +
+        '섬에서 떨어지지 않도록 주의하세요! 섬에서 떨어진 로봇은 실격됩니다.</p>' +
+        '<ul><li>상대를 페인트볼로 맞추면 2점을 획득합니다.</li>' +
+        '<li>페인트볼에 맞으면 1점이 감점됩니다.</li></ul>',
+  },
+  '#arena-collectorHTML#': {
+    en: '<p>Collect the colored chips.</p>' +
+        '<p>In this arena, Player 0 and 1 are in Team A, while Player 2 and 3 are in Team B. ' +
+        'Collect the red / green / blue tokens and drop them off in your team\'s score zone to score.</p>' +
+        '<ul><li>Tokens can be picked up using the electromagnet</li>' +
+        '<li>Tokens are worth 2 points if dropped in a matching colored zone, 1 point if dropped in a non-matching colored zone.</li>' +
+        '<li>Blue tokens respawn in 60 seconds, while red and green tokens respawn in 120 seconds.</li>' +
+        '<li>The doors to the center area will open when their respective colored sensors detect a robot or crate in it.</li></ul>',
+    ko: '<p>색깔 칩을 수집하세요.</p>' +
+        '<p>이 아레나에서 플레이어 0과 1은 팀 A, 플레이어 2와 3은 팀 B입니다. ' +
+        '빨간색 / 초록색 / 파란색 토큰을 수집하여 팀의 득점 구역에 내려놓아 점수를 획득하세요.</p>' +
+        '<ul><li>토큰은 전자석을 이용하여 집을 수 있습니다.</li>' +
+        '<li>같은 색 구역에 내려놓으면 2점, 다른 색 구역에 내려놓으면 1점입니다.</li>' +
+        '<li>파란색 토큰은 60초 후에, 빨간색과 초록색 토큰은 120초 후에 다시 생성됩니다.</li>' +
+        '<li>중앙 영역의 문은 해당 색 센서가 로봇이나 상자를 감지하면 열립니다.</li></ul>',
+  },
+  '#arena-sumoHTML#': {
+    en: '<p>Push the opponent off the platform, but be careful not to fall off yourself!</p>',
+    ko: '<p>상대를 플랫폼 밖으로 밀어내세요. 단, 자신이 떨어지지 않도록 조심하세요!</p>',
+  },
+  '#arena-timeLimit#': {
+    en: 'Time Limit',
+    ko: '시간 제한',
+  },
+  '#arena-stopRobots#': {
+    en: 'Stop robots when time is up',
+    ko: '시간 종료 시 로봇 정지',
+  },
+  '#arena-timeLimitHelp#': {
+    en: 'Only works in the arena. Stop all robot motors when time is up.',
+    ko: '아레나에서만 적용됩니다. 시간이 종료되면 모든 로봇의 모터를 정지합니다.',
+  },
+  '#arena-randomSeed#': {
+    en: 'Random Seed',
+    ko: '랜덤 시드',
+  },
+  '#arena-randomSeedHelp#': {
+    en: 'Leave this blank to let gears pick its own random seed.',
+    ko: '비워두면 gears가 자동으로 랜덤 시드를 선택합니다.',
+  },
+  '#arena-startPos#': {
+    en: 'Starting Position (Single Player Mode)',
+    ko: '시작 위치 (단일 플레이어 모드)',
+  },
+  '#arena-startPosHelp#': {
+    en: 'This option does nothing in Arena mode.',
+    ko: '아레나 모드에서는 이 옵션이 적용되지 않습니다.',
+  },
+  '#arena-time#': {
+    en: 'Time: ',
+    ko: '시간: ',
+  },
+  '#arena-teamA#': {
+    en: 'Team A : ',
+    ko: '팀 A : ',
+  },
+  '#arena-teamB#': {
+    en: ' : Team B',
+    ko: ' : 팀 B',
+  },
+});
+
 var world_Arena = new function() {
   var self = this;
 
   this.name = 'arena';
-  this.shortDescription = 'Multi-Robot Arena';
-  this.longDescription =
-    '<p>These are arena worlds, meant for multiple robots either competing or cooperating with each other.</p>' +
-    '<p>You can use this world in single robot mode to prepare your program, before running it in the arena.</p>';
+  this.shortDescription = i18n.get('#arena-shortDescription#');
+  this.longDescription = i18n.get('#arena-longDescription#');
   this.thumbnail = 'images/worlds/arena.jpg';
 
   this.options = {};
@@ -72,48 +171,35 @@ var world_Arena = new function() {
   this.optionsConfigurations = [
     {
       option: 'challenge',
-      title: 'Select Challenge',
+      title: i18n.get('#arena-selectChallenge#'),
       type: 'selectWithHTML',
       options: [
-        ['Paintball Islands', 'island'],
-        ['Color Collector', 'collector'],
-        ['Sumo', 'sumo']
+        [i18n.get('#arena-paintballIslands#'), 'island'],
+        [i18n.get('#arena-colorCollector#'), 'collector'],
+        [i18n.get('#arena-sumo#'), 'sumo']
       ],
       optionsHTML: {
-        island:
-          '<p>Every robot is on its own island. ' +
-          'You have 2 mins to hit your opponent with your paintballs, while avoiding being hit yourself. ' +
-          'Be careful not to fall off! Robots that have fallen off their island are disqualified.</p>' +
-          '<ul><li>Hitting an opponent with your paintball will gain you 2 points.</li>' +
-          '<li>Being hit with a paintball will deduct 1 point from your score.</li></ul>',
-        collector:
-          '<p>Collect the colored chips.</p>' +
-          '<p>In this arena, Player 0 and 1 are in Team A, while Player 2 and 3 are in Team B. ' +
-          'Collect the red / green / blue tokens and drop them off in your team\'s score zone to score.</p>' +
-          '<ul><li>Tokens can be picked up using the electromagnet</li>' +
-          '<li>Tokens are worth 2 points if dropped in a matching colored zone, 1 point if dropped in a non-matching colored zone.</li>' +
-          '<li>Blue tokens respawn in 60 seconds, while red and green tokens respawn in 120 seconds.</li>' +
-          '<li>The doors to the center area will open when their respective colored sensors detect a robot or crate in it.</li></ul>',
-        sumo:
-          '<p>Push the opponent off the platform, but be careful not to fall off yourself!</p>',
+        island: i18n.get('#arena-islandHTML#'),
+        collector: i18n.get('#arena-collectorHTML#'),
+        sumo: i18n.get('#arena-sumoHTML#'),
       }
     },
     {
       option: 'timeLimit',
-      title: 'Time Limit',
+      title: i18n.get('#arena-timeLimit#'),
       type: 'checkbox',
-      label: 'Stop robots when time is up',
-      help: 'Only works in the arena. Stop all robot motors when time is up.'
+      label: i18n.get('#arena-stopRobots#'),
+      help: i18n.get('#arena-timeLimitHelp#')
     },
     {
       option: 'seed',
-      title: 'Random Seed',
+      title: i18n.get('#arena-randomSeed#'),
       type: 'text',
-      help: 'Leave this blank to let gears pick its own random seed.'
+      help: i18n.get('#arena-randomSeedHelp#')
     },
     {
       option: 'startPos',
-      title: 'Starting Position (Single Player Mode)',
+      title: i18n.get('#arena-startPos#'),
       type: 'select',
       options: [
         ['Player 0', '0'],
@@ -121,7 +207,7 @@ var world_Arena = new function() {
         ['Player 2', '2'],
         ['Player 3', '3'],
       ],
-      help: 'This option does nothing in Arena mode.'
+      help: i18n.get('#arena-startPosHelp#')
     }
   ];
 
@@ -649,14 +735,14 @@ var world_Arena = new function() {
 
       time = sign + Math.floor(time/60) + ':' + ('0' + time % 60).slice(-2);
     }
-    time = 'Time: ' + time;
+    time = i18n.get('#arena-time#') + time;
 
     let p0 = 'P0: ' + self.game.p0;
     let p1 = 'P1: ' + self.game.p1;
     let p2 = 'P2: ' + self.game.p2;
     let p3 = 'P3: ' + self.game.p3;
-    let teamA = 'Team A : ' + self.game.teamA;
-    let teamB = self.game.teamB + ' : Team B';
+    let teamA = i18n.get('#arena-teamA#') + self.game.teamA;
+    let teamB = self.game.teamB + i18n.get('#arena-teamB#');
     function updateIfChanged(text, $dom) {
       if (typeof $dom == 'undefined') {
         return;

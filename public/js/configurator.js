@@ -241,7 +241,7 @@ var configurator = new function() {
           option: 'imageURL',
           type: 'strText',
           reset: true,
-          help: 'URL for image texture. Will not work with most webhosts; Imgur will work.'
+          help: '#builder-image_url_help#'
         },
       ]
     },
@@ -311,7 +311,7 @@ var configurator = new function() {
           option: 'imageURL',
           type: 'strText',
           reset: true,
-          help: 'URL for image texture. Will not work with most webhosts; Imgur will work.'
+          help: '#builder-image_url_help#'
         },
       ]
     },
@@ -363,7 +363,7 @@ var configurator = new function() {
           option: 'imageURL',
           type: 'strText',
           reset: true,
-          help: 'URL for image texture. Will not work with most webhosts; Imgur will work.'
+          help: '#builder-image_url_help#'
         },
       ]
     },
@@ -782,7 +782,7 @@ var configurator = new function() {
           option: 'imageURL',
           type: 'strText',
           reset: true,
-          help: 'URL for image texture. Will not work with most webhosts; Imgur will work.'
+          help: '#builder-image_url_help#'
         },
         {
           option: 'minAngle',
@@ -1305,6 +1305,21 @@ var configurator = new function() {
     self.saveHistory();
     self.resetScene();
     self.saveRobotOptions();
+    self.updateTextLanguage();
+  };
+
+  // Update text language
+  this.updateTextLanguage = function() {
+    self.$robotName.attr('placeholder', i18n.get('#configurator-robot_name#'));
+    self.$fileMenu.find('.activity-label').text(i18n.get('#main-file#'));
+    self.$fileMenu.attr('data-tooltip', i18n.get('#main-file#'));
+    self.$robotMenu.find('.activity-label').text(i18n.get('#main-robot#'));
+    self.$robotMenu.attr('data-tooltip', i18n.get('#main-robot#'));
+    self.$snapMenu.find('.activity-label').text(i18n.get('#builder-snap_label#'));
+    self.$snapMenu.attr('data-tooltip', i18n.get('#builder-snap_label#'));
+    self.$addComponent.text(i18n.get('#configurator-add#'));
+    self.$deleteComponent.text(i18n.get('#configurator-delete#'));
+    self.$undo.text(i18n.get('#configurator-undo#'));
   };
 
   // Apply pointerDragBehavior to selected mesh
@@ -2061,10 +2076,10 @@ var configurator = new function() {
     let rot = Math.round(angles.y / Math.PI * 1800) / 10;
 
     acknowledgeDialog({
-      title: 'Robot Position',
+      title: i18n.get('#configurator-robot_position#'),
       message: $(
-        '<p>Position: ' + x + ', ' + y + '</p>' +
-        '<p>Rotation: ' + rot + ' degrees</p>'
+        '<p>' + i18n.get('#main-position#') + ': ' + x + ', ' + y + '</p>' +
+        '<p>' + i18n.get('#main-rotation#') + ': ' + rot + ' ' + i18n.get('#main-degrees#') + '</p>'
       )
     })
   };
@@ -2079,13 +2094,13 @@ var configurator = new function() {
     if (typeof babylon.world.defaultOptions.startPosXY != 'undefined') {
       babylon.world.options.startPosXY = x + ',' +y;
     } else {
-      toastMsg('Current world doesn\'t allow saving of position');
+      toastMsg(i18n.get('#main-cannot_save_position#'));
       return;
     }
     if (typeof babylon.world.defaultOptions.startRot != 'undefined') {
       babylon.world.options.startRot = rot.toString();
     } else {
-      toastMsg('Current world doesn\'t allow saving of rotation');
+      toastMsg(i18n.get('#main-cannot_save_rotation#'));
     }
     babylon.world.setOptions();
   };
@@ -2108,8 +2123,8 @@ var configurator = new function() {
       e.stopPropagation();
 
       let menuItems = [
-        {html: 'Load from file', line: false, callback: self.loadRobotLocal},
-        {html: 'Save to file', line: true, callback: self.saveRobot},
+        {html: i18n.get('#configurator-load_robot#'), line: false, callback: self.loadRobotLocal},
+        {html: i18n.get('#configurator-save_robot#'), line: true, callback: self.saveRobot},
       ];
 
       menuDropDown(self.$fileMenu, menuItems, {className: 'fileMenuDropDown', align: 'activityBar'});
@@ -2123,7 +2138,7 @@ var configurator = new function() {
       e.stopPropagation();
 
       let menuItems = [
-        {html: 'Select Robot', line: false, callback: self.selectRobot},
+        {html: i18n.get('#configurator-select_robot#'), line: false, callback: self.selectRobot},
       ];
 
       menuDropDown(self.$robotMenu, menuItems, {className: 'robotMenuDropDown', align: 'activityBar'});
@@ -2166,12 +2181,12 @@ var configurator = new function() {
       }
 
       let menuItems = [
-        {html: 'No Snapping', line: false, callback: snapNone},
-        {html: 'Snap to 0.25cm', line: false, callback: snap25},
-        {html: 'Snap to 0.4cm (Lego Technic)', line: false, callback: snapTechnic},
-        {html: 'Snap to Lego (xy: 0.4, z: 0.48)', line: false, callback: snapLego},
-        {html: 'Snap to 0.5cm', line: false, callback: snap05},
-        {html: 'Snap to 1cm', line: false, callback: snap10},
+        {html: i18n.get('#configurator-no_snapping#'), line: false, callback: snapNone},
+        {html: i18n.get('#configurator-snap_25#'), line: false, callback: snap25},
+        {html: i18n.get('#configurator-snap_04_technic#'), line: false, callback: snapTechnic},
+        {html: i18n.get('#configurator-snap_lego#'), line: false, callback: snapLego},
+        {html: i18n.get('#configurator-snap_05#'), line: false, callback: snap05},
+        {html: i18n.get('#configurator-snap_10#'), line: false, callback: snap10},
       ];
       var tickIndex = 0;
       if (self.snapStep[2] == 0) {

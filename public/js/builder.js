@@ -7,55 +7,62 @@ var builder = new function() {
     optionsConfigurations: [
       {
         option: 'imageURL',
+        label: '#builder-label-imageURL#',
         type: 'selectImage',
         reset: true
       },
       {
         option: 'imageURL',
+        label: '#builder-label-imageURL#',
         type: 'strText',
         reset: true,
-        help: 'URL for ground image. Will not work with most webhosts; Imgur will work.'
+        help: '#builder-help-ground_image_url#'
       },
       {
         option: 'groundType',
+        label: '#builder-label-groundType#',
         type: 'select',
         options: [
-          ['Box', 'box'],
-          ['Cylinder', 'cylinder'],
-          ['None', 'none']
+          ['#builder-opt-box#', 'box'],
+          ['#builder-opt-cylinder#', 'cylinder'],
+          ['#builder-opt-none#', 'none']
         ],
         reset: true,
-        help: 'Walls only work with a Box ground. If None is selected, there will be no ground! This is only useful if a custom object is added to act as the ground.'
+        help: '#builder-help-ground_type#'
       },
       {
         option: 'imageScale',
+        label: '#builder-label-imageScale#',
         type: 'slider',
         min: '0.1',
         max: '10',
         step: '0.1',
         reset: true,
-        help: 'Scales the image (eg. when set to 2, each pixel will equal 2mm).'
+        help: '#builder-help-image_scale#'
       },
       {
         option: 'uScale',
+        label: '#builder-label-uScale#',
         type: 'slider',
         min: '0.1',
         max: '10',
         step: '0.1',
         reset: true,
-        help: 'Repeats the image horizontally (eg. when set to 2, each image will appear twice).'
+        help: '#builder-help-u_scale#'
       },
       {
         option: 'vScale',
+        label: '#builder-label-vScale#',
         type: 'slider',
         min: '0.1',
         max: '10',
         step: '0.1',
         reset: true,
-        help: 'Repeats the image vertically (eg. when set to 2, each image will appear twice).'
+        help: '#builder-help-v_scale#'
       },
       {
         option: 'groundFriction',
+        label: '#builder-label-groundFriction#',
         type: 'slider',
         min: '0',
         max: '10',
@@ -63,11 +70,12 @@ var builder = new function() {
       },
       {
         option: 'groundRestitution',
+        label: '#builder-label-groundRestitution#',
         type: 'slider',
         min: '0',
         max: '10',
         step: '0.1',
-        help: 'Affects the bounciness of the ground. Higher number will increase bounciness.'
+        help: '#builder-help-ground_restitution#'
       },
     ]
   };
@@ -76,11 +84,13 @@ var builder = new function() {
     optionsConfigurations: [
       {
         option: 'wall',
+        label: '#builder-label-wall#',
         type: 'boolean',
         reset: true
       },
       {
         option: 'wallHeight',
+        label: '#builder-label-wallHeight#',
         type: 'slider',
         min: '0.1',
         max: '30',
@@ -89,6 +99,7 @@ var builder = new function() {
       },
       {
         option: 'wallThickness',
+        label: '#builder-label-wallThickness#',
         type: 'slider',
         min: '0.1',
         max: '30',
@@ -97,12 +108,14 @@ var builder = new function() {
       },
       {
         option: 'wallColor',
+        label: '#builder-label-wallColor#',
         type: 'color',
-        help: 'Color in hex',
+        help: '#builder-help-wall_color#',
         reset: true
       },
       {
         option: 'wallFriction',
+        label: '#builder-label-wallFriction#',
         type: 'slider',
         min: '0',
         max: '10',
@@ -110,11 +123,12 @@ var builder = new function() {
       },
       {
         option: 'wallRestitution',
+        label: '#builder-label-wallRestitution#',
         type: 'slider',
         min: '0',
         max: '10',
         step: '0.1',
-        help: 'Affects the bounciness of the wall. Higher number will increase bounciness.'
+        help: '#builder-help-wall_restitution#'
       },
     ]
   };
@@ -123,16 +137,18 @@ var builder = new function() {
     optionsConfigurations: [
       {
         option: 'timer',
+        label: '#builder-label-timer#',
         type: 'select',
         options: [
-          ['None', 'none'],
-          ['Count up from zero', 'up'],
-          ['Count down from duration', 'down']
+          ['#builder-opt-none#', 'none'],
+          ['#builder-opt-count_up#', 'up'],
+          ['#builder-opt-count_down#', 'down']
         ],
         reset: true,
       },
       {
         option: 'timerDuration',
+        label: '#builder-label-timerDuration#',
         type: 'slider',
         min: '1',
         max: '300',
@@ -141,11 +157,12 @@ var builder = new function() {
       },
       {
         option: 'timerEnd',
+        label: '#builder-label-timerEnd#',
         type: 'select',
         options: [
-          ['Continue running', 'continue'],
-          ['Stop the timer only', 'stopTimer'],
-          ['Stop the timer and robot', 'stopRobot']
+          ['#builder-opt-continue#', 'continue'],
+          ['#builder-opt-stop_timer#', 'stopTimer'],
+          ['#builder-opt-stop_robot#', 'stopRobot']
         ],
       },
     ]
@@ -155,6 +172,7 @@ var builder = new function() {
     optionsConfigurations: [
       {
         option: 'startPosXYZ',
+        label: '#builder-label-startPosXYZ#',
         type: 'vectors',
         min: '-200',
         max: '200',
@@ -163,6 +181,7 @@ var builder = new function() {
       },
       {
         option: 'startRot',
+        label: '#builder-label-startRot#',
         type: 'slider',
         min: '-180',
         max: '180',
@@ -176,6 +195,7 @@ var builder = new function() {
     optionsConfigurations: [
       {
         option: 'restartAnimationOnRun',
+        label: '#builder-label-restartAnimationOnRun#',
         type: 'boolean',
       },
     ]
@@ -188,13 +208,14 @@ var builder = new function() {
         type: 'buttons',
         buttons: [
           {
-            label: 'Drop to ground',
+            label: '#builder-drop_to_ground#',
             callback: 'moveToGround'
           }
         ]
       },
       {
         option: 'position',
+        label: '#builder-label-position#',
         type: 'vectors',
         min: '-100',
         max: '100',
@@ -203,6 +224,7 @@ var builder = new function() {
       },
       {
         option: 'rotation',
+        label: '#builder-label-rotation#',
         type: 'vectors',
         min: '-180',
         max: '180',
@@ -211,23 +233,26 @@ var builder = new function() {
       },
       {
         option: 'animationMode',
+        label: '#builder-label-animationMode#',
         type: 'select',
         options: [
-          ['None', 'none'],
-          ['Loop', 'loop'],
-          ['Alternate', 'alternate'],
+          ['#builder-opt-none#', 'none'],
+          ['#builder-opt-loop#', 'loop'],
+          ['#builder-opt-alternate#', 'alternate'],
         ],
         reset: true,
-        help: 'Loop: Restart from beginning. Alternate: Alternate between back and forth.'
+        help: '#builder-help-animation_mode#'
       },
       {
         option: 'animationKeys',
+        label: '#builder-label-animationKeys#',
         type: 'custom',
         generatorFunction: 'setAnimationKeys',
-        help: 'Position object, set time, and add key. You need at least two keys for animation to work.'
+        help: '#builder-help-animation_keys#'
       },
       {
         option: 'size',
+        label: '#builder-label-size#',
         type: 'vectors',
         min: '1',
         max: '100',
@@ -236,19 +261,21 @@ var builder = new function() {
       },
       {
         option: 'color',
+        label: '#builder-label-color#',
         type: 'color',
-        help: 'Color in hex',
+        help: '#builder-help-color#',
         reset: true
       },
       {
         option: 'imageType',
+        label: '#builder-label-imageType#',
         type: 'select',
         options: [
-          ['None', 'none'],
-          ['Repeat on every face', 'repeat'],
-          ['Only on top face', 'top'],
-          ['Only on front face', 'front'],
-          ['Map across all faces', 'all']
+          ['#builder-opt-none#', 'none'],
+          ['#builder-opt-repeat#', 'repeat'],
+          ['#builder-opt-top#', 'top'],
+          ['#builder-opt-front#', 'front'],
+          ['#builder-opt-all#', 'all']
         ],
         reset: true
       },
@@ -261,95 +288,108 @@ var builder = new function() {
         option: 'imageURL',
         type: 'strText',
         reset: true,
-        help: 'URL for image texture. Will not work with most webhosts; Imgur will work.'
+        help: '#builder-image_url_help#'
       },
       {
         option: 'physicsOptions',
+        label: '#builder-label-physicsOptions#',
         type: 'custom',
         generatorFunction: 'setPhysicsOptions',
         options: [
-          ['Fixed', 'fixed'],
-          ['Moveable', 'moveable'],
-          ['Physicsless', 'false'],
-          ['Custom', 'custom']
+          ['#builder-opt-fixed#', 'fixed'],
+          ['#builder-opt-moveable#', 'moveable'],
+          ['#builder-opt-physicsless#', 'false'],
+          ['#builder-opt-custom#', 'custom']
         ],
         reset: true
       },
       {
         option: 'physics_mass',
+        label: '#builder-label-physics_mass#',
         type: 'custom',
         generatorFunction: 'setPhysicsOptions',
-        help: 'Default for moveable objects is 100. Set this to 0 to make it a fixed object.'
+        help: '#builder-help-physics_mass#'
       },
       {
         option: 'physics_friction',
+        label: '#builder-label-physics_friction#',
         type: 'custom',
         generatorFunction: 'setPhysicsOptions',
-        help: 'Default for objects is 0.1, while the ground is 1.0 by default.'
+        help: '#builder-help-physics_friction#'
       },
       {
         option: 'physics_restitution',
+        label: '#builder-label-physics_restitution#',
         type: 'custom',
         generatorFunction: 'setPhysicsOptions',
-        help: 'Affects the bounciness of the object. Higher number will increase bounciness.'
+        help: '#builder-help-physics_restitution#'
       },
       {
         option: 'physics_dampLinear',
+        label: '#builder-label-physics_dampLinear#',
         type: 'custom',
         generatorFunction: 'setPhysicsOptions',
-        help: 'Dampens linear movements.'
+        help: '#builder-help-physics_damp_linear#'
       },
       {
         option: 'physics_dampAngular',
+        label: '#builder-label-physics_dampAngular#',
         type: 'custom',
         generatorFunction: 'setPhysicsOptions',
-        help: 'Dampens rotations.'
+        help: '#builder-help-physics_damp_angular#'
       },
       {
         option: 'physics_group',
+        label: '#builder-label-physics_group#',
         type: 'custom',
         generatorFunction: 'setPhysicsOptions',
-        help: 'Sets the physics group bitmask (default is 1). Use together with mask.'
+        help: '#builder-help-physics_group#'
       },
       {
         option: 'physics_mask',
+        label: '#builder-label-physics_mask#',
         type: 'custom',
         generatorFunction: 'setPhysicsOptions',
-        help: 'A bitmask which sets which physics group this object will interact with. Default is -1 (all groups).'
+        help: '#builder-help-physics_mask#'
       },
       {
         option: 'magnetic',
+        label: '#builder-label-magnetic#',
         type: 'boolean',
       },
       {
         option: 'laserDetection',
+        label: '#builder-label-laserDetection#',
         type: 'select',
         options: [
-          ['Default', null],
-          ['Invisible (Ray passes through)', 'invisible'],
-          ['Absorb with no reflection', 'absorb'],
-          ['Normal', 'normal']
+          ['#builder-opt-default#', null],
+          ['#builder-opt-invisible#', 'invisible'],
+          ['#builder-opt-absorb#', 'absorb'],
+          ['#builder-opt-normal#', 'normal']
         ],
-        help: 'Defaults to invisible for physicless objects, and normal for all others.'
+        help: '#builder-help-laser_detection#'
       },
       {
         option: 'ultrasonicDetection',
+        label: '#builder-label-ultrasonicDetection#',
         type: 'select',
         options: [
-          ['Default', null],
-          ['Invisible (Ray passes through)', 'invisible'],
-          ['Absorb with no reflection', 'absorb'],
-          ['Normal', 'normal']
+          ['#builder-opt-default#', null],
+          ['#builder-opt-invisible#', 'invisible'],
+          ['#builder-opt-absorb#', 'absorb'],
+          ['#builder-opt-normal#', 'normal']
         ],
-        help: 'Defaults to invisible for physicless objects, and normal for all others.'
+        help: '#builder-help-laser_detection#'
       },
       {
         option: 'receiveShadows',
+        label: '#builder-label-receiveShadows#',
         type: 'boolean',
         reset: true
       },
       {
         option: 'castShadows',
+        label: '#builder-label-castShadows#',
         type: 'boolean',
         reset: true
       },
@@ -362,13 +402,14 @@ var builder = new function() {
         type: 'buttons',
         buttons: [
           {
-            label: 'Drop to ground',
+            label: '#builder-drop_to_ground#',
             callback: 'moveToGround'
           }
         ]
       },
       {
         option: 'position',
+        label: '#builder-label-position#',
         type: 'vectors',
         min: '-100',
         max: '100',
@@ -377,6 +418,7 @@ var builder = new function() {
       },
       {
         option: 'rotation',
+        label: '#builder-label-rotation#',
         type: 'vectors',
         min: '-180',
         max: '180',
@@ -385,23 +427,26 @@ var builder = new function() {
       },
       {
         option: 'animationMode',
+        label: '#builder-label-animationMode#',
         type: 'select',
         options: [
-          ['None', 'none'],
-          ['Loop', 'loop'],
-          ['Alternate', 'alternate'],
+          ['#builder-opt-none#', 'none'],
+          ['#builder-opt-loop#', 'loop'],
+          ['#builder-opt-alternate#', 'alternate'],
         ],
         reset: true,
-        help: 'Loop: Restart from beginning. Alternate: Alternate between back and forth.'
+        help: '#builder-help-animation_mode#'
       },
       {
         option: 'animationKeys',
+        label: '#builder-label-animationKeys#',
         type: 'custom',
         generatorFunction: 'setAnimationKeys',
-        help: 'Position object, set time, and add key. You need at least two keys for animation to work.'
+        help: '#builder-help-animation_keys#'
       },
       {
         option: 'size',
+        label: '#builder-label-size#',
         type: 'vectors',
         min: '1',
         max: '100',
@@ -410,8 +455,9 @@ var builder = new function() {
       },
       {
         option: 'color',
+        label: '#builder-label-color#',
         type: 'color',
-        help: 'Color in hex',
+        help: '#builder-help-color#',
         reset: true
       },
       {
@@ -423,95 +469,108 @@ var builder = new function() {
         option: 'imageURL',
         type: 'strText',
         reset: true,
-        help: 'URL for image texture. Will not work with most webhosts; Imgur will work.'
+        help: '#builder-image_url_help#'
       },
       {
         option: 'physicsOptions',
+        label: '#builder-label-physicsOptions#',
         type: 'custom',
         generatorFunction: 'setPhysicsOptions',
         options: [
-          ['Fixed', 'fixed'],
-          ['Moveable', 'moveable'],
-          ['Physicsless', 'false'],
-          ['Custom', 'custom']
+          ['#builder-opt-fixed#', 'fixed'],
+          ['#builder-opt-moveable#', 'moveable'],
+          ['#builder-opt-physicsless#', 'false'],
+          ['#builder-opt-custom#', 'custom']
         ],
         reset: true
       },
       {
         option: 'physics_mass',
+        label: '#builder-label-physics_mass#',
         type: 'custom',
         generatorFunction: 'setPhysicsOptions',
-        help: 'Default for moveable objects is 100. Set this to 0 to make it a fixed object.'
+        help: '#builder-help-physics_mass#'
       },
       {
         option: 'physics_friction',
+        label: '#builder-label-physics_friction#',
         type: 'custom',
         generatorFunction: 'setPhysicsOptions',
-        help: 'Default for objects is 0.1, while the ground is 1.0 by default.'
+        help: '#builder-help-physics_friction#'
       },
       {
         option: 'physics_restitution',
+        label: '#builder-label-physics_restitution#',
         type: 'custom',
         generatorFunction: 'setPhysicsOptions',
-        help: 'Affects the bounciness of the object. Higher number will increase bounciness.'
+        help: '#builder-help-physics_restitution#'
       },
       {
         option: 'physics_dampLinear',
+        label: '#builder-label-physics_dampLinear#',
         type: 'custom',
         generatorFunction: 'setPhysicsOptions',
-        help: 'Dampens linear movements.'
+        help: '#builder-help-physics_damp_linear#'
       },
       {
         option: 'physics_dampAngular',
+        label: '#builder-label-physics_dampAngular#',
         type: 'custom',
         generatorFunction: 'setPhysicsOptions',
-        help: 'Dampens rotations.'
+        help: '#builder-help-physics_damp_angular#'
       },
       {
         option: 'physics_group',
+        label: '#builder-label-physics_group#',
         type: 'custom',
         generatorFunction: 'setPhysicsOptions',
-        help: 'Sets the physics group bitmask (default is 1). Use together with mask.'
+        help: '#builder-help-physics_group#'
       },
       {
         option: 'physics_mask',
+        label: '#builder-label-physics_mask#',
         type: 'custom',
         generatorFunction: 'setPhysicsOptions',
-        help: 'A bitmask which sets which physics group this object will interact with. Default is -1 (all groups).'
+        help: '#builder-help-physics_mask#'
       },
       {
         option: 'magnetic',
+        label: '#builder-label-magnetic#',
         type: 'boolean',
       },
       {
         option: 'laserDetection',
+        label: '#builder-label-laserDetection#',
         type: 'select',
         options: [
-          ['Default', null],
-          ['Invisible (Ray passes through)', 'invisible'],
-          ['Absorb with no reflection', 'absorb'],
-          ['Normal', 'normal']
+          ['#builder-opt-default#', null],
+          ['#builder-opt-invisible#', 'invisible'],
+          ['#builder-opt-absorb#', 'absorb'],
+          ['#builder-opt-normal#', 'normal']
         ],
-        help: 'Defaults to invisible for physicless objects, and normal for all others.'
+        help: '#builder-help-laser_detection#'
       },
       {
         option: 'ultrasonicDetection',
+        label: '#builder-label-ultrasonicDetection#',
         type: 'select',
         options: [
-          ['Default', null],
-          ['Invisible (Ray passes through)', 'invisible'],
-          ['Absorb with no reflection', 'absorb'],
-          ['Normal', 'normal']
+          ['#builder-opt-default#', null],
+          ['#builder-opt-invisible#', 'invisible'],
+          ['#builder-opt-absorb#', 'absorb'],
+          ['#builder-opt-normal#', 'normal']
         ],
-        help: 'Defaults to invisible for physicless objects, and normal for all others.'
+        help: '#builder-help-laser_detection#'
       },
       {
         option: 'receiveShadows',
+        label: '#builder-label-receiveShadows#',
         type: 'boolean',
         reset: true
       },
       {
         option: 'castShadows',
+        label: '#builder-label-castShadows#',
         type: 'boolean',
         reset: true
       },
@@ -524,13 +583,14 @@ var builder = new function() {
         type: 'buttons',
         buttons: [
           {
-            label: 'Drop to ground',
+            label: '#builder-drop_to_ground#',
             callback: 'moveToGround'
           }
         ]
       },
       {
         option: 'position',
+        label: '#builder-label-position#',
         type: 'vectors',
         min: '-100',
         max: '100',
@@ -539,6 +599,7 @@ var builder = new function() {
       },
       {
         option: 'rotation',
+        label: '#builder-label-rotation#',
         type: 'vectors',
         min: '-180',
         max: '180',
@@ -547,23 +608,26 @@ var builder = new function() {
       },
       {
         option: 'animationMode',
+        label: '#builder-label-animationMode#',
         type: 'select',
         options: [
-          ['None', 'none'],
-          ['Loop', 'loop'],
-          ['Alternate', 'alternate'],
+          ['#builder-opt-none#', 'none'],
+          ['#builder-opt-loop#', 'loop'],
+          ['#builder-opt-alternate#', 'alternate'],
         ],
         reset: true,
-        help: 'Loop: Restart from beginning. Alternate: Alternate between back and forth.'
+        help: '#builder-help-animation_mode#'
       },
       {
         option: 'animationKeys',
+        label: '#builder-label-animationKeys#',
         type: 'custom',
         generatorFunction: 'setAnimationKeys',
-        help: 'Position object, set time, and add key. You need at least two keys for animation to work.'
+        help: '#builder-help-animation_keys#'
       },
       {
         option: 'size',
+        label: '#builder-label-size#',
         type: 'vectors',
         min: '1',
         max: '100',
@@ -572,8 +636,9 @@ var builder = new function() {
       },
       {
         option: 'color',
+        label: '#builder-label-color#',
         type: 'color',
-        help: 'Color in hex',
+        help: '#builder-help-color#',
         reset: true
       },
       {
@@ -585,95 +650,108 @@ var builder = new function() {
         option: 'imageURL',
         type: 'strText',
         reset: true,
-        help: 'URL for image texture. Will not work with most webhosts; Imgur will work.'
+        help: '#builder-image_url_help#'
       },
       {
         option: 'physicsOptions',
+        label: '#builder-label-physicsOptions#',
         type: 'custom',
         generatorFunction: 'setPhysicsOptions',
         options: [
-          ['Fixed', 'fixed'],
-          ['Moveable', 'moveable'],
-          ['Physicsless', 'false'],
-          ['Custom', 'custom']
+          ['#builder-opt-fixed#', 'fixed'],
+          ['#builder-opt-moveable#', 'moveable'],
+          ['#builder-opt-physicsless#', 'false'],
+          ['#builder-opt-custom#', 'custom']
         ],
         reset: true
       },
       {
         option: 'physics_mass',
+        label: '#builder-label-physics_mass#',
         type: 'custom',
         generatorFunction: 'setPhysicsOptions',
-        help: 'Default for moveable objects is 100. Set this to 0 to make it a fixed object.'
+        help: '#builder-help-physics_mass#'
       },
       {
         option: 'physics_friction',
+        label: '#builder-label-physics_friction#',
         type: 'custom',
         generatorFunction: 'setPhysicsOptions',
-        help: 'Default for objects is 0.1, while the ground is 1.0 by default.'
+        help: '#builder-help-physics_friction#'
       },
       {
         option: 'physics_restitution',
+        label: '#builder-label-physics_restitution#',
         type: 'custom',
         generatorFunction: 'setPhysicsOptions',
-        help: 'Affects the bounciness of the object. Higher number will increase bounciness.'
+        help: '#builder-help-physics_restitution#'
       },
       {
         option: 'physics_dampLinear',
+        label: '#builder-label-physics_dampLinear#',
         type: 'custom',
         generatorFunction: 'setPhysicsOptions',
-        help: 'Dampens linear movements.'
+        help: '#builder-help-physics_damp_linear#'
       },
       {
         option: 'physics_dampAngular',
+        label: '#builder-label-physics_dampAngular#',
         type: 'custom',
         generatorFunction: 'setPhysicsOptions',
-        help: 'Dampens rotations.'
+        help: '#builder-help-physics_damp_angular#'
       },
       {
         option: 'physics_group',
+        label: '#builder-label-physics_group#',
         type: 'custom',
         generatorFunction: 'setPhysicsOptions',
-        help: 'Sets the physics group bitmask (default is 1). Use together with mask.'
+        help: '#builder-help-physics_group#'
       },
       {
         option: 'physics_mask',
+        label: '#builder-label-physics_mask#',
         type: 'custom',
         generatorFunction: 'setPhysicsOptions',
-        help: 'A bitmask which sets which physics group this object will interact with. Default is -1 (all groups).'
+        help: '#builder-help-physics_mask#'
       },
       {
         option: 'magnetic',
+        label: '#builder-label-magnetic#',
         type: 'boolean',
       },
       {
         option: 'laserDetection',
+        label: '#builder-label-laserDetection#',
         type: 'select',
         options: [
-          ['Default', null],
-          ['Invisible (Ray passes through)', 'invisible'],
-          ['Absorb with no reflection', 'absorb'],
-          ['Normal', 'normal']
+          ['#builder-opt-default#', null],
+          ['#builder-opt-invisible#', 'invisible'],
+          ['#builder-opt-absorb#', 'absorb'],
+          ['#builder-opt-normal#', 'normal']
         ],
-        help: 'Defaults to invisible for physicless objects, and normal for all others.'
+        help: '#builder-help-laser_detection#'
       },
       {
         option: 'ultrasonicDetection',
+        label: '#builder-label-ultrasonicDetection#',
         type: 'select',
         options: [
-          ['Default', null],
-          ['Invisible (Ray passes through)', 'invisible'],
-          ['Absorb with no reflection', 'absorb'],
-          ['Normal', 'normal']
+          ['#builder-opt-default#', null],
+          ['#builder-opt-invisible#', 'invisible'],
+          ['#builder-opt-absorb#', 'absorb'],
+          ['#builder-opt-normal#', 'normal']
         ],
-        help: 'Defaults to invisible for physicless objects, and normal for all others.'
+        help: '#builder-help-laser_detection#'
       },
       {
         option: 'receiveShadows',
+        label: '#builder-label-receiveShadows#',
         type: 'boolean',
         reset: true
       },
       {
         option: 'castShadows',
+        label: '#builder-label-castShadows#',
         type: 'boolean',
         reset: true
       },
@@ -686,13 +764,14 @@ var builder = new function() {
         type: 'buttons',
         buttons: [
           {
-            label: 'Drop to ground',
+            label: '#builder-drop_to_ground#',
             callback: 'moveToGround'
           }
         ]
       },
       {
         option: 'position',
+        label: '#builder-label-position#',
         type: 'vectors',
         min: '-100',
         max: '100',
@@ -701,6 +780,7 @@ var builder = new function() {
       },
       {
         option: 'rotation',
+        label: '#builder-label-rotation#',
         type: 'vectors',
         min: '-180',
         max: '180',
@@ -709,34 +789,39 @@ var builder = new function() {
       },
       {
         option: 'animationMode',
+        label: '#builder-label-animationMode#',
         type: 'select',
         options: [
-          ['None', 'none'],
-          ['Loop', 'loop'],
-          ['Alternate', 'alternate'],
+          ['#builder-opt-none#', 'none'],
+          ['#builder-opt-loop#', 'loop'],
+          ['#builder-opt-alternate#', 'alternate'],
         ],
         reset: true,
-        help: 'Loop: Restart from beginning. Alternate: Alternate between back and forth.'
+        help: '#builder-help-animation_mode#'
       },
       {
         option: 'animationKeys',
+        label: '#builder-label-animationKeys#',
         type: 'custom',
         generatorFunction: 'setAnimationKeys',
-        help: 'Position object, set time, and add key. You need at least two keys for animation to work.'
+        help: '#builder-help-animation_keys#'
       },
       {
         option: 'modelURL',
+        label: '#builder-label-modelURL#',
         type: 'selectModel',
         reset: true
       },
       {
         option: 'modelURL',
+        label: '#builder-label-modelURL#',
         type: 'strText',
         reset: true,
-        help: 'URL for GLTF (.glb/.gltf) models. Will not work with most webhosts; Github will work.'
+        help: '#builder-help-model_url#'
       },
       {
         option: 'modelScale',
+        label: '#builder-label-modelScale#',
         type: 'slider',
         min: '5',
         max: '200',
@@ -746,95 +831,109 @@ var builder = new function() {
       {
         type: 'custom',
         option: 'modelAnimation',
+        label: '#builder-label-modelAnimation#',
         generatorFunction: 'selectAnimation'
       },
       {
         option: 'physicsOptions',
+        label: '#builder-label-physicsOptions#',
         type: 'custom',
         generatorFunction: 'setPhysicsOptions',
         options: [
-          ['Fixed', 'fixed'],
-          ['Moveable', 'moveable'],
-          ['Physicsless', 'false'],
-          ['Custom', 'custom']
+          ['#builder-opt-fixed#', 'fixed'],
+          ['#builder-opt-moveable#', 'moveable'],
+          ['#builder-opt-physicsless#', 'false'],
+          ['#builder-opt-custom#', 'custom']
         ],
         reset: true
       },
       {
         option: 'physics_mass',
+        label: '#builder-label-physics_mass#',
         type: 'custom',
         generatorFunction: 'setPhysicsOptions',
-        help: 'Default for moveable objects is 100. Set this to 0 to make it a fixed object.'
+        help: '#builder-help-physics_mass#'
       },
       {
         option: 'physics_friction',
+        label: '#builder-label-physics_friction#',
         type: 'custom',
         generatorFunction: 'setPhysicsOptions',
-        help: 'Default for objects is 0.1, while the ground is 1.0 by default.'
+        help: '#builder-help-physics_friction#'
       },
       {
         option: 'physics_restitution',
+        label: '#builder-label-physics_restitution#',
         type: 'custom',
         generatorFunction: 'setPhysicsOptions',
-        help: 'Affects the bounciness of the object. Higher number will increase bounciness.'
+        help: '#builder-help-physics_restitution#'
       },
       {
         option: 'physics_dampLinear',
+        label: '#builder-label-physics_dampLinear#',
         type: 'custom',
         generatorFunction: 'setPhysicsOptions',
-        help: 'Dampens linear movements.'
+        help: '#builder-help-physics_damp_linear#'
       },
       {
         option: 'physics_dampAngular',
+        label: '#builder-label-physics_dampAngular#',
         type: 'custom',
         generatorFunction: 'setPhysicsOptions',
-        help: 'Dampens rotations.'
+        help: '#builder-help-physics_damp_angular#'
       },
       {
         option: 'physics_group',
+        label: '#builder-label-physics_group#',
         type: 'custom',
         generatorFunction: 'setPhysicsOptions',
-        help: 'Sets the physics group bitmask (default is 1). Use together with mask.'
+        help: '#builder-help-physics_group#'
       },
       {
         option: 'physics_mask',
+        label: '#builder-label-physics_mask#',
         type: 'custom',
         generatorFunction: 'setPhysicsOptions',
-        help: 'A bitmask which sets which physics group this object will interact with. Default is -1 (all groups).'
+        help: '#builder-help-physics_mask#'
       },
       {
         option: 'magnetic',
+        label: '#builder-label-magnetic#',
         type: 'boolean',
       },
       {
         option: 'laserDetection',
+        label: '#builder-label-laserDetection#',
         type: 'select',
         options: [
-          ['Default', null],
-          ['Invisible (Ray passes through)', 'invisible'],
-          ['Absorb with no reflection', 'absorb'],
-          ['Normal', 'normal']
+          ['#builder-opt-default#', null],
+          ['#builder-opt-invisible#', 'invisible'],
+          ['#builder-opt-absorb#', 'absorb'],
+          ['#builder-opt-normal#', 'normal']
         ],
-        help: 'Defaults to invisible for physicless objects, and normal for all others.'
+        help: '#builder-help-laser_detection#'
       },
       {
         option: 'ultrasonicDetection',
+        label: '#builder-label-ultrasonicDetection#',
         type: 'select',
         options: [
-          ['Default', null],
-          ['Invisible (Ray passes through)', 'invisible'],
-          ['Absorb with no reflection', 'absorb'],
-          ['Normal', 'normal']
+          ['#builder-opt-default#', null],
+          ['#builder-opt-invisible#', 'invisible'],
+          ['#builder-opt-absorb#', 'absorb'],
+          ['#builder-opt-normal#', 'normal']
         ],
-        help: 'Defaults to invisible for physicless objects, and normal for all others.'
+        help: '#builder-help-laser_detection#'
       },
       {
         option: 'receiveShadows',
+        label: '#builder-label-receiveShadows#',
         type: 'boolean',
         reset: true
       },
       {
         option: 'castShadows',
+        label: '#builder-label-castShadows#',
         type: 'boolean',
         reset: true
       },
@@ -845,6 +944,7 @@ var builder = new function() {
     optionsConfigurations: [
       {
         option: 'position',
+        label: '#builder-label-position#',
         type: 'vectors',
         min: '-100',
         max: '100',
@@ -853,6 +953,7 @@ var builder = new function() {
       },
       {
         option: 'rotation',
+        label: '#builder-label-rotation#',
         type: 'vectors',
         min: '-180',
         max: '180',
@@ -861,6 +962,7 @@ var builder = new function() {
       },
       {
         option: 'size',
+        label: '#builder-label-size#',
         type: 'vectors',
         min: '1',
         max: '100',
@@ -869,24 +971,28 @@ var builder = new function() {
       },
       {
         option: 'hide',
+        label: '#builder-label-hide#',
         type: 'boolean',
-        help: 'If set, the hinge will be hidden',
+        help: '#builder-help-hinge_hide#',
         reset: true
       },
       {
         option: 'speed',
+        label: '#builder-label-speed#',
         type: 'floatText',
-        help: 'Rotation speed in radians per second'
+        help: '#builder-help-hinge_speed#'
       },
       {
         option: 'maxForce',
+        label: '#builder-label-maxForce#',
         type: 'floatText',
-        help: 'Maximum force applied to achieve the specified speed'
+        help: '#builder-help-hinge_maxforce#'
       },
       {
         option: 'attachID',
+        label: '#builder-label-attachID#',
         type: 'strText',
-        help: 'Mesh ID to attach to. Can only be used if there are no child meshes.'
+        help: '#builder-help-hinge_attachid#'
       }
     ]
   };
@@ -895,6 +1001,7 @@ var builder = new function() {
     optionsConfigurations: [
       {
         option: 'position',
+        label: '#builder-label-position#',
         type: 'vectors',
         min: '-100',
         max: '100',
@@ -903,6 +1010,7 @@ var builder = new function() {
       },
       {
         option: 'rotation',
+        label: '#builder-label-rotation#',
         type: 'vectors',
         min: '-180',
         max: '180',
@@ -919,14 +1027,16 @@ var builder = new function() {
       },
       {
         option: 'hide',
+        label: '#builder-label-hide#',
         type: 'boolean',
-        help: 'If set, the joint will be hidden',
+        help: '#builder-help-balljoint_hide#',
         reset: true
       },
       {
         option: 'attachID',
+        label: '#builder-label-attachID#',
         type: 'strText',
-        help: 'Mesh ID to attach to. Can only be used if there are no child meshes.'
+        help: '#builder-help-hinge_attachid#'
       }
     ]
   };
@@ -1028,6 +1138,21 @@ var builder = new function() {
 
     self.saveHistory();
     self.resetScene();
+    self.updateTextLanguage();
+  };
+
+  // Update text language
+  this.updateTextLanguage = function() {
+    self.$fileMenu.find('.activity-label').text(i18n.get('#main-file#'));
+    self.$fileMenu.attr('data-tooltip', i18n.get('#main-file#'));
+    self.$worldMenu.find('.activity-label').text(i18n.get('#sim-world#'));
+    self.$worldMenu.attr('data-tooltip', i18n.get('#sim-world#'));
+    self.$snapMenu.find('.activity-label').text(i18n.get('#builder-snap_label#'));
+    self.$snapMenu.attr('data-tooltip', i18n.get('#builder-snap_label#'));
+    self.$addObject.text(i18n.get('#builder-add#'));
+    self.$cloneObject.text(i18n.get('#builder-clone#'));
+    self.$deleteObject.text(i18n.get('#builder-delete#'));
+    self.$undo.text(i18n.get('#builder-undo#'));
   };
 
   // Setup drag
@@ -1141,7 +1266,7 @@ var builder = new function() {
     let mesh = babylon.scene.getMeshByID(id);
 
     if (typeof $div == 'undefined') {
-      $div = $('<div>Loading Model...</div>');
+      $div = $('<div>' + i18n.get('#builder-loading_model#') + '</div>');
     }
 
     if (mesh == null) {
@@ -1182,7 +1307,7 @@ var builder = new function() {
       } else {
         objectOptions.modelAnimation = 'None';
         $div.text('');
-        $div.append($('<div>No animations in this model</div>'));
+        $div.append($('<div>' + i18n.get('#builder-no_animations#') + '</div>'));
       }
     }
 
@@ -1198,7 +1323,7 @@ var builder = new function() {
       opt.options.forEach(function(option){
         let $opt = $('<option></option>');
         $opt.prop('value', option[1]);
-        $opt.text(option[0]);
+        $opt.text(i18n.get(option[0]));
         if (option[1] == currentVal) {
           $opt.attr('selected', true);
         }
@@ -1238,7 +1363,7 @@ var builder = new function() {
 
         let val = parseFloat(trimmed);
         if (isNaN(val)) {
-          toastMsg('Not a valid number');
+          toastMsg(i18n.get('#builder-not_valid_number#'));
         } else {
           self.saveHistory();
           setter(val);
@@ -1433,16 +1558,16 @@ var builder = new function() {
       }
     ];
 
-    $buttonsBox.append('<span>Key Time (s):</span>');
+    $buttonsBox.append('<span>' + i18n.get('#builder-key_time#') + '</span>');
     $buttonsBox.append($keyTime);
 
     let $button = $('<button></button>');
-    $button.text('Add Key');
+    $button.text(i18n.get('#builder-add_key#'));
     $button.click(addKey);
     $buttonsBox.append($button);
 
     $button = $('<button></button>');
-    $button.text('Edit');
+    $button.text(i18n.get('#builder-edit#'));
     $button.click(edit);
     $buttonsBox.append($button);
     $buttonsBox.append('<span>&nbsp;</span>');
@@ -1895,32 +2020,32 @@ var builder = new function() {
     let objectIndex = 0;
 
     let $ul = $('<ul></ul>');
-    let $li = $('<li class="selected">Ground</li>');
+    let $li = $('<li class="selected"></li>').text(i18n.get('#builder-list-ground#'));
     $li[0].name = 'ground';
     $li[0].object = options;
     $ul.append($li);
 
-    $li = $('<li>Wall</li>');
+    $li = $('<li></li>').text(i18n.get('#builder-list-wall#'));
     $li[0].name = 'wall';
     $li[0].object = options;
     $ul.append($li);
 
-    $li = $('<li>Timer</li>');
+    $li = $('<li></li>').text(i18n.get('#builder-list-timer#'));
     $li[0].name = 'timer';
     $li[0].object = options;
     $ul.append($li);
 
-    $li = $('<li>Robot</li>');
+    $li = $('<li></li>').text(i18n.get('#builder-list-robot#'));
     $li[0].name = 'robot';
     $li[0].object = options;
     $ul.append($li);
 
-    $li = $('<li>Animation</li>');
+    $li = $('<li></li>').text(i18n.get('#builder-list-animation#'));
     $li[0].name = 'animation';
     $li[0].object = options;
     $ul.append($li);
 
-    $li = $('<li>Objects</li>');
+    $li = $('<li></li>').text(i18n.get('#builder-list-objects#'));
     $li[0].name = 'objects';
     $li[0].object = {};
     $ul.append($li);
@@ -2032,7 +2157,7 @@ var builder = new function() {
   // New world using defaults
   this.newWorld = function() {
     let options = {
-      message: 'Create a new empty world? You will lose all unsaved changes.',
+      message: i18n.get('#builder-new_world_confirm#'),
     };
     confirmDialog(options, function(){
       self.worldOptions = JSON.parse(JSON.stringify(worlds[0].defaultOptions));
@@ -2054,8 +2179,8 @@ var builder = new function() {
         let loadedJson = JSON.parse(this.result);
 
         if (loadedJson.worldName != 'custom') {
-          let msg = 'Only "custom" worlds can be edited in the world builder.<br>';
-          msg += 'This json file is for a "' + loadedJson.worldName + '" world.';
+          let msg = i18n.get('#builder-only_custom_world#') + '<br>';
+          msg += i18n.get('#builder-this_world_is#') + ' "' + loadedJson.worldName + '" ' + i18n.get('#builder-world_type#');
           showErrorModal(msg);
           return;
         }
@@ -2077,11 +2202,11 @@ var builder = new function() {
       e.stopPropagation();
 
       let menuItems = [
-        {html: 'New World', line: true, callback: self.newWorld},
-        {html: 'Load world from file', line: false, callback: self.loadWorldLocal},
-        {html: 'Save world to file', line: true, callback: self.saveWorld},
-        {html: 'Load object from file', line: false, callback: self.loadObjectLocal},
-        {html: 'Save object to file', line: false, callback: self.saveObject},
+        {html: i18n.get('#builder-new_world#'), line: true, callback: self.newWorld},
+        {html: i18n.get('#builder-load_world#'), line: false, callback: self.loadWorldLocal},
+        {html: i18n.get('#builder-save_world#'), line: true, callback: self.saveWorld},
+        {html: i18n.get('#builder-load_object#'), line: false, callback: self.loadObjectLocal},
+        {html: i18n.get('#builder-save_object#'), line: false, callback: self.saveObject},
 
       ];
 
@@ -2104,7 +2229,7 @@ var builder = new function() {
       }
 
       let menuItems = [
-        {html: i18n.get('Animate'), line: false, callback: toggleAnimate }
+        {html: i18n.get('#builder-animate#'), line: false, callback: toggleAnimate }
       ];
       if (babylon.world.animate) {
         menuItems[0].html = '<span class="tick">&#x2713;</span> ' + menuItems[0].html;
@@ -2153,13 +2278,13 @@ var builder = new function() {
       }
 
       let menuItems = [
-        {html: 'No Snapping', line: false, callback: snapNone},
-        {html: 'Snap to 0.2cm', line: false, callback: snap02},
-        {html: 'Snap to 0.4cm (Lego Technic)', line: false, callback: snapTechnic},
-        {html: 'Snap to Lego (xy: 0.4, z: 0.48)', line: false, callback: snapLego},
-        {html: 'Snap to 0.5cm', line: false, callback: snap05},
-        {html: 'Snap to 1cm', line: false, callback: snap10},
-        {html: 'Snap to 5cm', line: false, callback: snap50},
+        {html: i18n.get('#builder-no_snapping#'), line: false, callback: snapNone},
+        {html: i18n.get('#builder-snap_02#'), line: false, callback: snap02},
+        {html: i18n.get('#builder-snap_04_technic#'), line: false, callback: snapTechnic},
+        {html: i18n.get('#builder-snap_lego#'), line: false, callback: snapLego},
+        {html: i18n.get('#builder-snap_05#'), line: false, callback: snap05},
+        {html: i18n.get('#builder-snap_10#'), line: false, callback: snap10},
+        {html: i18n.get('#builder-snap_50#'), line: false, callback: snap50},
       ];
       var tickIndex = 0;
       if (self.snapStep[2] == 0) {

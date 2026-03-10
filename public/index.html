@@ -11,6 +11,7 @@
 
   <link rel="stylesheet" href="css/main.css?v=9584d2b6">
   <link rel="stylesheet" href="css/widgets.css?v=7d85fcde">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prism-themes@1.9.0/themes/prism-one-dark.css">
 
   <script src="jquery/jquery-3.5.1.slim.min.js"></script>
 
@@ -109,11 +110,34 @@
       </div>
 
       <div class="panel" aria-labelledby="navPython">
-        <div class="python">
-          <div id="pythonCode"></div>
-          <div id="filesRow">
-            <div id="filesList"></div>
-            <div id="addNewFile"><span class="icon-plus"></span></div>
+        <div class="pythonSplitContainer">
+          <div class="python">
+            <div id="pythonCode"></div>
+            <div id="filesRow">
+              <div id="filesList"></div>
+              <div id="addNewFile"><span class="icon-plus"></span></div>
+            </div>
+          </div>
+          <div id="aiTutorPanel" class="aiTutorPanel">
+            <div class="aiTutorHeader">
+              <span class="material-symbols-rounded">forum</span>
+              <span>AI Tutor</span>
+            </div>
+            <div class="aiTutorMessages"></div>
+            <div class="aiTutorInput">
+              <div id="llm-progress-container" style="display: none;">
+                <div id="llm-progress-bar"></div>
+                <div id="llm-progress-text"></div>
+              </div>
+              <div class="aiTutorInputRow">
+                <select id="llm-model-select" title="모델 선택">
+                  <option value="Qwen2.5-Coder-1.5B-Instruct-q4f16_1-MLC">Qwen2.5-Coder-1.5B</option>
+                  <option value="gemma-2-2b-it-q4f16_1-MLC">Gemma-2-2B</option>
+                </select>
+                <textarea id="aiTutorTextarea" placeholder="Ask AI Tutor..."></textarea>
+                <button id="aiTutorSend"><span class="material-symbols-rounded">send</span></button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -206,6 +230,10 @@
       <div id="simSplitToggle" class="simSplitToggle active">
         <span class="material-symbols-rounded">view_in_ar</span>
       </div>
+      <div id="pythonSplitToggle" class="pythonSplitToggle" style="display:none;">
+        <span class="material-symbols-rounded toggleTutorIcon active">forum</span>
+        <span class="material-symbols-rounded toggleSimIcon hide">view_in_ar</span>
+      </div>
     </div>
   </main>
 
@@ -256,6 +284,14 @@
   <script src="js/filesManager.js?v=c95715e3"></script>
   <script src="js/simPanel.js?v=37d4fdb5"></script>
   <script src="js/main.js?v=8bd02914"></script>
+
+  <!-- AI Tutor: Prism.js (web-llm은 aiTutor.js에서 dynamic import) -->
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/prism.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-python.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-javascript.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-bash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-sql.min.js"></script>
+  <script src="js/aiTutor.js"></script>
 
   <script>
     // Init classes

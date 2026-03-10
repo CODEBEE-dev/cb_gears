@@ -19,6 +19,7 @@ var main = new function() {
 
     self.$navs.click(self.tabClicked);
     $('#simSplitToggle').click(simPanel.toggleSplitSim);
+    $('#pythonSplitToggle').click(simPanel.togglePythonSplitSim);
     self.$fileMenu.click(self.toggleFileMenu);
     self.$pythonMenu.click(self.togglePythonMenu);
     self.$robotMenu.click(self.toggleRobotMenu);
@@ -821,13 +822,37 @@ var main = new function() {
     if (match === 'navSim') {
       $('.panels').removeClass('splitSim');
       $('#simPanel').removeClass('splitActive');
+      $('.panels').removeClass('pythonSplitSim');
+      $('#simPanel').removeClass('pythonSplitActive');
     }
 
-    // Show toggle button only on Blocks tab
+    // When leaving Python tab, hide python sim split and reset AI Tutor state
+    if (match !== 'navPython') {
+      if ($('.panels').hasClass('pythonSplitSim')) {
+        if (!skulpt.running) {
+          babylon.engine.stopRenderLoop();
+        }
+      }
+      // Always clean up python split state
+      $('.panels').removeClass('pythonSplitSim');
+      $('#simPanel').removeClass('pythonSplitActive');
+      // Reset pythonSplitToggle to AI Tutor mode regardless of previous state
+      $('#aiTutorPanel').removeClass('hide');
+      $('#pythonSplitToggle .toggleSimIcon').addClass('hide').removeClass('active');
+      $('#pythonSplitToggle .toggleTutorIcon').removeClass('hide').addClass('active');
+      $('#pythonSplitToggle').removeClass('simMode');
+    }
+
+    // Show toggle buttons by tab
     if (match === 'navBlocks') {
       $('#simSplitToggle').show();
+      $('#pythonSplitToggle').hide();
+    } else if (match === 'navPython') {
+      $('#simSplitToggle').hide();
+      $('#pythonSplitToggle').show();
     } else {
       $('#simSplitToggle').hide();
+      $('#pythonSplitToggle').hide();
     }
 
     function getPanelByNav(nav) {

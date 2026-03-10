@@ -1,12 +1,78 @@
+i18n.append({
+  '#maze-shortDescription#': {
+    en: 'Maze Map',
+    ko: '미로 지도',
+  },
+  '#maze-longDescription#': {
+    en: '<p>This generates a maze of configurable size.</p>' +
+        '<p>See the <a href="https://github.com/QuirkyCort/gears/wiki/Maze-Map" target="_blank">wiki page</a> for some challenges to try out.</p>' +
+        '<p>By default, the generated maze is randomized unless you set a random seed.</p>',
+    ko: '<p>크기를 설정할 수 있는 미로를 생성합니다.</p>' +
+        '<p>도전 과제는 <a href="https://github.com/QuirkyCort/gears/wiki/Maze-Map" target="_blank">위키 페이지</a>를 참고하세요.</p>' +
+        '<p>기본적으로 무작위 시드가 설정되지 않으면 미로는 매번 무작위로 생성됩니다.</p>',
+  },
+  '#maze-mazeType#': {
+    en: 'Maze Type',
+    ko: '미로 유형',
+  },
+  '#maze-perfect#': {
+    en: 'Perfect',
+    ko: '완전 미로',
+  },
+  '#maze-imperfect#': {
+    en: 'Imperfect',
+    ko: '불완전 미로',
+  },
+  '#maze-perfectHTML#': {
+    en: '<p>Perfect mazes have no loops or isolated walls. ' +
+        'For this maze, your robot will always start at the bottom left corner.<p>',
+    ko: '<p>완전 미로는 루프나 고립된 벽이 없습니다. ' +
+        '이 미로에서 로봇은 항상 왼쪽 아래 모서리에서 시작합니다.<p>',
+  },
+  '#maze-imperfectHTML#': {
+    en: '<p>Imperfect mazes may have loops and isolated wall segments. ' +
+        'This may make it slightly easier for a human to solve, but can also make it harder for a computer.</p>' +
+        '<p>When generating an imperfect maze, the columns and rows must always be an odd number. ' +
+        'It\'s also preferable to generate a large maze. ' +
+        'Your robot will start at the center of the maze.</p>',
+    ko: '<p>불완전 미로는 루프와 고립된 벽 구간이 있을 수 있습니다. ' +
+        '사람이 풀기에는 약간 더 쉬울 수 있지만, 컴퓨터에게는 더 어려울 수도 있습니다.</p>' +
+        '<p>불완전 미로를 생성할 때 열과 행의 수는 항상 홀수여야 합니다. ' +
+        '큰 미로를 생성하는 것이 더 좋습니다. ' +
+        '로봇은 미로의 중앙에서 시작합니다.</p>',
+  },
+  '#maze-columns#': {
+    en: 'Number of columns',
+    ko: '열 수',
+  },
+  '#maze-rows#': {
+    en: 'Number of rows',
+    ko: '행 수',
+  },
+  '#maze-cellSize#': {
+    en: 'Cell size (cm)',
+    ko: '셀 크기 (cm)',
+  },
+  '#maze-wallHeight#': {
+    en: 'Wall Height (cm)',
+    ko: '벽 높이 (cm)',
+  },
+  '#maze-seed#': {
+    en: 'Maze Seed',
+    ko: '미로 시드',
+  },
+  '#maze-seedHelp#': {
+    en: 'Leave this blank to generate a random maze',
+    ko: '무작위 미로를 생성하려면 비워 두세요',
+  },
+});
+
 var world_Maze = new function() {
   var self = this;
 
   this.name = 'maze';
-  this.shortDescription = 'Maze Map';
-  this.longDescription =
-    '<p>This generates a maze of configurable size.</p>' +
-    '<p>See the <a href="https://github.com/QuirkyCort/gears/wiki/Maze-Map" target="_blank">wiki page</a> for some challenges to try out.</p>' +
-    '<p>By default, the generated maze is randomized unless you set a random seed.</p>';
+  this.shortDescription = i18n.get('#maze-shortDescription#');
+  this.longDescription = i18n.get('#maze-longDescription#');
   this.thumbnail = 'images/worlds/maze.jpg';
 
   this.options = {};
@@ -18,27 +84,20 @@ var world_Maze = new function() {
   this.optionsConfigurations = [
     {
       option: 'mazeType',
-      title: 'Maze Type',
+      title: i18n.get('#maze-mazeType#'),
       type: 'selectWithHTML',
       options: [
-        ['Perfect', 'perfect'],
-        ['Imperfect', 'imperfect']
+        [i18n.get('#maze-perfect#'), 'perfect'],
+        [i18n.get('#maze-imperfect#'), 'imperfect']
       ],
       optionsHTML: {
-        perfect:
-          '<p>Perfect mazes have no loops or isolated walls. ' +
-          'For this maze, your robot will always start at the bottom left corner.<p>',
-        imperfect:
-          '<p>Imperfect mazes may have loops and isolated wall segments. ' +
-          'This may make it slightly easier for a human to solve, but can also make it harder for a computer.</p>' +
-          '<p>When generating an imperfect maze, the columns and rows must always be an odd number. ' +
-          'It\'s also preferable to generate a large maze. ' +
-          'Your robot will start at the center of the maze.</p>',
+        perfect:   i18n.get('#maze-perfectHTML#'),
+        imperfect: i18n.get('#maze-imperfectHTML#'),
       }
     },
     {
       option: 'columns',
-      title: 'Number of columns',
+      title: i18n.get('#maze-columns#'),
       type: 'slider',
       min: '2',
       max: '20',
@@ -46,7 +105,7 @@ var world_Maze = new function() {
     },
     {
       option: 'rows',
-      title: 'Number of rows',
+      title: i18n.get('#maze-rows#'),
       type: 'slider',
       min: '2',
       max: '20',
@@ -54,7 +113,7 @@ var world_Maze = new function() {
     },
     {
       option: 'size',
-      title: 'Cell size (cm)',
+      title: i18n.get('#maze-cellSize#'),
       type: 'slider',
       min: '20',
       max: '100',
@@ -62,7 +121,7 @@ var world_Maze = new function() {
     },
     {
       option: 'wallHeight',
-      title: 'Wall Height (cm)',
+      title: i18n.get('#maze-wallHeight#'),
       type: 'slider',
       min: '0',
       max: '30',
@@ -70,9 +129,9 @@ var world_Maze = new function() {
     },
     {
       option: 'seed',
-      title: 'Maze Seed',
+      title: i18n.get('#maze-seed#'),
       type: 'text',
-      help: 'Leave this blank to generate a random maze'
+      help: i18n.get('#maze-seedHelp#')
     }
   ];
 

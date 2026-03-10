@@ -5,6 +5,7 @@ i18n.append({
     de: 'Dimensionen',
     nl: 'Dimensies',
     he: 'מימדים',
+    ko: '크기',
   },
   '#robot-wheelDiameter#': {
     en: 'Wheel Diameter',
@@ -12,6 +13,7 @@ i18n.append({
     de: 'Raddurchmesser',
     nl: 'Wieldiameter',
     he: 'קוטר גלגל',
+    ko: '바퀴 직경',
   },
   '#robot-wheelSpacing#': {
     en: 'Wheel Spacing',
@@ -19,6 +21,7 @@ i18n.append({
     de: 'Radabstand',
     nl: 'Wielafstand',
     he: 'מרווח גלגלים',
+    ko: '바퀴 간격',
   },
   '#robot-actuators#': {
     en: 'Actuators',
@@ -26,6 +29,7 @@ i18n.append({
     de: 'Antrieb',
     nl: 'Aandrijving',
     he: 'מפעילים',
+    ko: '구동장치',
   },
   '#robot-port#': {
     en: 'Port',
@@ -33,6 +37,7 @@ i18n.append({
     de: 'Port',
     nl: 'Poort',
     he: 'יציאה',
+    ko: '포트',
   },
   '#robot-leftWheel#': {
     en: 'Left Wheel',
@@ -40,13 +45,15 @@ i18n.append({
     de: 'linkes Rad',
     nl: 'Linker wiel',
     he: 'גלגל שמאל',
+    ko: '왼쪽 바퀴',
   },
   '#robot-rightWheel#': {
     en: 'Right Wheel',
     fr: 'roue droite',
     de: 'rechtes Rad',
     nl: 'Rechter wiel',
-    he: 'גלגל ימין'
+    he: 'גלגל ימין',
+    ko: '오른쪽 바퀴',
   },
   '#robot-electromagnet#': {
     en: 'Electromagnet',
@@ -54,6 +61,7 @@ i18n.append({
     de: 'Elektromagnet',
     nl: 'Elektromagneet',
     he: 'אלקטרומגנט',
+    ko: '전자석',
   },
   '#robot-motorizedArm#': {
     en: 'Motorized Arm',
@@ -61,6 +69,7 @@ i18n.append({
     de: 'motorisierter Arm',
     nl: 'gemotoriseerde Arm',
     he: 'זרוע ממונעת',
+    ko: '모터 암',
   },
   '#robot-swivel#': {
     en: 'Swivel Platform',
@@ -68,10 +77,12 @@ i18n.append({
     de: 'Schwenkplattform',
     nl: 'Draaiplatform',
     he: 'משטח סיבוב',
+    ko: '회전 플랫폼',
   },
   '#robot-linear#': {
     en: 'Linear Actuator',
     he: 'מפעיל קו ישר',
+    ko: '선형 구동장치',
   },
   '#robot-paintball#': {
     en: 'Paintball Launcher',
@@ -79,6 +90,7 @@ i18n.append({
     de: 'Paintball Launcher',
     nl: 'Paintball kanon',
     he: 'משגר פיינטבול',
+    ko: '페인트볼 발사기',
   },
   '#robot-sensors#': {
     en: 'Sensors',
@@ -86,6 +98,7 @@ i18n.append({
     de: 'Sensoren',
     nl: 'Sensoren',
     he: 'חיישנים',
+    ko: '센서',
   },
   '#robot-color#': {
     en: 'Color Sensor',
@@ -93,6 +106,7 @@ i18n.append({
     de: 'Frabsensor',
     nl: 'Kleurensensor',
     he: 'חיישן צבע',
+    ko: '컬러 센서',
   },
   '#robot-front#': {
     en: 'Front',
@@ -100,6 +114,7 @@ i18n.append({
     de: 'Vorne',
     nl: 'Voorkant',
     he: 'קדמי',
+    ko: '앞',
   },
   '#robot-left#': {
     en: 'Left',
@@ -107,6 +122,7 @@ i18n.append({
     de: 'Links',
     nl: 'Links',
     he: 'שמאל',
+    ko: '왼쪽',
   },
   '#robot-right#': {
     en: 'Right',
@@ -114,10 +130,12 @@ i18n.append({
     de: 'Rechts',
     nl: 'Rechts',
     he: 'ימין',
+    ko: '오른쪽',
   },
   '#robot-back#': {
     en: 'Back',
     he: 'אחורי',
+    ko: '뒤',
   },
   '#robot-arm#': {
     en: 'Arm',
@@ -125,6 +143,7 @@ i18n.append({
     de: 'Arm',
     nl: 'Arm',
     he: 'זרוע',
+    ko: '암',
   },
   '#robot-ultrasonic#': {
     en: 'Ultrasonic Distance',
@@ -132,6 +151,7 @@ i18n.append({
     de: 'Unltraschallabstand',
     nl: 'Ultrasonische afstand',
     he: 'מרחק אולטראקולי',
+    ko: '초음파 거리 센서',
   },
   '#robot-gyro#': {
     en: 'Gyro',
@@ -139,6 +159,7 @@ i18n.append({
     de: 'Gyroskop',
     nl: 'Gyroscoop',
     he: 'ג`ירו',
+    ko: '자이로',
   },
   '#robot-laser#': {
     en: 'Laser Range Sensor',
@@ -146,23 +167,28 @@ i18n.append({
     de: 'Laserentfernungssensor',
     nl: 'Laser afstandsensor',
     he: 'חיישן טווח לייזר',
+    ko: '레이저 거리 센서',
   },
   '#robot-lidar#': {
     en: 'LIDAR Sensor (360° Distance)',
+    ko: '라이다 센서 (360° 거리)',
   },
   '#robot-pen#': {
     en: 'Pen',
     nl: 'Pen',
     he: 'עט',
+    ko: '펜',
   },
   '#robot-touch#': {
     en: 'Touch Sensor',
     nl: 'Drukknopsensor',
     he: 'חיישן מגע',
+    ko: '터치 센서',
   },
   '#robot-wheel#': {
     en: 'Wheel',
     he: 'גלגל',
+    ko: '바퀴',
   },
   '#robot-singleFollowerShort#': {
     en: 'Single Sensor Line Follower',
@@ -170,6 +196,7 @@ i18n.append({
     de: 'Einsensor Linienverfolger',
     nl: 'Enkele sensor lijnvolger',
     he: 'חיישן עקיבת קו',
+    ko: '단일 센서 라인 추종 로봇',
   },
   '#robot-singleFollowerLong#': {
     en:
@@ -188,6 +215,10 @@ i18n.append({
       '<p>Deze robot is uitgerust met een enkele kleurensensor voor lijn volgen.</p>' +
       '<p>Een elektromagneet aan de onderkant van de robot laat je magnetische objecten oppikken.</p>' +
       '<p>Het is goed om de basis van lijnvolgen te leren, maar sommige lijnvolg arena\'s vereisen dubbele sensors.</p>',
+    ko:
+      '<p>이 로봇은 라인 추종을 위한 단일 컬러 센서를 장착하고 있습니다.</p>' +
+      '<p>로봇 하단의 전자석으로 자성 물체를 집을 수 있으며, 펜으로 로봇의 경로를 확인할 수 있습니다.</p>' +
+      '<p>라인 추종의 기초를 배우기에 적합하지만, 일부 라인 추종 맵은 이중 센서가 필요합니다.</p>',
   },
   '#robot-doubleFollowerShort#': {
     en: 'Double Sensor Line Follower',
@@ -195,6 +226,7 @@ i18n.append({
     de: 'Doppelsensoren Linienverfolger',
     nl: 'Dubbele sensor lijnvolger',
     he: 'חיישן עקיבת קו כפול',
+    ko: '이중 센서 라인 추종 로봇',
   },
   '#robot-doubleFollowerLong#': {
     en:
@@ -209,6 +241,9 @@ i18n.append({
     nl:
       '<p>Deze robot is uitgerust met een dubbele kleurensensor voor lijn volgen.</p>' +
       '<p>Een elektromagneet aan de onderkant van de robot laat je magnetische objecten oppikken en een gyroscoop en GPS laten nauwkeurige beweging toe, zelfs als de robot van de lijn raakt.</p>',
+    ko:
+      '<p>이 로봇은 라인 추종을 위한 두 개의 컬러 센서를 장착하고 있습니다.</p>' +
+      '<p>로봇 하단의 전자석으로 자성 물체를 집을 수 있으며, 자이로와 GPS로 라인을 벗어나도 정확한 움직임이 가능합니다.</p>',
   },
   '#robot-paintballShort#': {
     en: 'Paintball ',
@@ -216,6 +251,7 @@ i18n.append({
     de: 'Paintball',
     nl: 'Paintball',
     he: 'פיינטבול',
+    ko: '페인트볼',
   },
   '#robot-paintballLong#': {
     en:
@@ -234,6 +270,10 @@ i18n.append({
       '<p>Deze robot is vergelijkbaar met de dubbele sensor lijnvolger, maar met de toevoeging van een paintball kanon, gemonteerd op een gemotoriseerde arm. ' +
       'De ultrasonische afstandsensor is ook vervangen door een lange afstand (5m) laser afstandsensor.</p>'  +
       '<p>Lees de <a href="https://github.com/QuirkyCort/gears/wiki/Paintball-Launcher" target="_blank">Paintball kanon documentatie</a> om te leren hoe een paintball te lanceren.</p>',
+    ko:
+      '<p>이 로봇은 이중 센서 라인 추종 로봇과 비슷하지만, 모터 암에 페인트볼 발사기가 추가되어 있습니다. ' +
+      '초음파 거리 센서도 장거리(5m) 레이저 거리 센서로 교체되었습니다.</p>' +
+      '<p>페인트볼 발사 방법은 <a href="https://github.com/QuirkyCort/gears/wiki/Paintball-Launcher" target="_blank">페인트볼 발사기 설명서</a>를 참고하세요.</p>',
   },
   '#robot-mazeShort#': {
     en: 'Maze Runner',
@@ -241,6 +281,7 @@ i18n.append({
     de: 'Labyrinth Läufer (Maze Runner)',
     nl: 'Doolhofloper',
     he: 'רץ במבוך',
+    ko: '미로 탐색 로봇',
   },
   '#robot-mazeLong#': {
     en:
@@ -255,12 +296,16 @@ i18n.append({
     nl:
       '<p>Deze robot is uitgerust met drie ultrasonische sensors voor doolhof navigatie en een kleurensensor om het eindpunt te detecteren.</p>' +
       '<p>Een elektromagneet aan de onderkant van de robot laat je magnetische objecten oppikken en een gyroscoop helpt de robot om recht te rijden.</p>',
+    ko:
+      '<p>이 로봇은 미로 탐색을 위한 세 개의 초음파 센서와 도착 지점 감지용 컬러 센서를 장착하고 있습니다.</p>' +
+      '<p>로봇 하단의 전자석으로 자성 물체를 집을 수 있으며, 자이로가 로봇이 직진하는 데 도움을 줍니다.</p>',
   },
   '#robot-maze2Short#': {
     en: 'Maze Runner MkII',
     fr: 'Coureur de labyrinthe MkII (Maze Runner)',
     de: 'Labyrinth Läufer MKII (Maze Runner)',
     nl: 'Doolhofloper MKII',
+    ko: '미로 탐색 로봇 MkII',
   },
   '#robot-maze2Long#': {
     en:
@@ -275,12 +320,16 @@ i18n.append({
     nl:
       '<p>Dit is een geavanceerde doolhofloper robot die de originele drie-ultrasonische sensor vervangt door een enkele laser afstandsensor en een voorwaarts gerichte kleurensensor, gemonteerd op een zwenkplatform.</p>' +
       '<p>De voorwaarts gerichte kleurensensor is speciaal geconfigureerd voor lange afstand (30cm) en smal zicht (30 graden).</p>',
+    ko:
+      '<p>이 로봇은 기존의 세 개 초음파 센서를 단일 레이저 거리 측정기와 회전 플랫폼에 장착된 전방 컬러 센서로 대체한 고급 미로 탐색 로봇입니다.</p>' +
+      '<p>전방 컬러 센서는 장거리(30cm) 및 좁은 시야(30도)에 맞게 특별히 구성되어 있습니다.</p>',
   },
   '#robot-towShort#': {
     en: 'Tow Truck',
     fr: 'Remorqueur (Tow Truck)',
     de: 'Apschleppfahrzeug',
     nl: 'Sleepwagen',
+    ko: '견인 로봇',
   },
   '#robot-towLong#': {
     en:
@@ -295,6 +344,9 @@ i18n.append({
     nl:
       '<p>Deze robot is uitgerust met een magneet aan een arm.</p>' +
       '<p>Het kan magnetische objecten oppakken of verslepen. Wees voorzichtig om geen objecten om te stoten bij het omdraaien!</p>',
+    ko:
+      '<p>이 로봇은 암에 자석이 장착되어 있습니다.</p>' +
+      '<p>자성 물체를 집거나 견인할 수 있습니다. 돌아설 때 물체를 밀어내지 않도록 주의하세요!</p>',
   },
   '#robot-craneShort#': {
     en: 'Crane',
@@ -302,6 +354,7 @@ i18n.append({
     de: 'Kran',
     nl: 'Kraan',
     he: 'עגורן',
+    ko: '크레인 로봇',
   },
   '#robot-craneLong#': {
     en:
@@ -324,33 +377,51 @@ i18n.append({
       '<p>Het kan hoger en verder reiken dan de andere robots ' +
       'en een kleurensensor aan het eind van de arm helpt in het identificeren van wat het oppakt.</p>' +
       '<p>Als je deze robot gebruikt, vouw dan de armen samen, om te voorkomen dat het de ultrasonische sensor blokkeerd.</p>',
+    ko:
+      '<p>이 로봇은 2단 크레인 암 끝에 전자석이 장착되어 있습니다.</p>' +
+      '<p>다른 로봇보다 더 높이, 더 멀리 뻗을 수 있으며, ' +
+      '암 끝의 컬러 센서로 집어 올리는 물체를 식별할 수 있습니다.</p>' +
+      '<p>로봇을 사용할 때는 초음파 센서가 가리지 않도록 암을 접어 두세요.</p>',
   },
   '#robot-cageShort#': {
     en: 'Cage Bot',
     he: 'רובוט כלוב',
+    ko: '케이지 로봇',
   },
   '#robot-cageLong#': {
     en:
       '<p>This robot is equipped with a moveable cage that can be used to capture and move blocks.' +
       'A forward facing color sensor allows the robot to detect the presence and color of blocks infront of it.</p>' +
       '<p>If you require a larger cage for your mission, you can modify the robot in the robot configurator.</p>',
+    ko:
+      '<p>이 로봇은 블록을 잡아 이동할 수 있는 이동식 케이지를 장착하고 있습니다. ' +
+      '전방 컬러 센서로 앞에 있는 블록의 유무와 색상을 감지할 수 있습니다.</p>' +
+      '<p>미션에 더 큰 케이지가 필요하다면 로봇 설정에서 수정할 수 있습니다.</p>',
   },
   '#robot-footballShort#': {
     en: 'Football',
     he: 'כדורגל',
+    ko: '축구 로봇',
   },
   '#robot-footballLong#': {
     en:
       '<p>This robot is equipped with front and back electromagnets to capture and shoot the football.</p>' +
-      '<p>The electromagnets on this robot are customized to have a longer range and higher power.</p>'
+      '<p>The electromagnets on this robot are customized to have a longer range and higher power.</p>',
+    ko:
+      '<p>이 로봇은 축구공을 잡고 슈팅하기 위한 앞뒤 전자석을 장착하고 있습니다.</p>' +
+      '<p>이 로봇의 전자석은 더 긴 범위와 높은 출력을 갖도록 커스터마이즈되어 있습니다.</p>',
   },
   '#robot-WROSportShort#': {
     en: 'WRO RoboSport',
+    ko: 'WRO 로보스포츠',
   },
   '#robot-WROSportLong#': {
     en:
       '<p>Sample robot for WRO RoboSport.</p>' +
-      '<p>Use the electromagnet (Port C) to capture and shoot the ball (...shoot by setting the magnet power to -100%).</p>'
+      '<p>Use the electromagnet (Port C) to capture and shoot the ball (...shoot by setting the magnet power to -100%).</p>',
+    ko:
+      '<p>WRO 로보스포츠용 샘플 로봇입니다.</p>' +
+      '<p>전자석(포트 C)으로 공을 잡고 슈팅하세요 (자석 출력을 -100%로 설정하면 슈팅됩니다).</p>',
   }
 });
 

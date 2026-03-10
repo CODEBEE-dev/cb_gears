@@ -1,10 +1,64 @@
+i18n.append({
+  '#gyro-shortDescription#': {
+    en: 'Gyro Challenges',
+    ko: '자이로 도전',
+  },
+  '#gyro-longDescription#': {
+    en: '<p>A series of challenges that focuses on gyro usage.</p>',
+    ko: '<p>자이로 센서를 활용한 도전 시리즈입니다.</p>',
+  },
+  '#gyro-selectChallenge#': {
+    en: 'Select Challenge',
+    ko: '도전 선택',
+  },
+  '#gyro-straightRun#': {
+    en: 'Straight Run',
+    ko: '직선 주행',
+  },
+  '#gyro-squareLoops#': {
+    en: 'Square Loops',
+    ko: '사각 루프',
+  },
+  '#gyro-randomDirection#': {
+    en: 'Random Direction',
+    ko: '무작위 방향',
+  },
+  '#gyro-straightHTML#': {
+    en: '<p class="bold">A simple straight run.</p>' +
+        '<p>You just have to drive straight to the end. Easy right?<p>',
+    ko: '<p class="bold">단순한 직선 주행입니다.</p>' +
+        '<p>끝까지 직선으로 주행하기만 하면 됩니다. 쉽죠?<p>',
+  },
+  '#gyro-squareHTML#': {
+    en: '<p class="bold">Drive around the square.</p>' +
+        '<p>The black area can be used to help you align your turns.<p>' +
+        '<p>Task 1: Drive around the loop without falling off.<p>' +
+        '<p>Task 2: Complete as many loops as you can without falling off.<p>',
+    ko: '<p class="bold">사각형을 따라 주행하세요.</p>' +
+        '<p>검은색 영역을 회전 정렬 기준으로 활용할 수 있습니다.<p>' +
+        '<p>과제 1: 떨어지지 않고 루프를 한 바퀴 돌아보세요.<p>' +
+        '<p>과제 2: 떨어지지 않고 최대한 많은 루프를 완료하세요.<p>',
+  },
+  '#gyro-randomDirectionHTML#': {
+    en: '<p class="bold">Detect and drive down the path</p>' +
+        '<p>Use your ultrasonic and gyro to find the wall, then drive straight down the path.<p>' +
+        '<p class="bold">This world randomizes on reset!<p>',
+    ko: '<p class="bold">경로를 감지하고 주행하세요</p>' +
+        '<p>초음파 센서와 자이로를 사용해 벽을 찾은 다음 경로를 따라 직진하세요.<p>' +
+        '<p class="bold">이 맵은 초기화 시 무작위로 변경됩니다!<p>',
+  },
+  '#gyro-straightRunWidth#': {
+    en: 'Width of Straight Run challenge',
+    ko: '직선 주행 도전의 너비',
+  },
+});
+
 var world_Gyro = new function() {
   var self = this;
 
   this.name = 'gyro';
-  this.shortDescription = 'Gyro Challenges';
-  this.longDescription =
-    '<p>A series of challenges that focuses on gyro usage.</p>';
+  this.shortDescription = i18n.get('#gyro-shortDescription#');
+  this.longDescription = i18n.get('#gyro-longDescription#');
   this.thumbnail = 'images/worlds/gyro.jpg';
 
   this.options = {};
@@ -15,34 +69,23 @@ var world_Gyro = new function() {
   this.optionsConfigurations = [
     {
       option: 'image',
-      title: 'Select Challenge',
+      title: i18n.get('#gyro-selectChallenge#'),
       type: 'selectWithHTML',
       options: [
-        ['Straight Run', 'straight'],
-        ['Square Loops', 'square'],
-        ['Random Direction', 'randomDirection'],
+        [i18n.get('#gyro-straightRun#'), 'straight'],
+        [i18n.get('#gyro-squareLoops#'), 'square'],
+        [i18n.get('#gyro-randomDirection#'), 'randomDirection'],
       ],
       optionsHTML: {
-        straight:
-          '<p class="bold">A simple straight run.</p>' +
-          '<p>You just have to drive straight to the end. Easy right?<p>',
-        straightHard:
-          '<p class="bold">A simple straight run.</p>' +
-          '<p>You just have to drive straight to the end. Easy right?<p>',
-        square:
-          '<p class="bold">Drive around the square.</p>' +
-          '<p>The black area can be used to help you align your turns.<p>' +
-          '<p>Task 1: Drive around the loop without falling off.<p>' +
-          '<p>Task 2: Complete as many loops as you can without falling off.<p>',
-        randomDirection:
-          '<p class="bold">Detect and drive down the path</p>' +
-          '<p>Use your ultrasonic and gyro to find the wall, then drive straight down the path.<p>' +
-          '<p class="bold">This world randomizes on reset!<p>',
+        straight:        i18n.get('#gyro-straightHTML#'),
+        straightHard:    i18n.get('#gyro-straightHTML#'),
+        square:          i18n.get('#gyro-squareHTML#'),
+        randomDirection: i18n.get('#gyro-randomDirectionHTML#'),
       }
     },
     {
       option: 'straightRunWidth',
-      title: 'Width of Straight Run challenge',
+      title: i18n.get('#gyro-straightRunWidth#'),
       type: 'slider',
       min: '18',
       max: '40',

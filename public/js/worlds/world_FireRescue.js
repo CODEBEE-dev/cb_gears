@@ -1,14 +1,96 @@
+i18n.append({
+  '#fireRescue-shortDescription#': {
+    en: 'Fire Rescue',
+    ko: '화재 구조',
+  },
+  '#fireRescue-longDescription#': {
+    en: '<p>Rescue the victims from the fire!</p>' +
+        '<p>Red victims are worth 10 points, but must be rescued fast! ' +
+        'Green victims are worth 5 points, and can be rescued as long as you have time left. ' +
+        'Both victims can be picked up using the robot\'s magnet.</p>' +
+        '<p>Your time starts when the center of your robot moves out of the starting area</p>',
+    ko: '<p>화재 현장에서 피해자를 구조하세요!</p>' +
+        '<p>빨간 피해자는 10점이지만 빠르게 구조해야 합니다! ' +
+        '초록 피해자는 5점이며 시간이 남아 있는 동안 구조할 수 있습니다. ' +
+        '두 피해자 모두 로봇의 자석으로 집을 수 있습니다.</p>' +
+        '<p>로봇 중심이 시작 구역을 벗어나는 순간 타이머가 시작됩니다</p>',
+  },
+  '#fireRescue-selectChallenge#': {
+    en: 'Select Challenge',
+    ko: '도전 선택',
+  },
+  '#fireRescue-grocers#': {
+    en: 'Fire at the Grocers',
+    ko: '식료품점 화재',
+  },
+  '#fireRescue-warehouse#': {
+    en: 'Warehouse Fire',
+    ko: '창고 화재',
+  },
+  '#fireRescue-grocersHTML#': {
+    en: '<p>The grocery store is on fire, and there are 7 victims inside. ' +
+        'Bring the red victims to the red rescue point within the first 4 mins, and the green victims to the green rescue point.<p>' +
+        '<p>You have 8 mins to rescue everyone!</p>',
+    ko: '<p>식료품점에 불이 났고, 안에 피해자 7명이 있습니다. ' +
+        '처음 4분 안에 빨간 피해자를 빨간 구조 지점으로, 초록 피해자는 초록 구조 지점으로 데려오세요.<p>' +
+        '<p>모두를 구조할 시간은 8분입니다!</p>',
+  },
+  '#fireRescue-warehouseHTML#': {
+    en: '<p>Rescue the victims from the warehouse! ' +
+        'Bring the red victims to the red rescue point within the first 5 mins, and the green victims to the green rescue point.<p>' +
+        '<p>There are many special features in this world:</p>' +
+        '<ul><li>Drop the victims in the white ambulance for a 5 points bonus each.</li>' +
+        '<li>The blue door to the inner room will open when the blue sensor area nearby detects an object inside it.</li>' +
+        '<li>Are there more secrets? Find them on your own!</li></ul>' +
+        '<p>You have 10 mins to rescue everyone!</p>',
+    ko: '<p>창고에서 피해자를 구조하세요! ' +
+        '처음 5분 안에 빨간 피해자를 빨간 구조 지점으로, 초록 피해자는 초록 구조 지점으로 데려오세요.<p>' +
+        '<p>이 맵에는 다양한 특수 기능이 있습니다:</p>' +
+        '<ul><li>피해자를 흰색 구급차에 내려놓으면 각 5점 보너스를 받습니다.</li>' +
+        '<li>내부 방의 파란 문은 근처 파란 센서 구역 안에 물체가 감지될 때 열립니다.</li>' +
+        '<li>더 많은 비밀이 있을까요? 직접 찾아보세요!</li></ul>' +
+        '<p>모두를 구조할 시간은 10분입니다!</p>',
+  },
+  '#fireRescue-randomizeWorld#': {
+    en: 'Randomize world',
+    ko: '맵 무작위화',
+  },
+  '#fireRescue-no#': {
+    en: 'No',
+    ko: '아니오',
+  },
+  '#fireRescue-yes#': {
+    en: 'Yes',
+    ko: '예',
+  },
+  '#fireRescue-randomizeHelp#': {
+    en: 'Randomize position of game elements in the world.',
+    ko: '맵 내 게임 요소의 위치를 무작위로 배치합니다.',
+  },
+  '#fireRescue-time#': {
+    en: 'Time: ',
+    ko: '시간: ',
+  },
+  '#fireRescue-red#': {
+    en: 'Red: ',
+    ko: '빨강: ',
+  },
+  '#fireRescue-green#': {
+    en: 'Green: ',
+    ko: '초록: ',
+  },
+  '#fireRescue-score#': {
+    en: 'Score: ',
+    ko: '점수: ',
+  },
+});
+
 var world_FireRescue = new function() {
   var self = this;
 
   this.name = 'fireRescue';
-  this.shortDescription = 'Fire Rescue';
-  this.longDescription =
-    '<p>Rescue the victims from the fire!</p>' +
-    '<p>Red victims are worth 10 points, but must be rescued fast! ' +
-    'Green victims are worth 5 points, and can be rescued as long as you have time left. ' +
-    'Both victims can be picked up using the robot\'s magnet.</p>' +
-    '<p>Your time starts when the center of your robot moves out of the starting area</p>';
+  this.shortDescription = i18n.get('#fireRescue-shortDescription#');
+  this.longDescription = i18n.get('#fireRescue-longDescription#');
   this.thumbnail = 'images/worlds/fireRescue.jpg';
 
   this.options = {};
@@ -20,37 +102,26 @@ var world_FireRescue = new function() {
   this.optionsConfigurations = [
     {
       option: 'challenge',
-      title: 'Select Challenge',
+      title: i18n.get('#fireRescue-selectChallenge#'),
       type: 'selectWithHTML',
       options: [
-        ['Fire at the Grocers', 'grocers'],
-        ['Warehouse Fire', 'warehouse'],
+        [i18n.get('#fireRescue-grocers#'), 'grocers'],
+        [i18n.get('#fireRescue-warehouse#'), 'warehouse'],
       ],
       optionsHTML: {
-        grocers:
-          '<p>The grocery store is on fire, and there are 7 victims inside. ' +
-          'Bring the red victims to the red rescue point within the first 4 mins, and the green victims to the green rescue point.<p>' +
-          '<p>You have 8 mins to rescue everyone!</p>',
-        warehouse:
-          '<p>Rescue the victims from the warehouse! ' +
-          'Bring the red victims to the red rescue point within the first 5 mins, and the green victims to the green rescue point.<p>' +
-          '<p>There are many special features in this world:</p>' +
-          '<ul><li>Drop the victims in the white ambulance for a 5 points bonus each.</li>' +
-          // '<li>The oil barrel near the entrance is too close to the fire. Move it out of the way before it explodes and block the exit.</li>' +
-          '<li>The blue door to the inner room will open when the blue sensor area nearby detects an object inside it.</li>' +
-          '<li>Are there more secrets? Find them on your own!</li></ul>' +
-          '<p>You have 10 mins to rescue everyone!</p>'
+        grocers:   i18n.get('#fireRescue-grocersHTML#'),
+        warehouse: i18n.get('#fireRescue-warehouseHTML#'),
       }
     },
     {
       option: 'random',
-      title: 'Randomize world',
+      title: i18n.get('#fireRescue-randomizeWorld#'),
       type: 'select',
       options: [
-        ['No', 'fixed'],
-        ['Yes', 'random']
+        [i18n.get('#fireRescue-no#'), 'fixed'],
+        [i18n.get('#fireRescue-yes#'), 'random']
       ],
-      help: 'Randomize position of game elements in the world.'
+      help: i18n.get('#fireRescue-randomizeHelp#')
     }
   ];
 
@@ -514,11 +585,11 @@ var world_FireRescue = new function() {
       time = -time;
     }
     time = Math.round(time / 1000);
-    time = 'Time: ' + sign + Math.floor(time/60) + ':' + ('0' + time % 60).slice(-2);
+    time = i18n.get('#fireRescue-time#') + sign + Math.floor(time/60) + ':' + ('0' + time % 60).slice(-2);
 
-    let red = 'Red: ' + self.game.red;
-    let green = 'Green: ' + self.game.green;
-    let score = 'Score: ' + self.game.score;
+    let red = i18n.get('#fireRescue-red#') + self.game.red;
+    let green = i18n.get('#fireRescue-green#') + self.game.green;
+    let score = i18n.get('#fireRescue-score#') + self.game.score;
     function updateIfChanged(text, $dom) {
       if (text != $dom.text()) {
         $dom.text(text);

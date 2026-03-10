@@ -2,36 +2,45 @@ i18n.append({
   '#shortDescription#': {
     en: 'Paintball Challenges',
     de: 'Paintball-Herausforderungen',
+    ko: '페인트볼 도전',
   },
   '#longDescription#': {
     en: '<p>These challenges requires the use of the paintball launcher.</p>' +
         'Read the <a href="https://github.com/QuirkyCort/gears/wiki/Paintball-Launcher" target="_blank">Paintball Launcher documentations</a> to learn how to launch a paintball.</p>',
     de: '<p>Diese Herausforderungen erfordern die Nutzung des Paintball-Geschützes.</p>' +
         'Lies die <a href="https://github.com/QuirkyCort/gears/wiki/Paintball-Launcher" target="_blank">Dokumentations des Paintball-Geschützes</a>, um zu erfahren, wie man einen Paintball abfeuert.</p>',
+    ko: '<p>이 도전은 페인트볼 발사기를 사용해야 합니다.</p>' +
+        '<a href="https://github.com/QuirkyCort/gears/wiki/Paintball-Launcher" target="_blank">페인트볼 발사기 설명서</a>를 읽고 발사 방법을 익히세요.</p>',
   },
   '#firingRange#': {
     en: 'Firing Range',
     de: 'Schießbahn',
+    ko: '사격 연습장',
   },
   '#variableRange#': {
     en: 'Variable Range',
     de: 'Wechselnde Entfernung',
+    ko: '가변 거리',
   },
   '#findTarget#': {
     en: 'Find the Target',
     de: 'Finde das Ziel',
+    ko: '표적 찾기',
   },
   '#highLow#': {
     en: 'High and Low',
     de: 'Hoch und Niedrig',
+    ko: '높낮이 표적',
   },
   '#movingTarget1#': {
     en: 'Moving Target 1',
     de: 'Bewegliches Ziel 1',
+    ko: '이동 표적 1',
   },
   '#movingTarget2#': {
     en: 'Moving Target 2',
     de: 'Bewegliches Ziel 2',
+    ko: '이동 표적 2',
   },
   '#firingRangeLongDescriptiong#': {
     en: '<p>Test out the paintball launcher here.</p>' +
@@ -69,7 +78,25 @@ i18n.append({
           '<li>Grundlagen: Bewahre das Diagramm für spätere Herausforderungen auf.</li>' +
           '<li>Fortgeschritten: Finde eine mathematische Gleichung für die Kurve des Diagramms.</li>' +
           '<li>Fortgeschritten: Erstelle ein Unterprogramm, welches die Entfernung als Eingabe erhält und durch Regelung des Abschusswinkels einen Paintball auf diese Entfernung abfeuert.</li>' +
-        '</ul>'
+        '</ul>',
+    ko: '<p>페인트볼 발사기를 여기서 테스트해 보세요.</p>' +
+        '<p class="bold">실험 1</p>' +
+        '<ul>' +
+          '<li>페인트볼 발사기를 45도 각도로 올리세요.</li>' +
+          '<li>다양한 출력으로 페인트볼을 발사하고 날아간 거리를 기록하세요.</li>' +
+          '<li>기록한 값을 차트로 그려보세요.</li>' +
+          '<li>기본: 차트를 저장해 두고 이후 도전에 활용하세요.</li>' +
+          '<li>심화: 차트의 곡선을 설명하는 수학적 방정식을 찾을 수 있나요?</li>' +
+          '<li>심화: 거리를 입력받아 출력을 조절해 그 거리까지 페인트볼을 발사하는 함수를 만들어 보세요.</li>' +
+        '</ul>' +
+        '<p class="bold">실험 2</p>' +
+        '<ul>' +
+          '<li>최대 출력으로 발사하되, 발사 각도를 0도에서 90도까지 변경해 보세요.</li>' +
+          '<li>각 발사 각도에서 날아간 거리를 기록하고 차트로 그려보세요.</li>' +
+          '<li>기본: 차트를 저장해 두고 이후 도전에 활용하세요.</li>' +
+          '<li>심화: 차트의 곡선을 설명하는 수학적 방정식을 찾을 수 있나요?</li>' +
+          '<li>심화: 거리를 입력받아 발사 각도를 조절해 그 거리까지 페인트볼을 발사하는 함수를 만들어 보세요.</li>' +
+        '</ul>',
   }
 });
 

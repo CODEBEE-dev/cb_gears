@@ -1995,6 +1995,14 @@ var configurator = new function() {
     hiddenElement.dispatchEvent(new MouseEvent('click'));
   };
 
+  this.syncRobotToMain = function() {
+    localStorage.setItem('gears_robot_sync', JSON.stringify(robot.options));
+    const bc = new BroadcastChannel('gears_sync');
+    bc.postMessage({ type: 'robot_updated' });
+    bc.close();
+    acknowledgeDialog({ title: i18n.get('#configurator-sync_robot#'), message: i18n.get('#configurator-sync_robot_done#') });
+  };
+
   // Load robot from json file
   this.loadRobotLocal = function() {
     var hiddenElement = document.createElement('input');
@@ -2124,7 +2132,8 @@ var configurator = new function() {
 
       let menuItems = [
         {html: i18n.get('#configurator-load_robot#'), line: false, callback: self.loadRobotLocal},
-        {html: i18n.get('#configurator-save_robot#'), line: true, callback: self.saveRobot},
+        {html: i18n.get('#configurator-save_robot#'), line: false, callback: self.saveRobot},
+        {html: i18n.get('#configurator-sync_robot#'), line: true, callback: self.syncRobotToMain},
       ];
 
       menuDropDown(self.$fileMenu, menuItems, {className: 'fileMenuDropDown', align: 'activityBar'});

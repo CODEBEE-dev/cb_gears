@@ -3393,6 +3393,14 @@ let MSGS = {
     en: 'Save world to file',
     ko: '월드: 파일에 저장하기',
   },
+  '#builder-sync_world#': {
+    en: 'Use world in simulator',
+    ko: '월드: 시뮬레이터에서 사용하기',
+  },
+  '#builder-sync_world_done#': {
+    en: 'World has been sent to the simulator.',
+    ko: '월드가 시뮬레이터에 반영되었습니다.',
+  },
   '#builder-load_object#': {
     en: 'Load object from file',
     ko: '오브젝트: 파일에서 불러오기',
@@ -3694,6 +3702,14 @@ let MSGS = {
   '#configurator-save_robot#': {
     en: 'Save to file',
     ko: '로봇: 파일에 저장하기',
+  },
+  '#configurator-sync_robot#': {
+    en: 'Use robot in simulator',
+    ko: '로봇: 시뮬레이터에서 사용하기',
+  },
+  '#configurator-sync_robot_done#': {
+    en: 'Robot has been sent to the simulator.',
+    ko: '로봇이 시뮬레이터에 반영되었습니다.',
   },
   '#configurator-select_robot#': {
     en: 'Select Robot',

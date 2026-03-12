@@ -2108,6 +2108,18 @@ var builder = new function() {
     hiddenElement.dispatchEvent(new MouseEvent('click'));
   };
 
+  this.syncWorldToMain = function() {
+    let world = {
+      worldName: 'custom',
+      options: self.worldOptions
+    };
+    localStorage.setItem('gears_world_sync', JSON.stringify(world));
+    const bc = new BroadcastChannel('gears_sync');
+    bc.postMessage({ type: 'world_updated' });
+    bc.close();
+    acknowledgeDialog({ title: i18n.get('#builder-sync_world#'), message: i18n.get('#builder-sync_world_done#') });
+  };
+
   // Load object from json file
   this.loadObjectLocal = function() {
     var hiddenElement = document.createElement('input');
@@ -2204,7 +2216,8 @@ var builder = new function() {
       let menuItems = [
         {html: i18n.get('#builder-new_world#'), line: true, callback: self.newWorld},
         {html: i18n.get('#builder-load_world#'), line: false, callback: self.loadWorldLocal},
-        {html: i18n.get('#builder-save_world#'), line: true, callback: self.saveWorld},
+        {html: i18n.get('#builder-save_world#'), line: false, callback: self.saveWorld},
+        {html: i18n.get('#builder-sync_world#'), line: true, callback: self.syncWorldToMain},
         {html: i18n.get('#builder-load_object#'), line: false, callback: self.loadObjectLocal},
         {html: i18n.get('#builder-save_object#'), line: false, callback: self.saveObject},
 

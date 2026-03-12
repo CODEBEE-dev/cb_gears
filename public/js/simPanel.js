@@ -1375,3 +1375,20 @@ var simPanel = new function() {
 }
 
 simPanel.init();
+
+// Page-to-page sync: listen for world updates from builder.html
+(function() {
+  var bc = new BroadcastChannel('gears_sync');
+  bc.onmessage = function(event) {
+    if (event.data.type === 'world_updated') {
+      var json = localStorage.getItem('gears_world_sync');
+      if (json) simPanel.loadWorld(json);
+    }
+  };
+
+  // Load world from localStorage after page is fully ready
+  window.addEventListener('load', function() {
+    var savedWorld = localStorage.getItem('gears_world_sync');
+    if (savedWorld) simPanel.loadWorld(savedWorld);
+  });
+})();

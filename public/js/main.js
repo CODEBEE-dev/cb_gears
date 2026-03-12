@@ -953,3 +953,20 @@ var main = new function() {
 
 // Init class
 main.init();
+
+// Page-to-page sync: listen for robot updates from configurator.html
+(function() {
+  var bc = new BroadcastChannel('gears_sync');
+  bc.onmessage = function(event) {
+    if (event.data.type === 'robot_updated') {
+      var json = localStorage.getItem('gears_robot_sync');
+      if (json) main.loadRobot(json);
+    }
+  };
+
+  // Load robot from localStorage after page is fully ready
+  window.addEventListener('load', function() {
+    var savedRobot = localStorage.getItem('gears_robot_sync');
+    if (savedRobot) main.loadRobot(savedRobot);
+  });
+})();

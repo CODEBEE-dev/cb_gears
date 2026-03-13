@@ -1767,7 +1767,7 @@ var builder = new function() {
     objectTypes.forEach(function(type){
       let $object = $('<option></option>');
       $object.prop('value', type);
-      $object.text(type);
+      $object.text(i18n.get('#builder-type-' + type + '#'));
       $select.append($object);
     });
 
@@ -1775,11 +1775,11 @@ var builder = new function() {
     $body.append($description);
 
     let $buttons = $(
-      '<button type="button" class="cancel btn-light">Cancel</button>' +
+      '<button type="button" class="cancel btn-light">' + i18n.get('#sim-cancel#') + '</button>' +
       '<button type="button" class="confirm btn-success">Ok</button>'
     );
 
-    let $dialog = dialog('Select Object Type', $body, $buttons);
+    let $dialog = dialog(i18n.get('#builder-type-select_title#'), $body, $buttons);
 
     $buttons.siblings('.cancel').click(function() { $dialog.close(); });
     $buttons.siblings('.confirm').click(function(){

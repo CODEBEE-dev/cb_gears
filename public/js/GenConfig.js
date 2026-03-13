@@ -6,7 +6,9 @@ function GenConfig(caller, $settingsArea) {
   this.getTitle = function(opt) {
     let $title = $('<div class="configurationTitle"></div>');
     let $toolTip = $('<span> </span><div class="tooltip">?<div class="tooltiptext"></div></div>');
-    $title.text(opt.label ? i18n.get(opt.label) : opt.option);
+    let autoKey = '#configurator-opt-' + opt.option + '#';
+    let autoLabel = MSGS[autoKey] ? i18n.get(autoKey) : opt.option;
+    $title.text(opt.label ? i18n.get(opt.label) : autoLabel);
 
     if (opt.help) {
       $toolTip.find('.tooltiptext').text(i18n.get(opt.help));
@@ -64,7 +66,7 @@ function GenConfig(caller, $settingsArea) {
   gen.color = function(opt, currentOptions) {
     let $div = $('<div class="configuration"></div>');
     let $colorBox = $('<div class="color"><input type="color"><input type="text"></div>');
-    let $alphaBox = $('<div class="slider">Opacity: <input type="range"></div>');
+    let $alphaBox = $('<div class="slider">' + i18n.get('#configurator-opacity#') + ' <input type="range"></div>');
     let $color = $colorBox.find('input[type=color]');
     let $text = $colorBox.find('input[type=text]');
     let $alpha = $alphaBox.find('input');
@@ -145,20 +147,20 @@ function GenConfig(caller, $settingsArea) {
     function selectImageDialog() {
       let $body = $('<div class="selectImage"></div>');
       let $filter = $(
-        '<div class="filter">Filter by Type: ' +
+        '<div class="filter">' + i18n.get('#configurator-filter_by_type#') +
           '<select>' +
-            '<option selected value="any">Any</option>' +
-            '<option value="box">Box</option>' +
-            '<option value="cylinder">Cylinder</option>' +
-            '<option value="sphere">Sphere</option>' +
-            '<option value="ground">Ground</option>' +
-            '<option value="robot">Robot</option>' +
+            '<option selected value="any">' + i18n.get('#configurator-opt-any#') + '</option>' +
+            '<option value="box">' + i18n.get('#builder-opt-box#') + '</option>' +
+            '<option value="cylinder">' + i18n.get('#builder-opt-cylinder#') + '</option>' +
+            '<option value="sphere">' + i18n.get('#builder-opt-sphere#') + '</option>' +
+            '<option value="ground">' + i18n.get('#builder-opt-ground#') + '</option>' +
+            '<option value="robot">' + i18n.get('#builder-opt-robot#') + '</option>' +
           '</select>' +
         '</div>'
       );
       let $select = $filter.find('select');
       let $search = $(
-        '<div class="search">Search: ' +
+        '<div class="search">' + i18n.get('#configurator-search#') +
           '<input type="text"></input>' +
         '</div>'
       );
@@ -178,8 +180,9 @@ function GenConfig(caller, $settingsArea) {
         $descriptionBox.append($basename);
         $descriptionBox.append($description);
 
-        let $selectBox = $('<div class="select"><button>Select</button></div>');
+        let $selectBox = $('<div class="select"><button></button></div>');
         let $selectBtn = $selectBox.find('button');
+        $selectBtn.text(i18n.get('#configurator-select#'));
         $selectBtn.prop('url', image.url);
 
         $selectBtn.click(function(e){
@@ -231,11 +234,11 @@ function GenConfig(caller, $settingsArea) {
       $searchInput.on('input', filterList);
 
       let $buttons = $(
-        '<div class="searchCount"></div><button type="button" class="cancel btn-light">Cancel</button>'
+        '<div class="searchCount"></div><button type="button" class="cancel btn-light">' + i18n.get('#sim-cancel#') + '</button>'
       );
 
       function updateSearchCount(count) {
-        $buttons.siblings('.searchCount').text(count + ' image textures found');
+        $buttons.siblings('.searchCount').text(count + i18n.get('#configurator-image_textures_found#'));
       }
 
       updateSearchCount($itemList[0].childNodes.length);
@@ -255,14 +258,14 @@ function GenConfig(caller, $settingsArea) {
         filterList();
         setScroll();
       }
-      let $dialog = dialog('Select Built-In Image', $body, $buttons);
+      let $dialog = dialog(i18n.get('#configurator-select_image_dialog#'), $body, $buttons);
 
       $buttons.click(function() {
         // Save search
         caller.selectImage_filterType = $select.val();
         caller.selectImage_searchText = $searchInput.val();
         caller.selectImage_scroll = $itemList[0].scrollTop;
-        
+
         $dialog.close();
       });
     }
@@ -270,7 +273,7 @@ function GenConfig(caller, $settingsArea) {
     let $div = $('<div class="configuration"></div>');
     let $buttonsBox = $('<div class="buttons"></div>');
 
-    let $button = $('<button>Select built-in image</button>');
+    let $button = $('<button></button>').text(i18n.get('#configurator-select_image_btn#'));
     $button.click(selectImageDialog);
     $buttonsBox.append($button);
     $div.append($buttonsBox);
@@ -282,9 +285,9 @@ function GenConfig(caller, $settingsArea) {
     function selectModelDialog() {
       let $body = $('<div class="selectModel"></div>');
       let $filter = $(
-        '<div class="filter">Filter by Type: ' +
+        '<div class="filter">' + i18n.get('#configurator-filter_by_type#') +
           '<select>' +
-            '<option selected value="any">Any</option>' +
+            '<option selected value="any">' + i18n.get('#configurator-opt-any#') + '</option>' +
           '</select>' +
         '</div>'
       );
@@ -293,7 +296,7 @@ function GenConfig(caller, $settingsArea) {
         $select.append('<option>' + category + '</option');
       }
       let $search = $(
-        '<div class="search">Search: ' +
+        '<div class="search">' + i18n.get('#configurator-search#') +
           '<input type="text"></input>' +
         '</div>'
       );
@@ -312,8 +315,9 @@ function GenConfig(caller, $settingsArea) {
         let $basename = $('<p class="bold"></p>').text(basename);
         $descriptionBox.append($basename);
   
-        let $selectBox = $('<div class="select"><button>Select</button></div>');
+        let $selectBox = $('<div class="select"><button></button></div>');
         let $selectBtn = $selectBox.find('button');
+        $selectBtn.text(i18n.get('#configurator-select#'));
         $selectBtn.prop('url', model.url);
   
         $selectBtn.click(function(e){
@@ -365,11 +369,11 @@ function GenConfig(caller, $settingsArea) {
       $searchInput.on('input', filterList);
   
       let $buttons = $(
-        '<div class="searchCount"></div><button type="button" class="cancel btn-light">Cancel</button>'
+        '<div class="searchCount"></div><button type="button" class="cancel btn-light">' + i18n.get('#sim-cancel#') + '</button>'
       );
-  
+
       function updateSearchCount(count) {
-        $buttons.siblings('.searchCount').text(count + ' models found');
+        $buttons.siblings('.searchCount').text(count + i18n.get('#configurator-models_found#'));
       }
   
       updateSearchCount($itemList[0].childNodes.length);
@@ -390,7 +394,7 @@ function GenConfig(caller, $settingsArea) {
         setScroll();
       }
   
-      let $dialog = dialog('Select Built-In Model', $body, $buttons);
+      let $dialog = dialog(i18n.get('#configurator-select_model_dialog#'), $body, $buttons);
   
       $buttons.click(function() {
         // Save search
@@ -405,7 +409,7 @@ function GenConfig(caller, $settingsArea) {
     let $div = $('<div class="configuration"></div>');
     let $buttonsBox = $('<div class="buttons"></div>');
 
-    let $button = $('<button>Select built-in model</button>');
+    let $button = $('<button></button>').text(i18n.get('#configurator-select_model_btn#'));
     $button.click(selectModelDialog);
     $buttonsBox.append($button);
     $div.append($buttonsBox);
@@ -500,7 +504,7 @@ function GenConfig(caller, $settingsArea) {
     $input.change(function(){
       let val = parseFloat($input.val())
       if (isNaN(val)) {
-        toastMsg('Not a valid number');
+        toastMsg(i18n.get('#builder-not_valid_number#'));
       } else {
         caller.saveHistory();
         currentOptions[opt.option] = val;
@@ -527,7 +531,7 @@ function GenConfig(caller, $settingsArea) {
     $input.change(function(){
       let val = parseInt($input.val())
       if (isNaN(val)) {
-        toastMsg('Not a valid number');
+        toastMsg(i18n.get('#builder-not_valid_number#'));
       } else {
         caller.saveHistory();
         currentOptions[opt.option] = val;

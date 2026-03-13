@@ -107,7 +107,7 @@ var configurator = new function() {
         max: '10',
         step: '0.1',
         reset: true,
-        help: 'Set to 0 to use wheel diameter'
+        help: '#configurator-help-caster_diameter#'
       },
       {
         option: 'casterOffsetZ',
@@ -120,18 +120,18 @@ var configurator = new function() {
       {
         option: 'color',
         type: 'color',
-        help: 'Color in hex',
+        help: '#configurator-help-color#',
         reset: true
       },
       {
         option: 'imageType',
         type: 'select',
         options: [
-          ['None', 'none'],
-          ['Repeat on every face', 'repeat'],
-          ['Only on top face', 'top'],
-          ['Only on front face', 'front'],
-          ['Map across all faces', 'all']
+          ['#builder-opt-none#', 'none'],
+          ['#builder-opt-repeat#', 'repeat'],
+          ['#builder-opt-top#', 'top'],
+          ['#builder-opt-front#', 'front'],
+          ['#builder-opt-all#', 'all']
         ],
         reset: true
       },
@@ -144,7 +144,7 @@ var configurator = new function() {
         option: 'imageURL',
         type: 'strText',
         reset: true,
-        help: 'URL for robot body image. Will not work with most webhosts; Imgur will work.'
+        help: '#configurator-help-imageURL#'
       },
       {
         option: 'bodyMass',
@@ -217,18 +217,18 @@ var configurator = new function() {
         {
           option: 'color',
           type: 'color',
-          help: 'Color in hex',
+          help: '#configurator-help-color#',
           reset: true
         },
         {
           option: 'imageType',
           type: 'select',
           options: [
-            ['None', 'none'],
-            ['Repeat on every face', 'repeat'],
-            ['Only on top face', 'top'],
-            ['Only on front face', 'front'],
-            ['Map across all faces', 'all']
+            ['#builder-opt-none#', 'none'],
+            ['#builder-opt-repeat#', 'repeat'],
+            ['#builder-opt-top#', 'top'],
+            ['#builder-opt-front#', 'front'],
+            ['#builder-opt-all#', 'all']
           ],
           reset: true
         },
@@ -299,7 +299,7 @@ var configurator = new function() {
         {
           option: 'color',
           type: 'color',
-          help: 'Color in hex',
+          help: '#configurator-help-color#',
           reset: true
         },
         {
@@ -351,7 +351,7 @@ var configurator = new function() {
         {
           option: 'color',
           type: 'color',
-          help: 'Color in hex',
+          help: '#configurator-help-color#',
           reset: true
         },
         {
@@ -397,17 +397,17 @@ var configurator = new function() {
         {
           option: 'sensorMinRange',
           type: 'floatText',
-          help: 'Anything nearer than this will not be detected. Leave blank to use default.'
+          help: '#configurator-help-min_range#'
         },
         {
           option: 'sensorMaxRange',
           type: 'floatText',
-          help: 'Anything further than this will not be detected. Leave blank to use default.'
+          help: '#configurator-help-max_range#'
         },
         {
           option: 'sensorFov',
           type: 'floatText',
-          help: 'Field of View in radians. Leave blank to use default.'
+          help: '#configurator-help-fov#'
         },
       ]
     },
@@ -441,12 +441,12 @@ var configurator = new function() {
         {
           option: 'rayLength',
           type: 'floatText',
-          help: 'Anything further than this will not be detected. Leave blank to use default.'
+          help: '#configurator-help-max_range#'
         },
         {
           option: 'rayIncidentLimit',
           type: 'floatText',
-          help: 'Ignore object if angle of incident (radian) is greater than this. Leave blank to use default.'
+          help: '#configurator-help-incident_angle#'
         },
       ]
     },
@@ -480,7 +480,7 @@ var configurator = new function() {
         {
           option: 'rayLength',
           type: 'floatText',
-          help: 'Anything further than this will not be detected. Leave blank to use default.'
+          help: '#configurator-help-max_range#'
         },
       ]
     },
@@ -514,7 +514,7 @@ var configurator = new function() {
         {
           option: 'rayLength',
           type: 'floatText',
-          help: 'Anything further than this will not be detected. Leave blank to use default (600 cm).'
+          help: '#configurator-help-max_range_600#'
         },
         {
           option: 'rayCount',
@@ -641,12 +641,12 @@ var configurator = new function() {
         {
           option: 'sensorMinRange',
           type: 'floatText',
-          help: 'Anything nearer than this will not be detected. Leave blank to use default.'
+          help: '#configurator-help-min_range#'
         },
         {
           option: 'sensorFov',
           type: 'floatText',
-          help: 'Field of View in radians. Leave blank to use default.'
+          help: '#configurator-help-fov#'
         },
       ]
     },
@@ -680,17 +680,17 @@ var configurator = new function() {
         {
           option: 'maxRange',
           type: 'floatText',
-          help: 'Anything further than this will not be attracted. Leave blank to use default.'
+          help: '#configurator-help-magnet_range#'
         },
         {
           option: 'maxPower',
           type: 'floatText',
-          help: 'Maximum attraction force. Actual will be lower due to distance falloff. Leave blank to use default.'
+          help: '#configurator-help-magnet_force#'
         },
         {
           option: 'dGain',
           type: 'floatText',
-          help: 'Positive gain used to reduce wobbling of objects being attracted. Leave blank to use default of none (0).'
+          help: '#configurator-help-magnet_damping#'
         }
       ]
     },
@@ -740,36 +740,36 @@ var configurator = new function() {
         {
           option: 'armLength',
           type: 'floatText',
-          help: 'Length of arm in cm. Leave blank to use default.',
+          help: '#configurator-help-arm_length#',
           reset: true
         },
         {
           option: 'baseColor',
           type: 'color',
-          help: 'Color in hex',
+          help: '#configurator-help-color#',
           reset: true
         },
         {
           option: 'pivotColor',
           type: 'color',
-          help: 'Color in hex',
+          help: '#configurator-help-color#',
           reset: true
         },
         {
           option: 'armColor',
           type: 'color',
-          help: 'Color in hex',
+          help: '#configurator-help-color#',
           reset: true
         },
         {
           option: 'imageType',
           type: 'select',
           options: [
-            ['None', 'none'],
-            ['Repeat on every face', 'repeat'],
-            ['Only on top face', 'top'],
-            ['Only on front face', 'front'],
-            ['Map across all faces', 'all']
+            ['#builder-opt-none#', 'none'],
+            ['#builder-opt-repeat#', 'repeat'],
+            ['#builder-opt-top#', 'top'],
+            ['#builder-opt-front#', 'front'],
+            ['#builder-opt-all#', 'all']
           ],
           reset: true
         },
@@ -787,12 +787,12 @@ var configurator = new function() {
         {
           option: 'minAngle',
           type: 'floatText',
-          help: 'Lowest possible angle for arm. Leave blank to use default.'
+          help: '#configurator-help-arm_min_angle#'
         },
         {
           option: 'maxAngle',
           type: 'floatText',
-          help: 'Highest possible angle for arm. Leave blank to use default.'
+          help: '#configurator-help-arm_max_angle#'
         },
         {
           option: 'mass',
@@ -852,13 +852,13 @@ var configurator = new function() {
         {
           option: 'baseColor',
           type: 'color',
-          help: 'Color in hex',
+          help: '#configurator-help-color#',
           reset: true
         },
         {
           option: 'platformColor',
           type: 'color',
-          help: 'Color in hex',
+          help: '#configurator-help-color#',
           reset: true
         },
         {
@@ -959,7 +959,7 @@ var configurator = new function() {
           max: '20',
           step: '0.5',
           reset: true,
-          help: 'Length of the base'
+          help: '#configurator-help-base_length#'
         },
         {
           option: 'baseThickness',
@@ -1059,12 +1059,12 @@ var configurator = new function() {
         {
           option: 'maxSpeed',
           type: 'floatText',
-          help: 'Maximum rotation speed of the motor. NOT the maximum speed of the paintball. Leave blank to use default.'
+          help: '#configurator-help-paintball_speed#'
         },
         {
           option: 'color',
           type: 'intText',
-          help: 'Color of the paintball. From 0 to 5, they are Cyan, Green, Yellow, Red, Magenta, Blue. Leave blank to use default.'
+          help: '#configurator-help-paintball_color#'
         },
         {
           option: 'ttl',
@@ -1567,10 +1567,10 @@ var configurator = new function() {
     });
 
     let $buttons = $(
-      '<button type="button" class="cancel btn-light">Cancel</button>'
+      '<button type="button" class="cancel btn-light">' + i18n.get('#sim-cancel#') + '</button>'
     );
 
-    let $dialog = dialog('Select Built-In Image', $body, $buttons);
+    let $dialog = dialog(i18n.get('#configurator-select_image_dialog#'), $body, $buttons);
 
     $buttons.click(function() { $dialog.close(); });
   };
@@ -1593,13 +1593,13 @@ var configurator = new function() {
       self.resetScene(false);
     };
 
-    let $centerWheelAxisBtn = $('<div class="btn_pen">Center On Wheel Axis</div>');
+    let $centerWheelAxisBtn = $('<div class="btn_pen"></div>').text(i18n.get('#configurator-center_wheel_axis#'));
     $centerWheelAxisBtn.click(function(){
       // move the pen to the center of the wheel axis
       wheelAxisCenter = robot.leftWheel.mesh.position.add(robot.rightWheel.mesh.position).scale(1/2.0)
       moveTo(wheelAxisCenter.x, wheelAxisCenter.z)
     });
-    let $centerWheelBtn = $('<div class="btn_pen">Center On Wheel</div>');
+    let $centerWheelBtn = $('<div class="btn_pen"></div>').text(i18n.get('#configurator-center_wheel#'));
     let nextWheelCenter = 'L';
     $centerWheelBtn.click(function(){
       // move the pen to the center of a wheel.
@@ -1613,7 +1613,7 @@ var configurator = new function() {
       }
       moveTo(wheelCenter.x, wheelCenter.z)
     });
-    let $centerCSBtn = $('<div class="btn_pen">Center On Color Sensor</div>');
+    let $centerCSBtn = $('<div class="btn_pen"></div>').text(i18n.get('#configurator-center_color_sensor#'));
     let nextColorSensor = 0;
     $centerCSBtn.click(function(){
       // Move the pen to the center of the color sensor.  If there is more
@@ -1710,7 +1710,7 @@ var configurator = new function() {
     let $selected = self.getSelectedComponent();
     let COMPATIBLE_TYPES = ['ArmActuator', 'SwivelActuator', 'LinearActuator', 'WheelActuator', 'WheelPassive'];
     if (
-      $selected.text() != 'Body'
+      typeof $selected[0].component.type != 'undefined'
       && COMPATIBLE_TYPES.indexOf($selected[0].component.type) == -1
     ) {
       toastMsg('Components can only be added to Body and Actuators.');
@@ -1729,14 +1729,15 @@ var configurator = new function() {
     });
 
     groups.forEach(function(group){
-      let $group = $('<optgroup label="' + group + '"></optgroup>');
+      let $group = $('<optgroup></optgroup>');
+      $group.attr('label', i18n.get('#configurator-cat-' + group + '#'));
       self.componentTemplates.forEach(function(componentTemplate){
         if (componentTemplate.category != group) {
           return;
         }
         let $component = $('<option></option>');
         $component.prop('value', componentTemplate.name);
-        $component.text(componentTemplate.name);
+        $component.text(i18n.get('#configurator-name-' + componentTemplate.name + '#'));
         $group.append($component);
       });
       $select.append($group);
@@ -1746,11 +1747,11 @@ var configurator = new function() {
     $body.append($description);
 
     let $buttons = $(
-      '<button type="button" class="cancel btn-light">Cancel</button>' +
+      '<button type="button" class="cancel btn-light">' + i18n.get('#sim-cancel#') + '</button>' +
       '<button type="button" class="confirm btn-success">Ok</button>'
     );
 
-    let $dialog = dialog('Select Component', $body, $buttons);
+    let $dialog = dialog(i18n.get('#configurator-select_component#'), $body, $buttons);
 
     $buttons.siblings('.cancel').click(function() { $dialog.close(); });
     $buttons.siblings('.confirm').click(function(){
@@ -1871,7 +1872,7 @@ var configurator = new function() {
     let componentIndex = 0;
 
     let $ul = $('<ul></ul>');
-    let $li = $('<li class="selected">Body</li>');
+    let $li = $('<li class="selected"></li>').text(i18n.get('#configurator-name-Body#'));
     $li[0].component = options;
     $ul.append($li);
 
@@ -1880,11 +1881,11 @@ var configurator = new function() {
       components.forEach(function(component){
         let $item = $('<li></li>');
         $item.attr('componentIndex', componentIndex);
-        let text = component.type;
+        let text = i18n.get('#configurator-name-' + component.type + '#');
 
-        if (DUMB_BLOCKS.indexOf(text) != -1) {
+        if (DUMB_BLOCKS.indexOf(component.type) != -1) {
           ;
-        } else if (ACTUATORS.indexOf(text) != -1) {
+        } else if (ACTUATORS.indexOf(component.type) != -1) {
           text += ' (out' + PORT_LETTERS[(++motorCount)] + ')';
         } else {
           text += ' (in' + (++sensorCount) + ')';

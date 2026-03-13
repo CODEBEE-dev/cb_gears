@@ -225,7 +225,7 @@ let MSGS = {
     ru: 'ждать',
     hu: 'várakozás',
     it: 'aspettare per',
-    ko: '기다리기 :',
+    ko: '기다리기',
   },
   '#blk-seconds#': {
     en: 'seconds',
@@ -407,7 +407,7 @@ let MSGS = {
     ru: 'для',
     hu: 'eddig:',
     it: 'per',
-    ko: '으로',
+    ko: '동안',
   },
   '#blk-exit_program#': {
     en: 'exit program',
@@ -590,7 +590,7 @@ let MSGS = {
     pt: 'esbarrado',
     he: 'נתקל',
     it: 'viene respinto',
-    ko: '부딫힘',
+    ko: '충돌 감지',
   },
   '#blk-send_message#': {
     en: 'Send message to',
@@ -797,13 +797,13 @@ let MSGS = {
     pt: 'como',
     de: 'als',
     it: 'come',
-    ko: "을 다음으로 설정 : ",
+    ko: "설정값 :",
   },
   '#blk-of#': {
     en: 'of',
     pt: 'de',
     it: 'di',
-    ko: ', 다음에서 얻기 :'
+    ko: '에서 :'
   },
   '#blk-color#': {
     en: 'color',
@@ -961,7 +961,7 @@ let MSGS = {
     ru: 'в',
     hu: 'bemenet',
     it: 'entrata',
-    ko: '을 다음으로 설정 :',
+    ko: '설정값 :',
   },
   '#blk-gyro#': {
     en: 'gyro',
@@ -997,7 +997,7 @@ let MSGS = {
     he: 'קצב',
     ru: 'ускорение',
     it: 'cadenza',
-    ko: '비율(Rate)',
+    ko: '각속도(Rate)',
   },
   '#blk-pitchAngle#': {
     en: 'pitch angle',
@@ -1005,7 +1005,7 @@ let MSGS = {
     he: 'זווית גובה',
     pt: 'ângulo de inclinação',
     it: 'angolo di inclinazione',
-    ko: '피지 각도(Pitch Angle)',
+    ko: '피치 각도(Pitch Angle)',
   },
   '#blk-pitchRate#': {
     en: 'pitch rate',
@@ -1013,7 +1013,7 @@ let MSGS = {
     he: 'קצב גובה גובה',
     pt: 'taxa de passo',
     it: 'velocità del passo',
-    ko: '피치 비율(Pitch Rate)',
+    ko: '피치 각속도(Pitch Rate)',
   },
   '#blk-rollAngle#': {
     en: 'roll angle',
@@ -1029,7 +1029,7 @@ let MSGS = {
     he: 'קצב גלגול',
     pt: 'taxa de rolagem',
     it: 'tasso di rotazione',
-    ko: '롤 비율(Roll Rate)',
+    ko: '롤 각속도(Roll Rate)',
   },
   '#blk-heading#': {
     en: 'heading',
@@ -1073,7 +1073,7 @@ let MSGS = {
     ru: 'скорость',
     hu: 'port',
     it: 'a',
-    ko: '를 다음으로 설정 :',
+    ko: '설정값 :',
   },
   '#blk-run_motor_tooltip#': {
     en: 'motor will continue running until given a different command',
@@ -1098,7 +1098,7 @@ let MSGS = {
     ru: 'до позиции',
     hu: 'helyzetig',
     it: 'per posizionare',
-    ko: '으로 목표 추종 :'
+    ko: '목표 위치 :'
   },
   '#blk-say#': {
     en: 'say',
@@ -1211,7 +1211,7 @@ let MSGS = {
     he: 'גוֹבַה',
     ru: 'высота',
     it: 'altitudine',
-    ko: '높이(Altitute)',
+    ko: '높이(Altitude)',
   },
   '#blk-valtitude#': {
     en: 'valtitude',
@@ -1684,7 +1684,7 @@ let MSGS = {
   },
   '#blk-to#': {
     en: 'to',
-    ko: '부터 다음까지 :',
+    ko: '부터 :',
   },
   '#blk-plotter_drawLine_tooltip#': {
     en: 'Draw a line from the start point to the end point.',

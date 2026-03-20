@@ -1378,8 +1378,11 @@ simPanel.init();
 
 // Page-to-page sync: listen for world updates from builder.html
 (function() {
+  var isChallenge = new URLSearchParams(window.location.search).has('challenge');
+
   var bc = new BroadcastChannel('gears_sync');
   bc.onmessage = function(event) {
+    if (isChallenge) return;
     if (event.data.type === 'world_updated') {
       var json = localStorage.getItem('gears_world_sync');
       if (json) simPanel.loadWorld(json);
@@ -1388,6 +1391,7 @@ simPanel.init();
 
   // Load world from localStorage after page is fully ready
   window.addEventListener('load', function() {
+    if (isChallenge) return;
     var savedWorld = localStorage.getItem('gears_world_sync');
     if (savedWorld) simPanel.loadWorld(savedWorld);
   });

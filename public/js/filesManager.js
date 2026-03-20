@@ -13,7 +13,9 @@ var filesManager = new function() {
 
     self.$addNewFile.click(self.addNewFile);
 
-    self.loadLocalStorage();
+    if (!new URLSearchParams(window.location.search).has('challenge')) {
+      self.loadLocalStorage();
+    }
     setInterval(self.saveLocalStorage, 2 * 1000);
   };
 

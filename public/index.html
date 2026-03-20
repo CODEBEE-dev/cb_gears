@@ -300,7 +300,13 @@
     function loadWorldFromGET() {
       let worldJSON = readGET('worldJSON');
       if (worldJSON) {
-        simPanel.loadWorldURL(decodeURIComponent(worldJSON));
+        let decoded = decodeURIComponent(worldJSON);
+        // JSON 문자열이면 직접 loadWorld, URL이면 fetch해서 loadWorld
+        if (decoded.trimStart().startsWith('{')) {
+          simPanel.loadWorld(decoded);
+        } else {
+          simPanel.loadWorldURL(decoded);
+        }
       }
     }
 
@@ -348,6 +354,11 @@
       return Promise.all(scriptsPromises);
     }
 
+    function loadChallengeToolbox() {
+      if (!readGET('challenge')) return;
+      blockly.loadToolboxFilter({ show: { categories: ['Movement'] } });
+    }
+
     // Load world if specified
     async function loadWhenReady() {
       if (typeof babylon.scene != 'undefined' && babylon.scene.isReady()) {
@@ -355,6 +366,7 @@
         loadWorldFromGET();
         loadRobotFromGET();
         loadFilterFromGET();
+        loadChallengeToolbox();
       } else {
         setTimeout(loadWhenReady, 100);
       }

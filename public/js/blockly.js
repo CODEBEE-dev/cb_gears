@@ -118,7 +118,9 @@ var blockly = new function() {
         self.workspace.addChangeListener(Blockly.Events.disableOrphans);
         self.displayedWorkspace.addChangeListener(Blockly.Events.disableOrphans);
         // self.loadLocalStorage();
-        setTimeout(self.loadLocalStorage, 200);
+        if (!new URLSearchParams(window.location.search).has('challenge')) {
+          setTimeout(self.loadLocalStorage, 200);
+        }
         setTimeout(function(){
           self.workspace.addChangeListener(self.checkModified);
         }, 1000);

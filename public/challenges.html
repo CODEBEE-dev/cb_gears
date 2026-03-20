@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="codebridgeai_favicon.png">
+  <title>Codebridge - 도전 과제</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20,400,1,0" rel="stylesheet">
+
+  <style>
+    :root {
+      --color-primary: #2634a3;
+      --color-primary-light: #4a5fd4;
+      --color-bg: #E4F0FE;
+      --color-locked: #9aa5b4;
+      --color-done: #22c55e;
+      --color-active: #f59e0b;
+      --radius: 12px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--color-bg);
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--color-primary);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0.75rem 1.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,.25);
+    }
+    header img { width: 32px; height: 32px; }
+    header h1 { font-size: 1.1rem; font-weight: 800; flex: 1; }
+    #progressBar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+    #progressBarFill {
+      width: 160px;
+      height: 10px;
+      background: rgba(255,255,255,.25);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    #progressBarFill div {
+      height: 100%;
+      background: var(--color-done);
+      border-radius: 99px;
+      transition: width .4s ease;
+    }
+    #resetBtn {
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.4);
+      color: #fff;
+      border-radius: 8px;
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 700;
+    }
+    #resetBtn:hover { background: rgba(255,255,255,.3); }
+
+    /* ── Main ── */
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1rem 4rem;
+    }
+
+    /* ── Category ── */
+    .category {
+      margin-bottom: 2.5rem;
+    }
+    .category-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 1rem;
+    }
+    .category-icon {
+      font-size: 1.5rem;
+    }
+    .category-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--color-primary);
+    }
+    .category-count {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #666;
+      background: #fff;
+      border-radius: 99px;
+      padding: 2px 8px;
+    }
+
+    /* ── Card Grid ── */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 10px;
+    }
+
+    /* ── Challenge Card ── */
+    .challenge-card {
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 14px 10px 12px;
+      text-align: center;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: transform .15s, box-shadow .15s, border-color .15s;
+      position: relative;
+      user-select: none;
+    }
+    .challenge-card:hover:not(.locked) {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 18px rgba(0,0,0,.12);
+    }
+    .challenge-card.locked {
+      cursor: default;
+      opacity: .55;
+      filter: grayscale(.6);
+    }
+    .challenge-card.done {
+      border-color: var(--color-done);
+      background: #f0fdf4;
+    }
+    .challenge-card.active-next {
+      border-color: var(--color-active);
+      box-shadow: 0 0 0 3px rgba(245,158,11,.25);
+    }
+
+    .card-emoji {
+      font-size: 1.8rem;
+      margin-bottom: 6px;
+      display: block;
+    }
+    .card-title {
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: #334155;
+      line-height: 1.3;
+      word-break: keep-all;
+    }
+    .card-badge {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+    }
+    .card-badge.done-badge {
+      background: var(--color-done);
+      color: #fff;
+    }
+    .card-badge.lock-badge {
+      background: var(--color-locked);
+      color: #fff;
+    }
+    .card-badge.next-badge {
+      background: var(--color-active);
+      color: #fff;
+    }
+    .material-symbols-rounded { font-size: 14px; }
+
+    /* ── Modal ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.45);
+      z-index: 200;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: #fff;
+      border-radius: 16px;
+      padding: 2rem;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,.3);
+    }
+    .modal-emoji { font-size: 3rem; margin-bottom: 0.5rem; }
+    .modal h2 { font-size: 1.2rem; font-weight: 800; color: var(--color-primary); margin-bottom: 0.5rem; }
+    .modal p { font-size: 0.88rem; color: #555; margin-bottom: 1.25rem; line-height: 1.6; }
+    .modal-buttons { display: flex; gap: 8px; justify-content: center; }
+    .btn {
+      padding: 8px 20px;
+      border-radius: 8px;
+      border: none;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: opacity .15s;
+    }
+    .btn:hover { opacity: .85; }
+    .btn-primary { background: var(--color-primary); color: #fff; }
+    .btn-secondary { background: #e2e8f0; color: #333; }
+
+    /* ── Reset confirm modal ── */
+    #confirmModal .modal { border: 3px solid #ef4444; }
+    #confirmModal h2 { color: #ef4444; }
+  </style>
+</head>
+<body>
+
+<header>
+  <img src="codebridgeai_favicon.png" alt="logo">
+  <h1>도전 과제</h1>
+  <div id="progressBar">
+    <div id="progressBarFill"><div id="progressBarInner" style="width:0%"></div></div>
+    <span id="progressText">0 / 0</span>
+  </div>
+  <button id="resetBtn">초기화</button>
+</header>
+
+<main id="challengeRoot"></main>
+
+<!-- Challenge start modal -->
+<div class="modal-overlay" id="startModal">
+  <div class="modal">
+    <div class="modal-emoji" id="modalEmoji">🤖</div>
+    <h2 id="modalTitle">도전 과제 이름</h2>
+    <p id="modalDesc">설명이 여기에 표시됩니다.</p>
+    <div class="modal-buttons">
+      <button class="btn btn-secondary" id="modalCancel">취소</button>
+      <button class="btn btn-primary" id="modalStart">시작하기 →</button>
+    </div>
+  </div>
+</div>
+
+<!-- Reset confirm modal -->
+<div class="modal-overlay" id="confirmModal">
+  <div class="modal">
+    <div class="modal-emoji">⚠️</div>
+    <h2>진행 상황 초기화</h2>
+    <p>모든 완료 기록이 삭제됩니다.<br>정말 초기화하시겠습니까?</p>
+    <div class="modal-buttons">
+      <button class="btn btn-secondary" id="confirmNo">취소</button>
+      <button class="btn" style="background:#ef4444;color:#fff;" id="confirmYes">초기화</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── 도전 과제 데이터 ──────────────────────────────────────────────
+const CATEGORIES = [
+  {
+    id: 'basic',
+    title: '기초: 이동',
+    icon: '🚗',
+    challenges: [
+      { id: 'basic-1', title: '앞으로 이동', emoji: '➡️', code: 'UNICORN',
+        desc: '로봇을 초록 박스 안으로 이동시키고 멈추세요.',
+        json: 'worlds/challenges_basic/basic-1.json?v=65847fe0' },
+      { id: 'basic-2', title: '여러 번 이동', emoji: '⏩', code: 'ELEPHANT',
+        desc: '초록 박스까지 여러 개의 이동 블록을 사용하세요.',
+        json: 'worlds/challenges_basic/basic-2.json?v=c9f70768' },
+      { id: 'basic-3', title: '이동과 회전 1', emoji: '↩️', code: 'DOG',
+        desc: '회전 블록을 사용해 박스 안으로 이동하세요.',
+        json: 'worlds/challenges_basic/basic-3.json?v=ebe6693c' },
+      { id: 'basic-4', title: '이동과 회전 2', emoji: '🔄', code: 'CAT',
+        desc: '회전 블록을 사용해 박스 안으로 이동하세요.',
+        json: 'worlds/challenges_basic/basic-4.json?v=071580c0' },
+      { id: 'basic-5', title: '이동과 회전 3', emoji: '🌀', code: 'MOUSE',
+        desc: '박스가 뒤에 있을 수도 있습니다!',
+        json: 'worlds/challenges_basic/basic-5.json?v=2af8b1e9' },
+    ]
+  },
+  {
+    id: 'sleep',
+    title: '기초: 대기',
+    icon: '⏱️',
+    challenges: [
+      { id: 'sleep-1', title: '대기 1', emoji: '😴', code: 'SLOTH',
+        desc: '각 박스 안에서 1초 동안 멈춰야 합니다.',
+        json: 'worlds/challenges_basic/sleep-1.json?v=b28b34e8' },
+      { id: 'sleep-2', title: '대기 2', emoji: '🐼', code: 'PANDA',
+        desc: '각 박스 안에서 1초 동안 멈춰야 합니다.',
+        json: 'worlds/challenges_basic/sleep-2.json?v=a0d67ae4' },
+    ]
+  },
+  {
+    id: 'maze',
+    title: '미로',
+    icon: '🌿',
+    challenges: [
+      { id: 'maze-1', title: '미로 1', emoji: '🐭', code: 'MOLE',
+        desc: '미로를 통과해 모든 박스를 방문하세요.',
+        json: 'worlds/challenges_basic/maze-1.json?v=1ce38425' },
+      { id: 'maze-2', title: '미로 2', emoji: '🦔', code: 'HEDGEHOG',
+        desc: '미로를 통과해 모든 박스를 방문하세요.',
+        json: 'worlds/challenges_basic/maze-2.json?v=4c257c21' },
+      { id: 'maze-3', title: '미로 3', emoji: '🐇', code: 'RABBIT',
+        desc: '더 복잡한 미로를 통과하세요.',
+        json: 'worlds/challenges_basic/maze-3.json?v=52c6d5cd' },
+      { id: 'maze-4', title: '미로 4', emoji: '🫏', code: 'DONKEY',
+        desc: '더 복잡한 미로를 통과하세요.',
+        json: 'worlds/challenges_basic/maze-4.json?v=324c0860' },
+      { id: 'maze-5', title: '미로 5', emoji: '🦃', code: 'TURKEY',
+        desc: '도전적인 미로를 정복하세요.',
+        json: 'worlds/challenges_basic/maze-5.json?v=57ce4528' },
+      { id: 'maze-6', title: '미로 6', emoji: '🦊', code: 'FOX',
+        desc: '최고 난이도 미로입니다.',
+        json: 'worlds/challenges_basic/maze-6.json?v=7bd986c4' },
+    ]
+  },
+  {
+    id: 'dungeon',
+    title: '던전',
+    icon: '🏰',
+    challenges: [
+      { id: 'dungeon-0', title: '던전 0', emoji: '👺', code: 'IMP',
+        desc: '던전을 탈출하세요.',
+        json: 'worlds/challenges_basic/dungeon-0.json?v=d16421b8' },
+      { id: 'dungeon-1', title: '던전 1', emoji: '👹', code: 'ORC',
+        desc: '던전을 탈출하세요.',
+        json: 'worlds/challenges_basic/dungeon-1.json?v=4fcbabab' },
+      { id: 'dungeon-2', title: '던전 2', emoji: '🧌', code: 'TROLL',
+        desc: '던전을 탈출하세요.',
+        json: 'worlds/challenges_basic/dungeon-2.json?v=7114511d' },
+      { id: 'dungeon-3', title: '던전 3', emoji: '🐂', code: 'MINOTAUR',
+        desc: '던전을 탈출하세요.',
+        json: 'worlds/challenges_basic/dungeon-3.json?v=0abf9ae2' },
+      { id: 'dungeon-4', title: '던전 4', emoji: '👁️', code: 'CYCLOP',
+        desc: '던전을 탈출하세요.',
+        json: 'worlds/challenges_basic/dungeon-4.json?v=091f44ad' },
+      { id: 'dungeon-5', title: '던전 5', emoji: '🐉', code: 'DRAGON',
+        desc: '던전을 탈출하세요.',
+        json: 'worlds/challenges_basic/dungeon-5.json?v=009cbf96' },
+      { id: 'dungeon-6', title: '던전 6', emoji: '🦂', code: 'MANTICORE',
+        desc: '최종 던전을 정복하세요.',
+        json: 'worlds/challenges_basic/dungeon-6.json?v=80b8d5a6' },
+    ]
+  },
+  {
+    id: 'loops',
+    title: '반복',
+    icon: '🔁',
+    challenges: [
+      { id: 'loops-0',  title: '반복 0',   emoji: '🪐', code: 'PLUTO',    desc: '반복 블록을 사용하세요. (최대 4블록)', json: 'worlds/challenges_basic/loops-0.json?v=dca8f7ad' },
+      { id: 'loops-0b', title: '반복 0b',  emoji: '🌑', code: 'CHARON',   desc: '반복 블록을 사용하세요. (최대 4블록)', json: 'worlds/challenges_basic/loops-0b.json?v=4db77619' },
+      { id: 'loops-1',  title: '반복 1',   emoji: '🌊', code: 'NEPTUNE',  desc: '반복 블록을 사용하세요. (최대 5블록)', json: 'worlds/challenges_basic/loops-1.json?v=607f3c38' },
+      { id: 'loops-2',  title: '반복 2',   emoji: '💨', code: 'URANUS',   desc: '반복 블록을 사용하세요. (최대 6블록)', json: 'worlds/challenges_basic/loops-2.json?v=848fd296' },
+      { id: 'loops-2b', title: '반복 2b',  emoji: '🌙', code: 'TITANIA',  desc: '반복 블록을 사용하세요. (최대 4블록)', json: 'worlds/challenges_basic/loops-2b.json?v=eb903c3d' },
+      { id: 'loops-2c', title: '반복 2c',  emoji: '🌒', code: 'OBERON',   desc: '반복 블록을 사용하세요. (최대 9블록)', json: 'worlds/challenges_basic/loops-2c.json?v=fbab8903' },
+      { id: 'loops-2d', title: '반복 2d',  emoji: '🌓', code: 'MIRANDA',  desc: '반복 블록을 사용하세요. (최대 10블록)', json: 'worlds/challenges_basic/loops-2d.json?v=3023901c' },
+      { id: 'loops-2e', title: '반복 2e',  emoji: '🌔', code: 'CRISSIDA', desc: '반복 블록을 사용하세요. (최대 10블록)', json: 'worlds/challenges_basic/loops-2e.json?v=4935c9b8' },
+      { id: 'loops-3',  title: '반복 3',   emoji: '💫', code: 'SATURN',   desc: '반복 블록을 사용하세요. (최대 4블록)', json: 'worlds/challenges_basic/loops-3.json?v=ae7011eb' },
+      { id: 'loops-3b', title: '반복 3b',  emoji: '🪐', code: 'TITAN',    desc: '반복 블록을 사용하세요. (최대 4블록)', json: 'worlds/challenges_basic/loops-3b.json?v=53bc0e16' },
+      { id: 'loops-4',  title: '반복 4',   emoji: '⚡', code: 'JUPITER',  desc: '반복 블록을 사용하세요. (최대 6블록)', json: 'worlds/challenges_basic/loops-4.json?v=5fa0c5f0' },
+      { id: 'loops-4b', title: '반복 4b',  emoji: '🧊', code: 'EUROPA',   desc: '반복 블록을 사용하세요. (최대 7블록)', json: 'worlds/challenges_basic/loops-4b.json?v=b8989a90' },
+      { id: 'loops-5',  title: '반복 5',   emoji: '🔴', code: 'MARS',     desc: '반복 블록을 사용하세요. (최대 7블록)', json: 'worlds/challenges_basic/loops-5.json?v=729ad780' },
+      { id: 'loops-5b', title: '반복 5b',  emoji: '🌕', code: 'PHOBOS',   desc: '반복 블록을 사용하세요. (최대 7블록)', json: 'worlds/challenges_basic/loops-5b.json?v=ea21f9d5' },
+      { id: 'loops-6',  title: '반복 6',   emoji: '🌍', code: 'EARTH',    desc: '반복 블록을 사용하세요. (최대 10블록)', json: 'worlds/challenges_basic/loops-6.json?v=5484bb7c' },
+      { id: 'loops-7',  title: '반복 7',   emoji: '🌛', code: 'MOON',     desc: '반복 블록을 사용하세요. (최대 8블록)', json: 'worlds/challenges_basic/loops-7.json?v=a260f623' },
+    ]
+  },
+  {
+    id: 'conditions',
+    title: '조건',
+    icon: '🔀',
+    challenges: [
+      { id: 'conditions-1',  title: '색상 조건 1',  emoji: '🟫', code: 'STONE',         desc: '색상 센서로 조건을 판별하세요.', json: 'worlds/challenges_basic/conditions-1.json?v=b06212fe' },
+      { id: 'conditions-2',  title: '색상 조건 2',  emoji: '📖', code: 'SECRETS',       desc: '색상 센서로 조건을 판별하세요.', json: 'worlds/challenges_basic/conditions-2.json?v=4757e227' },
+      { id: 'conditions-3',  title: '색상 조건 3',  emoji: '🏰', code: 'AZKABAN',       desc: '색상 센서로 조건을 판별하세요.', json: 'worlds/challenges_basic/conditions-3.json?v=ecbb4ae5' },
+      { id: 'conditions-4',  title: '색상 조건 4',  emoji: '🔥', code: 'FIRE',          desc: '색상 센서로 조건을 판별하세요.', json: 'worlds/challenges_basic/conditions-4.json?v=4c96c864' },
+      { id: 'conditions-5',  title: '색상 조건 5',  emoji: '🦅', code: 'PHOENIX',       desc: '색상 센서로 조건을 판별하세요.', json: 'worlds/challenges_basic/conditions-5.json?v=d5353fa9' },
+      { id: 'conditions-6',  title: '색상 조건 6',  emoji: '👑', code: 'PRINCE',        desc: '색상 센서로 조건을 판별하세요.', json: 'worlds/challenges_basic/conditions-6.json?v=4f834e54' },
+      { id: 'conditions-7',  title: '색상 조건 7',  emoji: '🍫', code: 'CHOCOLATE',     desc: '색상 센서로 조건을 판별하세요.', json: 'worlds/challenges_basic/conditions-7.json?v=86502bb0' },
+      { id: 'conditions-8',  title: '색상 조건 8',  emoji: '🍌', code: 'BANANA',        desc: '색상 센서로 조건을 판별하세요.', json: 'worlds/challenges_basic/conditions-8.json?v=8ad2c418' },
+      { id: 'conditions-8b', title: '색상 조건 8b', emoji: '🧂', code: 'SALTED CARAMEL',desc: '색상 센서로 조건을 판별하세요.', json: 'worlds/challenges_basic/conditions-8b.json?v=4aad9762' },
+      { id: 'conditions-9',  title: '색상 조건 9',  emoji: '🥑', code: 'AVOCADO',       desc: '색상 센서로 조건을 판별하세요.', json: 'worlds/challenges_basic/conditions-9.json?v=3702a992' },
+      { id: 'conditions-9b', title: '색상 조건 9b', emoji: '🫐', code: 'BLUEBERRY',     desc: '색상 센서로 조건을 판별하세요.', json: 'worlds/challenges_basic/conditions-9b.json?v=ac0bedb2' },
+      { id: 'conditions-10', title: '색상 조건 10', emoji: '🍦', code: 'VANILLA',       desc: '색상 센서로 조건을 판별하세요.', json: 'worlds/challenges_basic/conditions-10.json?v=87b48a99' },
+      { id: 'conditions-11', title: '색상 조건 11', emoji: '🍮', code: 'CARAMEL',       desc: '색상 센서로 조건을 판별하세요.', json: 'worlds/challenges_basic/conditions-11.json?v=85e3052e' },
+      { id: 'conditions-12', title: '색상 조건 12', emoji: '🍪', code: 'OREO',          desc: '색상 센서로 조건을 판별하세요.', json: 'worlds/challenges_basic/conditions-12.json?v=6d42f222' },
+    ]
+  },
+  {
+    id: 'abstraction',
+    title: '추상화',
+    icon: '🧩',
+    challenges: [
+      { id: 'abstraction-1',  title: '추상화 1',  emoji: '🐱', code: 'TABBY',    desc: '함수 블록을 사용하세요.', json: 'worlds/challenges_basic/abstraction-1.json?v=3d38a55b' },
+      { id: 'abstraction-2',  title: '추상화 2',  emoji: '🐈', code: 'CALICO',   desc: '함수 블록을 사용하세요.', json: 'worlds/challenges_basic/abstraction-2.json?v=35d1b224' },
+      { id: 'abstraction-3',  title: '추상화 3',  emoji: '🟠', code: 'GINGER',   desc: '함수 블록을 사용하세요. (최대 5블록)', json: 'worlds/challenges_basic/abstraction-3.json?v=b07838d3' },
+      { id: 'abstraction-4',  title: '추상화 4',  emoji: '🐈‍⬛', code: 'SIAMESE',  desc: '함수 블록을 사용하세요. (최대 4블록)', json: 'worlds/challenges_basic/abstraction-4.json?v=468cc179' },
+      { id: 'abstraction-5',  title: '추상화 5',  emoji: '🪆', code: 'RAGDOLL',  desc: '함수 블록을 사용하세요.', json: 'worlds/challenges_basic/abstraction-5.json?v=926b32e2' },
+      { id: 'abstraction-6',  title: '추상화 6',  emoji: '🦎', code: 'Indri',    desc: '함수 블록을 사용하세요. (최대 1블록)', json: 'worlds/challenges_basic/abstraction-6.json?v=a2f2969a' },
+      { id: 'abstraction-7',  title: '추상화 7',  emoji: '🐾', code: 'Fossa',    desc: '함수 블록을 사용하세요. (최대 8블록)', json: 'worlds/challenges_basic/abstraction-7.json?v=f5b3c468' },
+      { id: 'abstraction-8',  title: '추상화 8',  emoji: '🐕', code: 'Dingo',    desc: '함수 블록을 사용하세요. (최대 11블록)', json: 'worlds/challenges_basic/abstraction-8.json?v=5957e6b8' },
+      { id: 'abstraction-9',  title: '추상화 9',  emoji: '🐖', code: 'Aardvark', desc: '함수 블록을 사용하세요. (최대 12블록)', json: 'worlds/challenges_basic/abstraction-9.json?v=3b330462' },
+      { id: 'abstraction-10', title: '추상화 10', emoji: '🐀', code: 'Zapus',    desc: '함수 블록을 사용하세요. (최대 5블록)', json: 'worlds/challenges_basic/abstraction-10.json?v=499c54f1' },
+      { id: 'abstraction-11', title: '추상화 11', emoji: '🐿️', code: 'Xerus',    desc: '마지막 추상화 도전!', json: 'worlds/challenges_basic/abstraction-11.json?v=4f35d8a5' },
+    ]
+  },
+];
+
+// ── 완료 코드 → challenge id 매핑 ──────────────────────────────
+const CODE_TO_ID = {};
+CATEGORIES.forEach(cat => {
+  cat.challenges.forEach(ch => {
+    CODE_TO_ID[ch.code.toUpperCase()] = ch.id;
+  });
+});
+
+// ── localStorage helpers ──────────────────────────────────────
+const STORAGE_KEY = 'cb_challenges_progress';
+
+function loadProgress() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
+  catch(e) { return {}; }
+}
+function saveProgress(p) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(p));
+}
+
+// ── 전체 challenge id 순서 (잠금 판별용) ──────────────────────
+const ALL_IDS = [];
+CATEGORIES.forEach(cat => cat.challenges.forEach(ch => ALL_IDS.push(ch.id)));
+
+function getFirstUnlocked(progress) {
+  // 첫 번째는 항상 열려있음. 완료된 것의 다음 하나가 열려있음.
+  // → 완료된 마지막 인덱스 + 1 까지 잠금 해제
+  let maxDoneIdx = -1;
+  ALL_IDS.forEach((id, i) => { if (progress[id]) maxDoneIdx = i; });
+  return maxDoneIdx + 1; // 이 인덱스까지(포함) unlock
+}
+
+// ── 렌더링 ────────────────────────────────────────────────────
+function render() {
+  const progress = loadProgress();
+  const unlockedUpTo = getFirstUnlocked(progress); // 이 인덱스까지 unlock
+
+  let totalDone = Object.keys(progress).filter(k => progress[k]).length;
+  let total = ALL_IDS.length;
+
+  // progress bar
+  document.getElementById('progressBarInner').style.width = (total ? (totalDone/total*100) : 0) + '%';
+  document.getElementById('progressText').textContent = totalDone + ' / ' + total;
+
+  const root = document.getElementById('challengeRoot');
+  root.innerHTML = '';
+
+  let globalIdx = 0;
+  CATEGORIES.forEach(cat => {
+    const section = document.createElement('div');
+    section.className = 'category';
+
+    // 카테고리 내 완료 수
+    const catDone = cat.challenges.filter(ch => progress[ch.id]).length;
+
+    section.innerHTML = `
+      <div class="category-header">
+        <span class="category-icon">${cat.icon}</span>
+        <span class="category-title">${cat.title}</span>
+        <span class="category-count">${catDone} / ${cat.challenges.length}</span>
+      </div>
+      <div class="card-grid" id="grid-${cat.id}"></div>
+    `;
+    root.appendChild(section);
+
+    const grid = section.querySelector('.card-grid');
+
+    cat.challenges.forEach(ch => {
+      const myIdx = globalIdx;
+      globalIdx++;
+
+      const isDone = !!progress[ch.id];
+      const isNext = myIdx === unlockedUpTo;
+      const isUnlocked = isDone || myIdx <= unlockedUpTo;
+
+      const card = document.createElement('div');
+      card.className = 'challenge-card' +
+        (isDone ? ' done' : '') +
+        (!isUnlocked ? ' locked' : '') +
+        (isNext ? ' active-next' : '');
+      card.dataset.id = ch.id;
+
+      let badgeHtml = '';
+      if (isDone) {
+        badgeHtml = `<div class="card-badge done-badge"><span class="material-symbols-rounded">check</span></div>`;
+      } else if (!isUnlocked) {
+        badgeHtml = `<div class="card-badge lock-badge"><span class="material-symbols-rounded">lock</span></div>`;
+      } else if (isNext) {
+        badgeHtml = `<div class="card-badge next-badge"><span class="material-symbols-rounded">play_arrow</span></div>`;
+      }
+
+      card.innerHTML = `
+        ${badgeHtml}
+        <span class="card-emoji">${ch.emoji}</span>
+        <div class="card-title">${ch.title}</div>
+      `;
+
+      if (isUnlocked) {
+        card.addEventListener('click', () => openModal(ch, isDone));
+      }
+
+      grid.appendChild(card);
+    });
+  });
+}
+
+// ── 모달 ──────────────────────────────────────────────────────
+let currentChallenge = null;
+
+function openModal(ch, isDone) {
+  currentChallenge = ch;
+  document.getElementById('modalEmoji').textContent = ch.emoji;
+  document.getElementById('modalTitle').textContent = ch.title;
+  document.getElementById('modalDesc').innerHTML =
+    ch.desc +
+    (isDone ? `<br><br>✅ 완료! 완료 코드: <strong>${ch.code}</strong>` : '');
+  document.getElementById('startModal').classList.add('open');
+}
+
+document.getElementById('modalCancel').addEventListener('click', () => {
+  document.getElementById('startModal').classList.remove('open');
+});
+document.getElementById('startModal').addEventListener('click', (e) => {
+  if (e.target === e.currentTarget) e.currentTarget.classList.remove('open');
+});
+
+document.getElementById('modalStart').addEventListener('click', () => {
+  if (!currentChallenge) return;
+  document.getElementById('startModal').classList.remove('open');
+  launchChallenge(currentChallenge);
+});
+
+// ── 챌린지 실행 ───────────────────────────────────────────────
+function launchChallenge(ch) {
+  // loadWorld()가 기대하는 형식: { worldName, options: { jsonFile, useDefaultRobot } }
+  const worldConfig = JSON.stringify({
+    worldName: 'challenges_basic',
+    options: {
+      jsonFile: ch.json,
+      useDefaultRobot: true
+    }
+  });
+  const worldJSON = encodeURIComponent(worldConfig);
+  const url = `index.html?worldScripts=challenges_basic&worldJSON=${worldJSON}&challenge=${ch.id}`;
+  // 새 탭으로 열어서 challenges.html을 유지 → BroadcastChannel 수신 가능
+  window.open(url, '_blank');
+}
+
+// ── 완료 코드 감지 ────────────────────────────────────────────
+// 방법 1: BroadcastChannel (새 탭의 index.html에서 완료 시 즉시 수신)
+const bc = new BroadcastChannel('cb_challenge_complete');
+bc.onmessage = (e) => {
+  if (e.data && e.data.type === 'CHALLENGE_COMPLETE') {
+    const { code } = e.data;
+    const cid = CODE_TO_ID[code.toUpperCase()];
+    if (cid) {
+      const p = loadProgress();
+      p[cid] = true;
+      saveProgress(p);
+      render();
+    }
+  }
+};
+
+// 방법 2: localStorage 변경 감지 (다른 탭에서 저장하면 발생)
+window.addEventListener('storage', (e) => {
+  if (e.key === STORAGE_KEY) {
+    render();
+  }
+});
+
+// 방법 3: 탭이 다시 활성화될 때 재렌더링 (사용자가 직접 탭 전환 시)
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
+    render();
+  }
+});
+
+// ── 초기화 버튼 ───────────────────────────────────────────────
+document.getElementById('resetBtn').addEventListener('click', () => {
+  document.getElementById('confirmModal').classList.add('open');
+});
+document.getElementById('confirmNo').addEventListener('click', () => {
+  document.getElementById('confirmModal').classList.remove('open');
+});
+document.getElementById('confirmYes').addEventListener('click', () => {
+  localStorage.removeItem(STORAGE_KEY);
+  document.getElementById('confirmModal').classList.remove('open');
+  render();
+});
+
+// ── 초기 렌더링 ───────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>

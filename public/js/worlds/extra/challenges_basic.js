@@ -183,6 +183,7 @@ var challenges_basic = new function() {
           let time = Math.round((Date.now() - self.challengeStartTime) / 100) / 10;
 
           self.playVictory();
+          self.notifyComplete(completionCode);
           acknowledgeDialog({
             title: 'COMPLETED!',
             message: $(
@@ -265,6 +266,7 @@ var challenges_basic = new function() {
           let time = Math.round((Date.now() - self.challengeStartTime) / 100) / 10;
 
           self.playVictory();
+          self.notifyComplete(completionCode);
           acknowledgeDialog({
             title: 'COMPLETED!',
             message: $(
@@ -929,6 +931,28 @@ var challenges_basic = new function() {
     } else if (self.options.jsonFile.includes('abstraction-11.json')) {
       self.renderIntersectOne(delta, 'worldBaseObject_box0', 'Xerus');
     }
+  };
+
+  // Notify challenges.html of completion via BroadcastChannel
+  this.notifyComplete = function(completionCode) {
+    try {
+      const bc = new BroadcastChannel('cb_challenge_complete');
+      bc.postMessage({ type: 'CHALLENGE_COMPLETE', code: completionCode });
+      bc.close();
+    } catch(e) {}
+
+    // Also save directly to localStorage so challenges.html can pick it up on return
+    try {
+      const STORAGE_KEY = 'cb_challenges_progress';
+      const progress = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+      // Map completion code to challenge id via URL param
+      const params = new URLSearchParams(window.location.search);
+      const cid = params.get('challenge');
+      if (cid) {
+        progress[cid] = true;
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
+      }
+    } catch(e) {}
   };
 
   // startSim

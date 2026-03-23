@@ -2163,6 +2163,18 @@ let MSGS = {
     it: 'Aiuto',
     ko: '도움말(Help)',
   },
+  '#main-login#': {
+    en: 'Login',
+    ko: '로그인',
+  },
+  '#main-logout#': {
+    en: 'Logout',
+    ko: '로그아웃',
+  },
+  '#main-welcome#': {
+    en: 'Welcome, {name}!',
+    ko: '환영합니다 {name}님!',
+  },
   '#main-whats_new#': {
     en: 'What\'s New',
     nl: 'Wat is nieuw',

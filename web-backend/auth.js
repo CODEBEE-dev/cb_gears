@@ -76,9 +76,9 @@ router.get('/logout', (req, res) => {
 
 router.get('/me', (req, res) => {
   if (!req.session.user) {
-    return res.send('로그인 안됨')
+    return res.json({ user: null })
   }
-  res.send(`로그인 중: ${req.session.user.name}`)
+  res.json({ user: req.session.user })
 })
 
 module.exports = { router, initKeycloak, requireAuth }

@@ -62,7 +62,21 @@
         </li>
       </ul>
     </nav>
-    <div class="language"><span class="material-symbols-rounded">language</span></div>
+    <div class="headerRight">
+      <a href="/auth/login" class="authBtn" id="loginBtn">
+        <span class="material-symbols-rounded">login</span>
+        <span class="auth-label" id="loginLabel"></span>
+      </a>
+      <div id="userArea">
+        <span class="material-symbols-rounded">person</span>
+        <span class="auth-label" id="welcomeLabel"></span>
+        <a href="/auth/logout" class="authBtn" id="logoutBtn">
+          <span class="material-symbols-rounded">logout</span>
+          <span class="auth-label" id="logoutLabel"></span>
+        </a>
+      </div>
+      <div class="language"><span class="material-symbols-rounded">language</span></div>
+    </div>
   </header>
 
   <main>
@@ -386,6 +400,20 @@
         console.error(err)
       }
     }
+  </script>
+  <script>
+    (async () => {
+      const res = await fetch('/auth/me')
+      const data = await res.json()
+      if (data.user) {
+        document.getElementById('loginBtn').style.display = 'none'
+        document.getElementById('welcomeLabel').textContent = i18n.get('#main-welcome#').replace('{name}', data.user.name)
+        document.getElementById('logoutLabel').textContent = i18n.get('#main-logout#')
+      } else {
+        document.getElementById('userArea').style.display = 'none'
+        document.getElementById('loginLabel').textContent = i18n.get('#main-login#')
+      }
+    })()
   </script>
 </body>
 </html>

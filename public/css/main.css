@@ -106,8 +106,13 @@ header #projectName::placeholder, header #robotName::placeholder {
   color: var(--color-text-muted);
   font-style: italic;
 }
-header .language {
+header .headerRight {
   margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.2em;
+}
+header .language {
   cursor: pointer;
   user-select: none;
   display: flex;
@@ -131,6 +136,46 @@ header .language .lang-label {
   font-size: 0.85em;
   font-weight: 600;
   letter-spacing: 0.02em;
+}
+header .authBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+  padding: 0.3em 0.5em;
+  border-radius: 0.4em;
+  color: #555;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  font-family: "Nunito", sans-serif;
+  font-size: 0.9em;
+}
+header .authBtn:hover {
+  background: var(--color-bg);
+  color: var(--color-primary);
+}
+header .authBtn .material-symbols-rounded {
+  font-size: 20px;
+}
+header .authBtn .auth-label {
+  font-weight: 600;
+  white-space: nowrap;
+}
+header #userArea {
+  display: flex;
+  align-items: center;
+  gap: 0.3em;
+  color: #555;
+  font-family: "Nunito", sans-serif;
+  font-size: 0.9em;
+}
+header #userArea .material-symbols-rounded {
+  font-size: 20px;
+}
+header #userArea .auth-label {
+  font-weight: 600;
+  white-space: nowrap;
+  margin-right: 1rem;
 }
 header nav {
   margin-left: 1.5em;

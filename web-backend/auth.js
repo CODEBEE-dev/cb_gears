@@ -15,6 +15,13 @@ const initKeycloak = async () => {
   })
 }
 
+const requireAuth = (req, res, next) => {
+  if (!req.session.user) {
+    return res.redirect('/auth/login')
+  }
+  next()
+}
+
 router.get('/login', (req, res) => {
   const codeVerifier = generators.codeVerifier()
   const codeChallenge = generators.codeChallenge(codeVerifier)
@@ -41,8 +48,37 @@ router.get('/callback', async (req, res) => {
   )
 
   const userInfo = tokenSet.claims()
-  console.log(`[SYSTEM] 로그인 성공: ${userInfo.email}`)
-  res.send(`로그인 성공: ${userInfo.email}`)
+
+  // 세션에 저장
+  req.session.user = {
+    id: userInfo.sub,
+    email: userInfo.email,
+    name: userInfo.name
+  }
+  req.session.idToken = tokenSet.id_token
+
+  console.log(`[SYSTEM] 로그인 성공: ${userInfo.sub}, ${userInfo.email}`)
+
+  res.redirect('/')
 })
 
-module.exports = { router, initKeycloak }
+router.get('/logout', (req, res) => {
+  console.log(`[SYSTEM] 로그아웃`)
+  const idToken = req.session.idToken
+  req.session.destroy()
+
+  res.redirect(`${process.env.KEYCLOAK_URL}/realms/${process.env.KEYCLOAK_REALM}/protocol/openid-connect/logout` +
+    `?post_logout_redirect_uri=${process.env.BASE_URL}` +
+    `&client_id=${process.env.KEYCLOAK_CLIENT_ID}` +
+    `&id_token_hint=${idToken}`
+  )
+})
+
+router.get('/me', (req, res) => {
+  if (!req.session.user) {
+    return res.send('로그인 안됨')
+  }
+  res.send(`로그인 중: ${req.session.user.name}`)
+})
+
+module.exports = { router, initKeycloak, requireAuth }

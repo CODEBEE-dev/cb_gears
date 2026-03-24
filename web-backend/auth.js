@@ -32,7 +32,8 @@ router.get('/login', (req, res) => {
   const url = client.authorizationUrl({
     scope: 'openid profile email',
     code_challenge: codeChallenge,
-    code_challenge_method: 'S256'
+    code_challenge_method: 'S256',
+    /** prompt: 'login' // 항상 ID/PW 입력 강제 */
   })
 
   res.redirect(url)

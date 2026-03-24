@@ -11,7 +11,11 @@ app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false, 
   saveUninitialized: false,
-  cookie: { maxAge: 1000 * 60 * 60 * 24 } // 24시간
+  /**
+   * 개발모드: 24시간 
+   * 일반모드: 브라우저 닫으면 쿠키 삭제
+   */
+  cookie: process.env.NODE_ENV === 'development' ? 1000 * 60 * 60 * 24 : null
 }))
 app.use(cookieParser())
 app.use('/auth', authRouter)

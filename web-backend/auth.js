@@ -17,6 +17,7 @@ const initKeycloak = async () => {
 
 const requireAuth = (req, res, next) => {
   if (!req.session.user) {
+    req.session.returnTo = req.originalUrl
     return res.redirect('/auth/login')
   }
   next()
@@ -40,6 +41,8 @@ router.get('/login', (req, res) => {
 router.get('/callback', async (req, res) => {
   const params = client.callbackParams(req)
   const codeVerifier = req.cookies['code_verifier']
+  const returnTo = req.session.returnTo || '/'
+  delete req.session.returnTo
 
   const tokenSet = await client.callback(
     `${process.env.BASE_URL}/auth/callback`,
@@ -59,7 +62,7 @@ router.get('/callback', async (req, res) => {
 
   console.log(`[SYSTEM] 로그인 성공: ${userInfo.sub}, ${userInfo.email}`)
 
-  res.redirect('/')
+  res.redirect(returnTo)
 })
 
 router.get('/logout', (req, res) => {

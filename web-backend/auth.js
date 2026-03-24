@@ -40,30 +40,35 @@ router.get('/login', (req, res) => {
 })
 
 router.get('/callback', async (req, res) => {
-  const params = client.callbackParams(req)
-  const codeVerifier = req.cookies['code_verifier']
-  const returnTo = req.session.returnTo || '/'
-  delete req.session.returnTo
+  try {
+    const params = client.callbackParams(req)
+    const codeVerifier = req.cookies['code_verifier']
+    const returnTo = req.session.returnTo || '/'
+    delete req.session.returnTo
 
-  const tokenSet = await client.callback(
-    `${process.env.BASE_URL}/auth/callback`,
-    params,
-    { code_verifier: codeVerifier }
-  )
+    const tokenSet = await client.callback(
+      `${process.env.BASE_URL}/auth/callback`,
+      params,
+      { code_verifier: codeVerifier }
+    )
 
-  const userInfo = tokenSet.claims()
+    const userInfo = tokenSet.claims()
 
-  // 세션에 저장
-  req.session.user = {
-    id: userInfo.sub,
-    email: userInfo.email,
-    name: userInfo.name
+    // 세션에 저장
+    req.session.user = {
+      id: userInfo.sub,
+      email: userInfo.email,
+      name: userInfo.name
+    }
+    req.session.idToken = tokenSet.id_token
+
+    console.log(`[SYSTEM] 로그인 성공: ${userInfo.sub}, ${userInfo.email}`)
+
+    res.redirect(returnTo)
+  } catch (err) {
+    console.log('[ERROR] 로그인 콜백 처리 실패: ', err)
+    res.redirect('/auth/login')
   }
-  req.session.idToken = tokenSet.id_token
-
-  console.log(`[SYSTEM] 로그인 성공: ${userInfo.sub}, ${userInfo.email}`)
-
-  res.redirect(returnTo)
 })
 
 router.get('/logout', (req, res) => {

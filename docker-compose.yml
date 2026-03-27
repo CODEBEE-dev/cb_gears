@@ -1,0 +1,27 @@
+services:
+  web-backend:
+    build: ./web-backend
+    ports:
+      - "45531:45531"
+    env_file:
+      - ./web-backend/.env
+    volumes:
+      - ./public:/public
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  postgres:
+    image: postgres:17-alpine
+    env_file:
+      - ./web-backend/.env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bridgebot_user -d bridgebot"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:

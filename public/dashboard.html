@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="icon" href="codebridgeai_favicon.png">
+
+  <script src="js/common/config.js"></script>
+
+  <!-- Google Font & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20,400,1,0" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/dashboard.css">
+
+  <script src="js/msg.js"></script>
+
+  <title>Dashboard</title>
+</head>
+
+<body>
+  <header>
+    <img class="gearsIcon" src="codebridgeai_favicon.png">
+    <div class="appName">Dashboard</div>
+    <div class="headerRight">
+      <a href="/auth/login" class="authBtn" id="loginBtn">
+        <span class="material-symbols-rounded">login</span>
+        <span class="auth-label" id="loginLabel"></span>
+      </a>
+      <div id="userArea" style="display:none; align-items:center; gap:0.2em;">
+        <span class="material-symbols-rounded">person</span>
+        <span class="auth-label" id="welcomeLabel"></span>
+        <a href="/auth/logout" class="authBtn" id="logoutBtn">
+          <span class="material-symbols-rounded">logout</span>
+          <span class="auth-label" id="logoutLabel"></span>
+        </a>
+      </div>
+      <div class="language"><span class="material-symbols-rounded">language</span></div>
+    </div>
+  </header>
+
+  <main>
+    <nav class="activity-bar expanded" id="activityBar">
+      <div class="activity-bar-toggle" id="activityBarToggle">
+        <span class="material-symbols-rounded">menu</span>
+      </div>
+      <div class="activity-bar-item active" data-key="home">
+        <span class="material-symbols-rounded">home</span>
+        <span class="activity-label"></span>
+      </div>
+      <div class="activity-bar-item" data-key="projects">
+        <span class="material-symbols-rounded">folder</span>
+        <span class="activity-label"></span>
+      </div>
+      <div class="activity-bar-item" data-key="settings">
+        <span class="material-symbols-rounded">settings</span>
+        <span class="activity-label"></span>
+      </div>
+    </nav>
+    <div class="container">
+      <div class="content"></div>
+    </div>
+  </main>
+
+  <script>
+    // 액티비티바 i18n
+    const navLabels = {
+      home: i18n.get('#nav-home#'),
+      projects: i18n.get('#nav-projects#'),
+      settings: i18n.get('#nav-settings#'),
+    }
+    document.querySelectorAll('.activity-bar-item').forEach(item => {
+      const key = item.dataset.key
+      item.querySelector('.activity-label').textContent = navLabels[key]
+      item.setAttribute('data-tooltip', navLabels[key])
+      item.addEventListener('click', () => {
+        document.querySelectorAll('.activity-bar-item').forEach(i => i.classList.remove('active'))
+        item.classList.add('active')
+      })
+    })
+
+    // 액티비티바 토글
+    document.getElementById('activityBarToggle').addEventListener('click', () => {
+      document.getElementById('activityBar').classList.toggle('expanded')
+    })
+
+    // 로그인 상태 확인
+    ;(async () => {
+      const res = await fetch('/auth/me')
+      const data = await res.json()
+      if (data.user) {
+        document.getElementById('loginBtn').style.display = 'none'
+        document.getElementById('userArea').style.display = 'flex'
+        document.getElementById('welcomeLabel').textContent =
+          i18n.get('#main-welcome#').replace('{name}', data.user.name)
+        document.getElementById('logoutBtn').querySelector('.auth-label').textContent = i18n.get('#main-logout#')
+      } else {
+        document.getElementById('loginLabel').textContent = i18n.get('#main-login#')
+      }
+    })()
+  </script>
+</body>
+</html>

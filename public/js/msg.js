@@ -3931,6 +3931,90 @@ let MSGS = {
     en: 'Worlds',
     ko: '월드',
   },
+  '#pm-title#': {
+    en: 'My Projects',
+    ko: '내 프로젝트',
+  },
+  '#pm-new_project#': {
+    en: 'New Project',
+    ko: '새 프로젝트',
+  },
+  '#pm-no_projects#': {
+    en: 'No projects yet. Create your first project!',
+    ko: '프로젝트가 없습니다. 첫 번째 프로젝트를 만들어보세요!',
+  },
+  '#pm-modal_title_new#': {
+    en: 'New Project',
+    ko: '새 프로젝트',
+  },
+  '#pm-project_name#': {
+    en: 'Project Name',
+    ko: '프로젝트 이름',
+  },
+  '#pm-project_name_placeholder#': {
+    en: 'Enter project name',
+    ko: '프로젝트 이름을 입력하세요',
+  },
+  '#pm-project_desc#': {
+    en: 'Description',
+    ko: '설명',
+  },
+  '#pm-project_desc_placeholder#': {
+    en: 'Enter description (optional)',
+    ko: '설명을 입력하세요 (선택사항)',
+  },
+  '#pm-cancel#': {
+    en: 'Cancel',
+    ko: '취소',
+  },
+  '#pm-create#': {
+    en: 'Create',
+    ko: '만들기',
+  },
+  '#pm-open#': {
+    en: 'Open',
+    ko: '열기',
+  },
+  '#pm-delete#': {
+    en: 'Delete',
+    ko: '삭제',
+  },
+  '#pm-login_required#': {
+    en: 'Login to save and manage your projects.',
+    ko: '로그인하면 프로젝트를 저장하고 관리할 수 있습니다.',
+  },
+  '#nav-home#': {
+    en: 'Home',
+    ko: '홈',
+  },
+  '#dash-login_title#': {
+    en: 'Welcome to Bridge Bot',
+    ko: 'Bridge Bot에 오신 것을 환영합니다',
+  },
+  '#dash-login_desc#': {
+    en: 'Login to save your projects and access them anywhere.',
+    ko: '로그인하면 프로젝트를 저장하고 어디서든 불러올 수 있습니다.',
+  },
+  '#dash-login_btn#': {
+    en: 'Login',
+    ko: '로그인',
+  },
+  '#dash-recent_projects#': {
+    en: 'Recent Projects',
+    ko: '최근 프로젝트',
+  },
+  '#dash-open#': {
+    en: 'Open',
+    ko: '열기',
+  },
+  '#nav-projects#': {
+    en: 'Projects',
+    ko: '프로젝트',
+  },
+  '#nav-settings#': {
+    en: 'Settings',
+    ko: '설정',
+  },
 };
 let MSGS_KEYS = Object.keys(MSGS);
 

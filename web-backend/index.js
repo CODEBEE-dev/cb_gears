@@ -23,19 +23,27 @@ app.use('/auth', authRouter)
 /**
  * 다른 페이지들 로그인 체크
  */
-app.get('/configurator.html', requireAuth, (req, res) => {
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'public', 'dashboard.html'))
+})
+
+app.get('/editor', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'public', 'index.html'))
+})
+
+app.get('/configurator', requireAuth, (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'configurator.html'))
 })
 
-app.get('/builder.html', requireAuth, (req, res) => {
+app.get('/builder', requireAuth, (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'builder.html'))
 })
 
-app.get('/arena.html', requireAuth, (req, res) => {
+app.get('/arena', requireAuth, (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'arena.html'))
 })
 
-app.get('/arenaFrame.html', requireAuth, (req, res) => {
+app.get('/arenaFrame', requireAuth, (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'arenaFrame.html'))
 })
 

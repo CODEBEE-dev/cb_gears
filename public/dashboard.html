@@ -45,7 +45,7 @@
   <main>
     <nav class="activity-bar expanded" id="activityBar">
       <div class="activity-bar-toggle" id="activityBarToggle">
-        <span class="material-symbols-rounded">menu</span>
+        <span class="material-symbols-rounded">apps</span>
       </div>
       <div class="activity-bar-item active" data-key="home">
         <span class="material-symbols-rounded">home</span>
@@ -61,12 +61,149 @@
       </div>
     </nav>
     <div class="container">
-      <div class="content"></div>
+      <!-- Home 뷰 -->
+      <div class="content" id="viewHome">
+        <div class="content-header">
+          <h2 class="section-title" id="recentTitle"></h2>
+          <button class="btn-new" id="btnNewProject">
+            <span class="material-symbols-rounded">add</span>
+            <span id="labelNewProject"></span>
+          </button>
+        </div>
+        <div class="project-list" id="recentList"></div>
+      </div>
+      <!-- Projects 뷰 -->
+      <div class="content" id="viewProjects" style="display:none;">
+        <div class="content-header">
+          <h2 class="section-title" id="allProjectsTitle"></h2>
+          <button class="btn-new" id="btnNewProject2">
+            <span class="material-symbols-rounded">add</span>
+            <span id="labelNewProject2"></span>
+          </button>
+        </div>
+        <div class="search-bar">
+          <span class="material-symbols-rounded">search</span>
+          <input type="text" id="searchInput" placeholder="">
+        </div>
+        <div class="project-list" id="allList"></div>
+      </div>
     </div>
   </main>
 
+  <!-- 로그인 안내 모달 -->
+  <div class="modal-overlay" id="loginModalOverlay">
+    <div class="modal">
+      <h2 id="loginModalTitle"></h2>
+      <p id="loginModalDesc" style="margin:0; font-size:0.9rem; color:#666;"></p>
+      <div class="modal-actions">
+        <button class="btn-create" id="btnLoginModalConfirm"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 새 프로젝트 모달 -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <h2 id="modalTitle"></h2>
+      <label>
+        <span id="labelName"></span>
+        <input type="text" id="inputName" maxlength="100">
+      </label>
+      <div class="modal-actions">
+        <button class="btn-cancel" id="btnCancel"></button>
+        <button class="btn-create" id="btnCreate"></button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    // 액티비티바 i18n
+    // ── i18n ──
+    document.getElementById('recentTitle').textContent = i18n.get('#dash-recent_projects#')
+    document.getElementById('allProjectsTitle').textContent = i18n.get('#nav-projects#')
+    document.getElementById('labelNewProject').textContent = i18n.get('#dash-new_project#')
+    document.getElementById('labelNewProject2').textContent = i18n.get('#dash-new_project#')
+    document.getElementById('modalTitle').textContent = i18n.get('#dash-modal_title#')
+    document.getElementById('labelName').textContent = i18n.get('#dash-project_name#')
+    document.getElementById('inputName').placeholder = i18n.get('#dash-project_name_placeholder#')
+    document.getElementById('searchInput').placeholder = i18n.get('#dash-search_placeholder#')
+    document.getElementById('btnCancel').textContent = i18n.get('#dash-cancel#')
+    document.getElementById('btnCreate').textContent = i18n.get('#dash-create#')
+    document.getElementById('loginModalTitle').textContent = i18n.get('#dash-login_modal_title#')
+    document.getElementById('loginModalDesc').textContent = i18n.get('#dash-login_modal_desc#')
+    document.getElementById('btnLoginModalConfirm').textContent = i18n.get('#dash-confirm#')
+
+    // ── 상태 ──
+    let currentUser = null
+    let isCreating = false
+    let allProjects = []
+
+    // ── 유틸 ──
+    function openEditor(projectId) {
+      window.location.href = `/editor?projectId=${projectId}`
+    }
+
+    function makeProjectItem(p) {
+      const item = document.createElement('div')
+      item.className = 'project-item'
+      item.innerHTML = `
+        <span class="material-symbols-rounded project-item-icon">folder</span>
+        <span class="project-item-name">${p.name}</span>
+        <span class="project-item-date">${new Date(p.updated_at).toLocaleDateString()}</span>
+      `
+      item.addEventListener('click', () => openEditor(p.id))
+      return item
+    }
+
+    function renderList(listEl, projects) {
+      listEl.innerHTML = ''
+      if (projects.length === 0) {
+        listEl.innerHTML = `<div class="empty-msg">${i18n.get('#dash-no_projects#')}</div>`
+        return
+      }
+      projects.forEach(p => listEl.appendChild(makeProjectItem(p)))
+    }
+
+    function renderLoginRequired(listEl) {
+      listEl.innerHTML = `<div class="empty-msg">${i18n.get('#dash-login_required#')}</div>`
+    }
+
+    // ── 데이터 로드 ──
+    async function loadRecent() {
+      const res = await fetch('/api/projects')
+      if (!res.ok) return
+      const data = await res.json()
+      renderList(document.getElementById('recentList'), data.projects)
+    }
+
+    async function loadAll() {
+      const res = await fetch('/api/projects?all=true')
+      if (!res.ok) return
+      const data = await res.json()
+      allProjects = data.projects
+      applySearch()
+    }
+
+    // ── 실시간 검색 ──
+    function applySearch() {
+      const q = document.getElementById('searchInput').value.trim().toLowerCase()
+      const filtered = q ? allProjects.filter(p => p.name.toLowerCase().includes(q)) : allProjects
+      renderList(document.getElementById('allList'), filtered)
+    }
+
+    document.getElementById('searchInput').addEventListener('input', applySearch)
+
+    // ── 뷰 전환 ──
+    const views = { home: 'viewHome', projects: 'viewProjects' }
+    let currentView = 'home'
+
+    function switchView(key) {
+      currentView = key
+      document.getElementById('viewHome').style.display = key === 'home' ? '' : 'none'
+      document.getElementById('viewProjects').style.display = key === 'projects' ? '' : 'none'
+      if (key === 'projects' && currentUser) loadAll()
+    }
+
+    // ── 액티비티바 ──
     const navLabels = {
       home: i18n.get('#nav-home#'),
       projects: i18n.get('#nav-projects#'),
@@ -79,26 +216,81 @@
       item.addEventListener('click', () => {
         document.querySelectorAll('.activity-bar-item').forEach(i => i.classList.remove('active'))
         item.classList.add('active')
+        switchView(key)
       })
     })
 
-    // 액티비티바 토글
     document.getElementById('activityBarToggle').addEventListener('click', () => {
       document.getElementById('activityBar').classList.toggle('expanded')
     })
 
-    // 로그인 상태 확인
+    // ── 모달 ──
+    function openNewProjectModal() {
+      if (!currentUser) {
+        document.getElementById('loginModalOverlay').classList.add('open')
+        return
+      }
+      document.getElementById('inputName').value = ''
+      document.getElementById('modalOverlay').classList.add('open')
+      document.getElementById('inputName').focus()
+    }
+
+    function closeModal() {
+      document.getElementById('modalOverlay').classList.remove('open')
+    }
+
+    document.getElementById('btnNewProject').addEventListener('click', openNewProjectModal)
+    document.getElementById('btnNewProject2').addEventListener('click', openNewProjectModal)
+    document.getElementById('btnCancel').addEventListener('click', closeModal)
+    document.getElementById('modalOverlay').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('modalOverlay')) closeModal()
+    })
+    document.getElementById('inputName').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') createProject()
+    })
+    document.getElementById('btnCreate').addEventListener('click', createProject)
+
+    document.getElementById('btnLoginModalConfirm').addEventListener('click', () => {
+      document.getElementById('loginModalOverlay').classList.remove('open')
+    })
+    document.getElementById('loginModalOverlay').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('loginModalOverlay'))
+        document.getElementById('loginModalOverlay').classList.remove('open')
+    })
+
+    async function createProject() {
+      if (isCreating) return
+      const name = document.getElementById('inputName').value.trim()
+      if (!name) { document.getElementById('inputName').focus(); return }
+      isCreating = true
+      const res = await fetch('/api/projects', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name }),
+      })
+      isCreating = false
+      if (res.ok) {
+        const data = await res.json()
+        closeModal()
+        openEditor(data.project.id)
+      }
+    }
+
+    // ── 로그인 상태 확인 ──
     ;(async () => {
       const res = await fetch('/auth/me')
       const data = await res.json()
       if (data.user) {
+        currentUser = data.user
         document.getElementById('loginBtn').style.display = 'none'
         document.getElementById('userArea').style.display = 'flex'
         document.getElementById('welcomeLabel').textContent =
           i18n.get('#main-welcome#').replace('{name}', data.user.name)
         document.getElementById('logoutBtn').querySelector('.auth-label').textContent = i18n.get('#main-logout#')
+        loadRecent()
       } else {
         document.getElementById('loginLabel').textContent = i18n.get('#main-login#')
+        renderLoginRequired(document.getElementById('recentList'))
       }
     })()
   </script>

@@ -1997,9 +1997,8 @@ var configurator = new function() {
   };
 
   this.syncRobotToMain = function() {
-    localStorage.setItem('gears_robot_sync', JSON.stringify(robot.options));
     const bc = new BroadcastChannel('gears_sync');
-    bc.postMessage({ type: 'robot_updated' });
+    bc.postMessage({ type: 'robot_updated', data: JSON.stringify(robot.options) });
     bc.close();
     acknowledgeDialog({ title: i18n.get('#configurator-sync_robot#'), message: i18n.get('#configurator-sync_robot_done#') });
   };

@@ -60,6 +60,65 @@ header {
   height: var(--header-height);
   align-items: center;
 }
+/* ── Hamburger Menu ── */
+header .hamburger-menu {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2em;
+  height: 2em;
+  border-radius: 0.4em;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  transition: background 0.15s, color 0.15s;
+  flex-shrink: 0;
+  margin-right: 0.3em;
+}
+header .hamburger-menu:hover {
+  background: var(--color-bg);
+  color: var(--color-primary);
+}
+header .hamburger-menu .material-symbols-rounded {
+  font-size: 1.4em;
+}
+header .hamburger-menu .hamburger-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  min-width: 160px;
+  background: #fff;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5em;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  z-index: 1000;
+  padding: 0.3em 0;
+  color: var(--color-text-muted);
+}
+header .hamburger-menu.open .hamburger-dropdown {
+  display: block;
+}
+header .hamburger-menu .hamburger-dropdown a {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: 0.55em 1em;
+  text-decoration: none;
+  color: #333;
+  font-family: "Nunito", sans-serif;
+  font-size: 0.9em;
+  transition: background 0.12s, color 0.12s;
+}
+header .hamburger-menu .hamburger-dropdown a:hover {
+  background: var(--color-bg);
+  color: var(--color-primary);
+}
+header .hamburger-menu .hamburger-dropdown a .material-symbols-rounded {
+  font-size: 1.1em;
+  color: inherit;
+}
+
 header .appName {
   font-family: "Nunito", sans-serif;
   font-optical-sizing: auto;
@@ -687,16 +746,45 @@ pre.streaming-raw {
   color: var(--color-primary);
 }
 
-.saveBlockly, .savePython {
-  font-weight: bold;
-  color: gray;
-  cursor: pointer;
-  user-select: none;
-  margin: 0 1em;
+/* ── Saving Indicator ── */
+.saving-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.25em 0.75em;
+  margin-left: 0.75em;
+  border-radius: 2em;
+  background: #f0f0f0;
+  border: 1px solid #ddd;
+  font-size: 0.82em;
+  color: #888;
+  font-family: "Nunito", sans-serif;
+  white-space: nowrap;
+  transition: opacity 0.3s;
+  opacity: 1;
 }
+.saving-indicator.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+.saving-indicator.saved {
+  color: #4caf50;
+  border-color: #a5d6a7;
+  background: #f1f8f1;
+}
+.saving-indicator.saved .saving-spinner { display: none; }
 
-.saveBlockly.hide, .savePython.hide {
-  display: none;
+.saving-spinner {
+  width: 0.85em;
+  height: 0.85em;
+  border: 2px solid #ccc;
+  border-top-color: #888;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 .dialogWindow .selectRobot .description {

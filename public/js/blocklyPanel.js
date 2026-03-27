@@ -4,24 +4,17 @@ var blocklyPanel = new function() {
   // Run on page load
   this.init = function() {
     self.$panel = $('.blocklyEditor');
-    self.$save = $('.saveBlockly');
     self.$pagesMenu = $('#blocklyPages');
 
     self.updateTextLanguage();
 
-    self.$save.click(self.save);
     self.$pagesMenu.click(self.togglePagesMenu);
 
     self.loadPagesOptions();
     self.$pagesMenu.addClass('visible');
-
-    setInterval(blockly.saveLocalStorage, 2 * 1000);
   };
 
-  // Update text already in html
-  this.updateTextLanguage = function() {
-    self.$save.text(i18n.get('#blockly-save#'));
-  };
+  this.updateTextLanguage = function() {};
 
   // Load pages options menu. This is used here and by blockly.js when loading a save.
   this.loadPagesOptions = function(pages, currentPage) {
@@ -266,9 +259,7 @@ var blocklyPanel = new function() {
   // Re-enable blocks mode
   this.enableBlocks = function(){
     confirmDialog(i18n.get('#blockly-python_lost_warning#'), function(){
-      // pythonPanel.modified = false;
       filesManager.modified = false;
-      localStorage.setItem('pythonModified', false);
       self.setDisable(false);
     });
   }
@@ -278,15 +269,8 @@ var blocklyPanel = new function() {
     blockly.saveLocalStorage();
   };
 
-  // Hide save button
-  this.hideSave = function() {
-    self.$save.addClass('hide');
-  };
-
-  // Show save button
-  this.showSave = function() {
-    self.$save.removeClass('hide');
-  };
+  this.hideSave = function() {};
+  this.showSave = function() {};
 }
 
 // Init class

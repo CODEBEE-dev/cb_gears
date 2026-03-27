@@ -113,12 +113,13 @@ var blockly = new function() {
         self.displayedWorkspace.addChangeListener(self.mirrorEvent);
         self.registerCustomToolboxes();
 
-        self.loadDefaultWorkspace();
+        const urlParams = new URLSearchParams(window.location.search);
+        if (!urlParams.get('projectId')) {
+          self.loadDefaultWorkspace();
+        }
 
         self.workspace.addChangeListener(Blockly.Events.disableOrphans);
         self.displayedWorkspace.addChangeListener(Blockly.Events.disableOrphans);
-        // self.loadLocalStorage();
-        setTimeout(self.loadLocalStorage, 200);
         setTimeout(function(){
           self.workspace.addChangeListener(self.checkModified);
         }, 1000);
@@ -317,12 +318,11 @@ var blockly = new function() {
     return Blockly.Xml.domToText(xml);
   };
 
-  // Save to local storage
+  // Mark block_xml as saved (called by main.autoSave)
   this.saveLocalStorage = function() {
     if (self.workspace && self.unsaved) {
       self.unsaved = false;
       blocklyPanel.hideSave();
-      localStorage.setItem('blocklyXML', self.getXmlText());
     }
   };
 
@@ -396,9 +396,13 @@ var blockly = new function() {
     }
   };
 
-  // Load from local storage
-  this.loadLocalStorage = function() {
-    self.loadXmlText(localStorage.getItem('blocklyXML'));
+  // Load block_xml from DB data
+  this.loadFromDb = function(blockXml) {
+    if (blockXml) {
+      self.loadXmlText(blockXml);
+    } else {
+      self.loadDefaultWorkspace();
+    }
   };
 
   // Clear all blocks from displayed workspace

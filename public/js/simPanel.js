@@ -1380,15 +1380,8 @@ simPanel.init();
 (function() {
   var bc = new BroadcastChannel('gears_sync');
   bc.onmessage = function(event) {
-    if (event.data.type === 'world_updated') {
-      var json = localStorage.getItem('gears_world_sync');
-      if (json) simPanel.loadWorld(json);
+    if (event.data.type === 'world_updated' && event.data.data) {
+      simPanel.loadWorld(event.data.data);
     }
   };
-
-  // Load world from localStorage after page is fully ready
-  window.addEventListener('load', function() {
-    var savedWorld = localStorage.getItem('gears_world_sync');
-    if (savedWorld) simPanel.loadWorld(savedWorld);
-  });
 })();

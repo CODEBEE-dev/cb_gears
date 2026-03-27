@@ -4,6 +4,7 @@ require('dotenv').config()
 const path = require('path')
 const cookieParser = require('cookie-parser')
 const { router: authRouter, initKeycloak, requireAuth } = require('./auth')
+const projectsRouter = require('./routes/projects')
 const session = require('express-session')
 const port = process.env.WEB_BACKEND_PORT
 
@@ -17,8 +18,10 @@ app.use(session({
    */
   cookie: { maxAge: process.env.NODE_ENV === 'development' ? 1000 * 60 * 60 * 24 : null }
 }))
+app.use(express.json())
 app.use(cookieParser())
 app.use('/auth', authRouter)
+app.use('/api/projects', projectsRouter)
 
 /**
  * 다른 페이지들 로그인 체크

@@ -6,3 +6,7 @@ services:
     command: node_modules/.bin/nodemon index.js
     environment:
       NODE_ENV: development
+
+  postgres:
+    ports:
+      - "5432:5432"

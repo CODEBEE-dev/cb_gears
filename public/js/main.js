@@ -28,11 +28,11 @@ var main = new function() {
     self.$languageMenu.click(self.toggleLanguageMenu);
     self.$newsButton.click(self.showNews);
 
-    self.$projectName.change(self.saveProjectName);
+    self.$projectName.on('input change', self.onProjectNameChange);
 
     window.addEventListener('beforeunload', self.checkUnsaved);
+    setInterval(self.autoSave, 2 * 1000);
     blocklyPanel.onActive();
-    self.loadProjectName();
 
     // Default: open split sim view on load
     simPanel.splitSimOpen = true;
@@ -60,6 +60,7 @@ var main = new function() {
     $('#blocklyPages').find('.activity-label').text(i18n.get('#main-pages#'));
     $('#blocklyPages').attr('data-tooltip', i18n.get('#main-pages#'));
     self.$projectName.attr('placeholder', i18n.get('#main-project_name#'));
+    document.getElementById('savingLabel').textContent = i18n.get('#main-saving#');
 
     const langNames = {
       de: 'Deutsch', el: 'Ελληνικά', en: 'English', es: 'Español',
@@ -119,16 +120,57 @@ var main = new function() {
     });
   };
 
-  // Load project name from local storage
-  this.loadProjectName = function() {
-    self.$projectName.val(localStorage.getItem('projectName'));
+  // Remove problematic characters then save project name to DB
+  this.onProjectNameChange = function() {
+    blockly.unsaved = true;
   };
 
-  // Remove problematic characters then save project name
   this.saveProjectName = function() {
     let filtered = self.$projectName.val().replace(/[^0-9a-zA-Z_\- ]/g, '').trim();
     self.$projectName.val(filtered);
-    localStorage.setItem('projectName', filtered);
+  };
+
+  // Load project data from DB and apply to editor
+  this.loadProjectFromDb = async function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const projectId = urlParams.get('projectId');
+    if (!projectId) return;
+    window.currentProjectId = projectId;
+    try {
+      const res = await fetch('/api/projects/' + projectId);
+      if (!res.ok) return;
+      const data = await res.json();
+      const p = data.project;
+      self.$projectName.val(p.name);
+      blockly.loadFromDb(p.block_xml);
+      filesManager.loadFromDb(p.python);
+      if (p.robot_options) self.loadRobot(JSON.stringify(p.robot_options));
+      if (p.world_options) simPanel.loadWorld(JSON.stringify({ worldName: 'custom', options: p.world_options }));
+    } catch (err) {
+      console.error('[DB] 프로젝트 로드 실패:', err);
+    }
+  };
+
+  // Save robot/world options to DB
+  this.saveRobotToDb = function(robotOptionsJson) {
+    const projectId = window.currentProjectId;
+    if (!projectId) return;
+    fetch('/api/projects/' + projectId, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ robot_options: JSON.parse(robotOptionsJson) })
+    }).catch(err => console.error('[DB] 로봇 저장 실패:', err));
+  };
+
+  this.saveWorldToDb = function(worldJson) {
+    const projectId = window.currentProjectId;
+    if (!projectId) return;
+    const world = JSON.parse(worldJson);
+    fetch('/api/projects/' + projectId, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ world_options: world.options })
+    }).catch(err => console.error('[DB] 월드 저장 실패:', err));
   };
 
   // Save robot to json file
@@ -528,7 +570,6 @@ var main = new function() {
     confirmDialog(i18n.get('#main-start_new_warning#'), function() {
       blockly.loadDefaultWorkspace();
       filesManager.modified = false;
-      localStorage.setItem('gearsPythonModified', false);
       blocklyPanel.setDisable(false);
       self.$projectName.val('');
       self.saveProjectName();
@@ -801,12 +842,84 @@ var main = new function() {
     reader.readAsText(e.target.files[0]);
   };
 
-  // Check for unsaved changes
-  this.checkUnsaved = function (event) {
-    if (blockly.unsaved || filesManager.unsaved) {
-      event.preventDefault();
-      event.returnValue = '';
+  // 통합 자동저장 — block_xml + python 한 번에 저장
+  this.autoSave = function() {
+    const projectId = window.currentProjectId;
+    if (!projectId) return;
+    if (!blockly.unsaved && !filesManager.unsaved) return;
+
+    blockly.saveLocalStorage();
+    if (!filesManager.modified) {
+      pythonPanel.loadPythonFromBlockly();
     }
+    filesManager.updateCurrentFile();
+    filesManager.saveToDb();
+
+    self.saveProjectName();
+    const payload = {
+      name: self.$projectName.val(),
+      block_xml: blockly.getXmlText(),
+      python: filesManager.files
+    };
+
+    self.showSaving();
+    fetch('/api/projects/' + projectId, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(() => self.hideSaving())
+    .catch(err => { console.error('[DB] 자동저장 실패:', err); self.hideSaving(); });
+  };
+
+  this._hideTimer = null;
+  this._showStart = 0;
+
+  this.showSaving = function() {
+    const el = document.getElementById('savingIndicator');
+    const label = document.getElementById('savingLabel');
+    clearTimeout(self._hideTimer);
+    el.classList.remove('hide', 'saved');
+    label.textContent = i18n.get('#main-saving#');
+    self._showStart = Date.now();
+  };
+
+  this.hideSaving = function() {
+    const elapsed = Date.now() - self._showStart;
+    const delay = Math.max(0, 800 - elapsed);
+    clearTimeout(self._hideTimer);
+    self._hideTimer = setTimeout(function() {
+      const el = document.getElementById('savingIndicator');
+      const label = document.getElementById('savingLabel');
+      label.textContent = i18n.get('#main-saved#');
+      el.classList.add('saved');
+      self._hideTimer = setTimeout(function() {
+        el.classList.add('hide');
+      }, 1500);
+    }, delay);
+  };
+
+  // 탭 닫기 전 미저장 변경사항 즉시 전송 (sendBeacon — 탭 닫혀도 보장)
+  this.checkUnsaved = function() {
+    const projectId = window.currentProjectId;
+    if (!projectId) return;
+    if (!blockly.unsaved && !filesManager.unsaved) return;
+
+    blockly.saveLocalStorage();
+    if (!filesManager.modified) {
+      pythonPanel.loadPythonFromBlockly();
+    }
+    filesManager.updateCurrentFile();
+    filesManager.saveToDb();
+
+    self.saveProjectName();
+    const payload = {
+      name: self.$projectName.val(),
+      block_xml: blockly.getXmlText(),
+      python: filesManager.files
+    };
+    const blob = new Blob([JSON.stringify(payload)], { type: 'application/json' });
+    navigator.sendBeacon('/api/projects/' + projectId, blob);
   };
 
   // Clicked on tab
@@ -954,19 +1067,17 @@ var main = new function() {
 // Init class
 main.init();
 
-// Page-to-page sync: listen for robot updates from configurator.html
+
+// Page-to-page sync: listen for robot/world updates from configurator/builder
 (function() {
   var bc = new BroadcastChannel('gears_sync');
   bc.onmessage = function(event) {
-    if (event.data.type === 'robot_updated') {
-      var json = localStorage.getItem('gears_robot_sync');
-      if (json) main.loadRobot(json);
+    if (event.data.type === 'robot_updated' && event.data.data) {
+      main.loadRobot(event.data.data);
+      main.saveRobotToDb(event.data.data);
+    }
+    if (event.data.type === 'world_updated' && event.data.data) {
+      main.saveWorldToDb(event.data.data);
     }
   };
-
-  // Load robot from localStorage after page is fully ready
-  window.addEventListener('load', function() {
-    var savedRobot = localStorage.getItem('gears_robot_sync');
-    if (savedRobot) main.loadRobot(savedRobot);
-  });
 })();

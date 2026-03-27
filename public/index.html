@@ -40,15 +40,26 @@
 
   <!-- Receiving Broadcasting -->
   <script src="js/common/broadcast_auth_receiver.js"></script>
+  <script src="js/common/hamburger.js"></script>
 
   <title></title>
 </head>
 
 <body>
   <header>
+    <div class="hamburger-menu" id="hamburgerMenu">
+      <span class="material-symbols-rounded">apps</span>
+      <div class="hamburger-dropdown">
+        <a href="/"><span class="material-symbols-rounded">home</span></a>
+      </div>
+    </div>
     <img class="gearsIcon" src="codebridgeai_favicon.png">
     <div class="appName"></div>
     <input type="text" id="projectName" placeholder="Project Name">
+    <div id="savingIndicator" class="saving-indicator hide">
+      <div class="saving-spinner"></div>
+      <span id="savingLabel"></span>
+    </div>
     <nav>
       <ul class="panelTabs">
         <li id="navBlocks" class="active" data-tooltip="Blocks">
@@ -111,12 +122,8 @@
         </div>
       </div>
       <div class="panelControlsArea">
-        <div class="panelControls active" aria-labelledby="navBlocks">
-          <div class="saveBlockly hide">Save Now</div>
-        </div>
-        <div class="panelControls" aria-labelledby="navPython">
-          <div class="savePython hide">Save Now</div>
-        </div>
+        <div class="panelControls active" aria-labelledby="navBlocks"></div>
+        <div class="panelControls" aria-labelledby="navPython"></div>
       </div>
     </nav>
     <div class="panels">
@@ -372,6 +379,7 @@
         loadWorldFromGET();
         loadRobotFromGET();
         loadFilterFromGET();
+        main.loadProjectFromDb();
       } else {
         setTimeout(loadWhenReady, 100);
       }

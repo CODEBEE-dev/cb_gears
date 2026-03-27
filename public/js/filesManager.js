@@ -13,39 +13,20 @@ var filesManager = new function() {
 
     self.$addNewFile.click(self.addNewFile);
 
-    self.loadLocalStorage();
-    setInterval(self.saveLocalStorage, 2 * 1000);
-  };
-
-  // Load legacy
-  this.loadLocalStorageLegacy = function() {
-    let code = localStorage.getItem('pythonCode');
-    if (code) {
-      let files = {
-        'main.py': code
-      };
-      localStorage.setItem('gearsPythonCode', JSON.stringify(files));
-      localStorage.removeItem('pythonCode');
-    }
-    let modified = localStorage.getItem('pythonModified');
-    if (modified) {
-      localStorage.setItem('gearsPythonModified', modified);
-      localStorage.removeItem('pythonModified');
+    const urlParams = new URLSearchParams(window.location.search);
+    if (!urlParams.get('projectId')) {
+      self.add('main.py', '');
+      self.select('main.py');
     }
   };
 
-  // Load from local storage
-  this.loadLocalStorage = function() {
-    self.loadLocalStorageLegacy();
-    if (localStorage.getItem('gearsPythonModified') == 'true') {
-      self.modified = true;
-    }
-
-    var json = localStorage.getItem('gearsPythonCode');
-    if (json) {
-      let files = JSON.parse(json);
-      for (let filename in files) {
-        self.add(filename, files[filename]);
+  // Load python files from DB data
+  this.loadFromDb = function(pythonJson) {
+    self.$filesList.find('.file').remove();
+    self.files = {};
+    if (pythonJson && Object.keys(pythonJson).length > 0) {
+      for (let filename in pythonJson) {
+        self.add(filename, pythonJson[filename]);
       }
     } else {
       self.add('main.py', '');
@@ -53,13 +34,11 @@ var filesManager = new function() {
     self.select('main.py');
   };
 
-  // Save to local storage
-  this.saveLocalStorage = function() {
+  // Mark python as saved (called by main.autoSave)
+  this.saveToDb = function() {
     if (self.unsaved) {
       self.unsaved = false;
       self.updateCurrentFile();
-      localStorage.setItem('gearsPythonCode', JSON.stringify(self.files));
-      localStorage.setItem('gearsPythonModified', self.modified);
     }
   };
 
@@ -177,7 +156,7 @@ var filesManager = new function() {
         }
       }
       self.unsaved = true;
-      self.saveLocalStorage();
+      self.saveToDb();
     }
   };
 

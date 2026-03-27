@@ -71,8 +71,6 @@ router.get('/callback', async (req, res) => {
     }
     req.session.idToken = tokenSet.id_token
 
-    console.log(req.session.user)
-
     console.log(`[SYSTEM] 로그인 성공: ${userInfo.sub}, ${userInfo.email}`)
 
     res.redirect(returnTo)

@@ -1811,6 +1811,18 @@ let MSGS = {
     it: 'Caricare Python dal computer',
     ko: '파이썬: 컴퓨터에서 불러오기',
   },
+  '#main-home#': {
+    en: 'Home',
+    ko: '홈',
+  },
+  '#main-saving#': {
+    en: 'Saving',
+    ko: '저장 중',
+  },
+  '#main-saved#': {
+    en: 'Saved',
+    ko: '저장됨',
+  },
   '#main-save_python#': {
     en: 'Save Python to your computer',
     fr: 'Télécharge le script Python',
@@ -3986,6 +3998,62 @@ let MSGS = {
   '#nav-home#': {
     en: 'Home',
     ko: '홈',
+  },
+  '#dash-login_modal_title#': {
+    en: 'Login Required',
+    ko: '로그인이 필요합니다',
+  },
+  '#dash-login_modal_desc#': {
+    en: 'Please login to create and manage projects.',
+    ko: '프로젝트를 생성하려면 로그인이 필요합니다.',
+  },
+  '#dash-login_required#': {
+    en: 'Login to manage your projects.',
+    ko: '로그인하면 프로젝트를 관리할 수 있습니다.',
+  },
+  '#dash-new_project#': {
+    en: 'New Project',
+    ko: '새 프로젝트',
+  },
+  '#dash-recent_projects#': {
+    en: 'Recent Projects',
+    ko: '최근 프로젝트',
+  },
+  '#dash-no_projects#': {
+    en: 'No projects yet.',
+    ko: '프로젝트가 없습니다.',
+  },
+  '#dash-open#': {
+    en: 'Open',
+    ko: '열기',
+  },
+  '#dash-modal_title#': {
+    en: 'New Project',
+    ko: '새 프로젝트',
+  },
+  '#dash-project_name#': {
+    en: 'Project Name',
+    ko: '프로젝트 이름',
+  },
+  '#dash-project_name_placeholder#': {
+    en: 'Enter project name',
+    ko: '프로젝트 이름을 입력하세요',
+  },
+  '#dash-cancel#': {
+    en: 'Cancel',
+    ko: '취소',
+  },
+  '#dash-confirm#': {
+    en: 'OK',
+    ko: '확인',
+  },
+  '#dash-search_placeholder#': {
+    en: 'Search projects...',
+    ko: '프로젝트 검색...',
+  },
+  '#dash-create#': {
+    en: 'Create',
+    ko: '만들기',
   },
   '#dash-login_title#': {
     en: 'Welcome to Bridge Bot',

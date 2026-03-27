@@ -2113,9 +2113,8 @@ var builder = new function() {
       worldName: 'custom',
       options: self.worldOptions
     };
-    localStorage.setItem('gears_world_sync', JSON.stringify(world));
     const bc = new BroadcastChannel('gears_sync');
-    bc.postMessage({ type: 'world_updated' });
+    bc.postMessage({ type: 'world_updated', data: JSON.stringify(world) });
     bc.close();
     acknowledgeDialog({ title: i18n.get('#builder-sync_world#'), message: i18n.get('#builder-sync_world_done#') });
   };

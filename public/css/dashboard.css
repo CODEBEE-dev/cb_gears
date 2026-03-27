@@ -2,10 +2,15 @@
 
 :root {
   --color-primary: #2634a3;
-  --color-bg: #E4F0FE;
-  --color-border: #bbbbbb;
-  --color-text-muted: #999999;
-  --header-height: 2rem;
+  --color-primary-hover: #1a2580;
+  --color-bg: #f0f4f8;
+  --color-border: #e0e4ea;
+  --color-text: #1a1a2e;
+  --color-text-muted: #8a93a8;
+  --color-surface: #ffffff;
+  --header-height: 3rem;
+  --activity-bar-collapsed: 52px;
+  --activity-bar-expanded: 200px;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -16,60 +21,60 @@ html, body {
   font-family: "Nunito", sans-serif;
   background: var(--color-bg);
   min-height: 100vh;
+  color: var(--color-text);
 }
 
-/* Header */
+/* ── Header ── */
 header {
-  background: #efeeee;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
   display: flex;
-  flex-direction: row;
-  padding: 0.5em 1em;
-  height: calc(var(--header-height) + 1rem);
   align-items: center;
+  padding: 0 1.2rem;
+  height: var(--header-height);
+  gap: 0.6rem;
 }
 
 header .gearsIcon {
-  height: 1.6em;
-  margin-right: 0.5em;
+  height: 1.5rem;
 }
 
 header .appName {
-  font-family: "Nunito", sans-serif;
-  font-size: 1.3em;
-  font-weight: 700;
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--color-primary);
   display: flex;
   align-items: center;
 }
 
 header .appName span {
-  margin-left: 5px;
-  font-size: 0.5em;
-  color: rgb(65, 65, 65);
-  padding: 2px 5px;
-  border-radius: 5px;
-  font-weight: normal;
-  background-color: rgba(126, 126, 126, 0.2);
+  margin-left: 6px;
+  font-size: 0.55em;
+  color: #888;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+  background: #f0f0f0;
 }
 
 header .headerRight {
   margin-left: auto;
   display: flex;
   align-items: center;
-  gap: 0.2em;
+  gap: 0.2rem;
 }
 
 header .authBtn {
   display: flex;
   align-items: center;
-  gap: 0.3em;
-  padding: 0.3em 0.5em;
-  border-radius: 0.4em;
-  color: #555;
+  gap: 0.3rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 0.4rem;
+  color: #666;
   text-decoration: none;
-  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
   transition: background 0.15s, color 0.15s;
-  font-family: "Nunito", sans-serif;
-  font-size: 0.9em;
 }
 
 header .authBtn:hover {
@@ -77,551 +82,334 @@ header .authBtn:hover {
   color: var(--color-primary);
 }
 
-header .authBtn .material-symbols-rounded {
-  font-size: 20px;
-}
+header .authBtn .material-symbols-rounded { font-size: 18px; }
 
 header .language {
-  cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 0.3em;
-  padding: 0.3em 0.5em;
-  border-radius: 0.4em;
-  color: #555;
-  font-size: 0.9em;
-  transition: background 0.15s, color 0.15s;
+  padding: 0.3rem 0.5rem;
+  border-radius: 0.4rem;
+  color: #666;
+  cursor: pointer;
+  transition: background 0.15s;
 }
 
-header .language:hover {
-  background: var(--color-bg);
-  color: var(--color-primary);
-}
+header .language:hover { background: var(--color-bg); }
+header .language .material-symbols-rounded { font-size: 20px; }
 
-header .language .material-symbols-rounded {
-  font-size: 24px;
-}
-
-/* Main */
+/* ── Layout ── */
 main {
   display: flex;
-  flex-direction: row;
-  height: calc(100vh - calc(var(--header-height) + 1rem));
+  height: calc(100vh - var(--header-height));
   overflow: hidden;
 }
 
-/* Activity Bar */
+/* ── Activity Bar ── */
 .activity-bar {
-  width: 50px;
-  min-width: 50px;
+  width: var(--activity-bar-collapsed);
+  min-width: var(--activity-bar-collapsed);
   height: 100%;
-  background: #FAFAFA;
+  background: var(--color-surface);
   border-right: 1px solid var(--color-border);
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   overflow: hidden;
   transition: width 0.2s ease, min-width 0.2s ease;
 }
 
 .activity-bar.expanded {
-  width: 180px;
-  min-width: 180px;
+  width: var(--activity-bar-expanded);
+  min-width: var(--activity-bar-expanded);
 }
 
 .activity-bar-toggle {
-  width: 50px;
-  min-width: 50px;
+  width: var(--activity-bar-collapsed);
+  min-width: var(--activity-bar-collapsed);
   height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color: #555;
-  transition: background 0.15s, color 0.15s;
+  color: #888;
   flex-shrink: 0;
+  transition: color 0.15s;
 }
 
-.activity-bar-toggle:hover {
-  background: var(--color-bg);
-  color: var(--color-primary);
-}
+.activity-bar-toggle:hover { color: var(--color-primary); }
 
 .activity-bar-item {
   width: 100%;
-  height: 48px;
+  height: 44px;
   display: flex;
   align-items: center;
-  gap: 0.7rem;
-  padding: 0 0 0 13px;
+  gap: 0.75rem;
+  padding: 0 0 0 14px;
   cursor: pointer;
-  color: #555;
+  color: #888;
   white-space: nowrap;
-  transition: background 0.15s, color 0.15s;
   flex-shrink: 0;
+  border-left: 3px solid transparent;
+  transition: color 0.15s, background 0.15s;
 }
 
 .activity-bar-item:hover {
-  background: var(--color-bg);
-  color: var(--color-primary);
+  background: #f5f6fa;
+  color: #555;
 }
 
 .activity-bar-item.active {
-  color: var(--color-primary);
-  background: var(--color-bg);
-  border-left: 3px solid var(--color-primary);
-  padding-left: 10px;
+  color: #5b6abf;
+  border-left-color: #a0aadd;
+  background: #f0f2fa;
+  padding-left: 11px;
 }
 
 .activity-bar-item .material-symbols-rounded {
-  font-size: 22px;
+  font-size: 20px;
   flex-shrink: 0;
 }
 
 .activity-label {
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 0.88rem;
+  font-weight: 700;
   opacity: 0;
   transition: opacity 0.15s;
   pointer-events: none;
 }
 
-.activity-bar.expanded .activity-label {
-  opacity: 1;
-}
+.activity-bar.expanded .activity-label { opacity: 1; }
 
-/* Container */
+/* ── Container ── */
 .container {
   flex: 1;
   height: 100%;
-  overflow: auto;
+  overflow-y: auto;
 }
 
-.page-header {
+.content {
+  max-width: 780px;
+  padding: 2rem 2rem;
+  margin: 0 auto;
+}
+
+/* ── Content Header ── */
+.content-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 2rem;
+  margin-bottom: 1.2rem;
 }
 
-.page-header h1 {
-  font-size: 1.6rem;
+.section-title {
+  font-size: 1rem;
   font-weight: 700;
-  color: var(--color-primary);
+  color: var(--color-text-muted);
   margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
+/* ── Buttons ── */
 .btn-new {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
-  background: var(--color-primary);
-  color: #fff;
-  border: none;
+  gap: 0.35rem;
+  background: #eef0fb;
+  color: #5b6abf;
+  border: 1px solid #d0d4f0;
   border-radius: 0.5rem;
-  padding: 0.5rem 1.1rem;
-  font-size: 0.95rem;
+  padding: 0.45rem 1rem;
+  font-size: 0.85rem;
   font-family: "Nunito", sans-serif;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  transition: background 0.15s;
+  transition: background 0.15s, border-color 0.15s;
 }
 
 .btn-new:hover {
-  background: #1a2580;
+  background: #e2e5f7;
+  border-color: #b0b8e8;
 }
+.btn-new .material-symbols-rounded { font-size: 17px; }
 
-/* Login Banner */
-.login-banner {
-  display: none;
-  align-items: center;
-  gap: 0.7rem;
-  background: #fff;
-  border: 1px solid var(--color-border);
-  border-radius: 0.6rem;
-  padding: 0.8rem 1.2rem;
-  margin-bottom: 1.5rem;
-  color: #555;
-  font-size: 0.95rem;
-}
 
-.login-banner a {
-  color: var(--color-primary);
-  font-weight: 700;
-  text-decoration: none;
-}
-
-.login-banner a:hover {
-  text-decoration: underline;
-}
-
-/* Project Grid */
-.project-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 1.2rem;
-}
-
-.project-card {
-  background: #fff;
-  border: 1px solid var(--color-border);
-  border-radius: 0.8rem;
-  padding: 1.2rem 1.2rem 1rem;
+/* ── Project List ── */
+.project-list {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  transition: box-shadow 0.15s;
+  gap: 0.4rem;
 }
 
-.project-card:hover {
-  box-shadow: 0 4px 16px rgba(38, 52, 163, 0.1);
-}
-
-.project-card-icon {
-  font-size: 2rem;
-  color: var(--color-primary);
-}
-
-.project-card-name {
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: #222;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.project-card-desc {
-  font-size: 0.88rem;
-  color: #777;
-  min-height: 1.2em;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
-
-.project-card-date {
-  font-size: 0.8rem;
-  color: var(--color-text-muted);
-  margin-top: auto;
-  padding-top: 0.5rem;
-}
-
-.project-card-actions {
+.project-item {
   display: flex;
-  gap: 0.5rem;
-  margin-top: 0.3rem;
+  align-items: center;
+  gap: 0.9rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 0.7rem;
+  padding: 0.85rem 1rem;
+  cursor: pointer;
+  transition: box-shadow 0.15s, border-color 0.15s;
 }
 
-.btn-open {
+.project-item:hover {
+  border-color: #c5cbdf;
+  box-shadow: 0 2px 12px rgba(38, 52, 163, 0.08);
+}
+
+.project-item-icon {
+  color: var(--color-primary);
+  font-size: 1.3rem;
+  flex-shrink: 0;
+  opacity: 0.8;
+}
+
+.project-item-name {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--color-text);
   flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.3rem;
-  background: var(--color-primary);
-  color: #fff;
-  border: none;
-  border-radius: 0.4rem;
-  padding: 0.4rem 0;
-  font-size: 0.88rem;
-  font-family: "Nunito", sans-serif;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.15s;
-  text-decoration: none;
 }
 
-.btn-open:hover {
-  background: #1a2580;
-}
-
-.btn-delete {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: none;
-  border: 1px solid var(--color-border);
-  border-radius: 0.4rem;
-  padding: 0.4rem 0.6rem;
-  color: #999;
-  cursor: pointer;
-  transition: color 0.15s, border-color 0.15s;
-}
-
-.btn-delete:hover {
-  color: #e74c3c;
-  border-color: #e74c3c;
-}
-
-/* Empty State */
-.empty-state {
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1rem;
-  padding: 4rem 0;
+.project-item-date {
+  font-size: 0.78rem;
   color: var(--color-text-muted);
+  flex-shrink: 0;
+  margin-right: 0.5rem;
 }
 
-.empty-state .material-symbols-rounded {
-  font-size: 3.5rem;
-  color: var(--color-border);
+/* ── Empty / Message ── */
+.empty-msg {
+  color: var(--color-text-muted);
+  font-size: 0.88rem;
+  padding: 3rem 0;
+  text-align: center;
 }
 
-.empty-state p {
-  font-size: 1rem;
-  margin: 0;
-}
-
-/* Modal */
+/* ── Modal ── */
 .modal-overlay {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.4);
+  background: rgba(0, 0, 0, 0.35);
   z-index: 100;
   align-items: center;
   justify-content: center;
 }
 
-.modal-overlay.open {
-  display: flex;
-}
+.modal-overlay.open { display: flex; }
 
 .modal {
-  background: #fff;
-  border-radius: 0.8rem;
-  padding: 2rem;
-  width: 420px;
+  background: var(--color-surface);
+  border-radius: 1rem;
+  padding: 1.8rem;
+  width: 400px;
   max-width: 95vw;
   display: flex;
   flex-direction: column;
   gap: 1.1rem;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
 }
 
 .modal h2 {
   margin: 0;
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: var(--color-primary);
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: var(--color-text);
 }
 
 .modal label {
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #444;
+  gap: 0.4rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
-.modal input,
-.modal textarea {
+.modal input {
   border: 1px solid var(--color-border);
-  border-radius: 0.4rem;
-  padding: 0.45rem 0.7rem;
+  border-radius: 0.5rem;
+  padding: 0.5rem 0.8rem;
   font-size: 0.95rem;
   font-family: "Nunito", sans-serif;
   outline: none;
-  transition: border-color 0.15s;
-  resize: vertical;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  background: var(--color-bg);
 }
 
-.modal input:focus,
-.modal textarea:focus {
+.modal input:focus {
   border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(38, 52, 163, 0.1);
 }
 
 .modal-actions {
   display: flex;
   justify-content: flex-end;
-  gap: 0.6rem;
+  gap: 0.5rem;
+  margin-top: 0.2rem;
 }
 
 .btn-cancel {
   background: none;
   border: 1px solid var(--color-border);
-  border-radius: 0.4rem;
+  border-radius: 0.5rem;
   padding: 0.45rem 1rem;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   font-family: "Nunito", sans-serif;
+  font-weight: 600;
   cursor: pointer;
-  color: #555;
+  color: #888;
   transition: background 0.15s;
 }
 
-.btn-cancel:hover {
-  background: var(--color-bg);
-}
+.btn-cancel:hover { background: var(--color-bg); }
 
 .btn-create {
   background: var(--color-primary);
   color: #fff;
   border: none;
-  border-radius: 0.4rem;
-  padding: 0.45rem 1.2rem;
-  font-size: 0.9rem;
-  font-family: "Nunito", sans-serif;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.15s;
-}
-
-.btn-create:hover {
-  background: #1a2580;
-}
-
-.activity-bar {
-}
-
-.container {
-}
-
-.content {
-  max-width: 1100px;
-  height: 100%;
-  padding: 2rem 2rem;
-  margin: 0 auto;
-  background-color: #1a2580;
-}
-
-/* 로그인 배너 */
-.login-banner {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  background: #fff;
-  border: 1px solid var(--color-border);
-  border-radius: 0.8rem;
-  padding: 1.2rem 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.login-banner-icon {
-  font-size: 2.5rem;
-  color: var(--color-primary);
-}
-
-.login-banner-text {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-  flex: 1;
-}
-
-.login-banner-text strong {
-  font-size: 1rem;
-  color: #222;
-}
-
-.login-banner-text span {
-  font-size: 0.88rem;
-  color: #777;
-}
-
-.btn-login {
-  background: var(--color-primary);
-  color: #fff;
-  text-decoration: none;
   border-radius: 0.5rem;
-  padding: 0.5rem 1.2rem;
-  font-size: 0.9rem;
+  padding: 0.45rem 1.2rem;
+  font-size: 0.88rem;
   font-family: "Nunito", sans-serif;
   font-weight: 700;
-  white-space: nowrap;
+  cursor: pointer;
   transition: background 0.15s;
 }
 
-.btn-login:hover {
-  background: #1a2580;
-}
+.btn-create:hover { background: var(--color-primary-hover); }
 
-/* 최근 프로젝트 */
-.section-title {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #333;
-  margin: 0 0 1rem 0;
-}
-
-.project-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 1rem;
-}
-
-.project-card {
-  background: #fff;
-  border: 1px solid var(--color-border);
-  border-radius: 0.8rem;
-  padding: 1.1rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  transition: box-shadow 0.15s;
-  cursor: pointer;
-}
-
-.project-card:hover {
-  box-shadow: 0 4px 16px rgba(38, 52, 163, 0.1);
-}
-
-.project-card-icon {
-  font-size: 1.8rem;
-  color: var(--color-primary);
-}
-
-.project-card-name {
-  font-size: 1rem;
-  font-weight: 700;
-  color: #222;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.project-card-desc {
-  font-size: 0.83rem;
-  color: #777;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  -webkit-box-orient: vertical;
-  min-height: 1.2em;
-}
-
-.project-card-footer {
+/* ── Search ── */
+.search-bar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-top: 0.4rem;
+  gap: 0.5rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 0.6rem;
+  padding: 0.5rem 0.8rem;
+  margin-bottom: 1rem;
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
-
-.project-card-date {
-  font-size: 0.78rem;
+.search-bar:focus-within {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(38, 52, 163, 0.08);
+}
+.search-bar .material-symbols-rounded {
+  font-size: 18px;
   color: var(--color-text-muted);
+  flex-shrink: 0;
 }
-
-.btn-open {
-  background: none;
-  border: 1px solid var(--color-primary);
-  border-radius: 0.4rem;
-  padding: 0.25rem 0.7rem;
-  font-size: 0.82rem;
+.search-bar input {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 0.9rem;
   font-family: "Nunito", sans-serif;
-  font-weight: 600;
-  color: var(--color-primary);
-  cursor: pointer;
-  transition: background 0.15s, color 0.15s;
+  color: var(--color-text);
+  width: 100%;
 }
-
-.btn-open:hover {
-  background: var(--color-primary);
-  color: #fff;
-}
+.search-bar input::placeholder { color: var(--color-text-muted); }

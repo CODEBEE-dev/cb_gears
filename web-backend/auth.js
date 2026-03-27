@@ -54,13 +54,24 @@ router.get('/callback', async (req, res) => {
 
     const userInfo = tokenSet.claims()
 
+    const ALLOWED_ROLES = ['school_admin', 'teacher', 'student']
+    const role = (userInfo.realm_roles || []).find(r => ALLOWED_ROLES.includes(r)) || null
+
+    const group = (userInfo.groups || []).reduce((a, b) =>
+      a.split('/').length > b.split('/').length ? a : b
+    , '') || null
+
     // 세션에 저장
     req.session.user = {
       id: userInfo.sub,
       email: userInfo.email,
-      name: userInfo.name
+      name: userInfo.name,
+      role,
+      group,
     }
     req.session.idToken = tokenSet.id_token
+
+    console.log(req.session.user)
 
     console.log(`[SYSTEM] 로그인 성공: ${userInfo.sub}, ${userInfo.email}`)
 

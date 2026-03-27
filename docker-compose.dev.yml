@@ -1,0 +1,8 @@
+services:
+  web-backend:
+    volumes:
+      - ./web-backend:/app
+      - /app/node_modules
+    command: node_modules/.bin/nodemon index.js
+    environment:
+      NODE_ENV: development

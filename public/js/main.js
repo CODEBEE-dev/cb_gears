@@ -537,6 +537,68 @@ var main = new function() {
     }
   };
 
+  // Load world from DB (user's saved worlds)
+  this.loadWorldFromDb = async function() {
+    let $body = $('<div class="dbWorldList"></div>');
+    let $grid = $('<div class="dbWorldGrid"></div>');
+    let $empty = $('<div class="dbWorldEmpty">저장된 월드가 없습니다.</div>').hide();
+    $body.append($grid).append($empty);
+
+    let $closeBtn = $('<button type="button" class="btn btn-light">닫기</button>');
+    let $dialog = dialog('내 월드 불러오기', $body, $closeBtn);
+    $closeBtn.click(function() { $dialog.close(); });
+
+    try {
+      const res = await fetch('/api/worlds');
+      if (!res.ok) throw new Error();
+      const { worlds } = await res.json();
+
+      if (worlds.length === 0) {
+        $grid.hide();
+        $empty.show();
+        return;
+      }
+
+      worlds.forEach(function(w) {
+        let $row = $('<div class="dbWorldRow"></div>');
+        let $img = $('<img class="dbWorldThumb">');
+        $img.attr('src', w.thumbnail || 'images/worlds/default_thumbnail.png');
+        let $name = $('<div class="dbWorldName"></div>').text(w.name);
+        let $btns = $('<div class="dbWorldBtns"></div>');
+        let $selectBtn = $('<button class="dbWorldSelectBtn">불러오기</button>');
+        let $deleteBtn = $('<button class="dbWorldDeleteBtn"><span class="material-symbols-rounded">delete</span></button>');
+        $btns.append($selectBtn).append($deleteBtn);
+        $row.append($img).append($name).append($btns);
+        $selectBtn.click(async function() {
+          try {
+            const r = await fetch('/api/worlds/' + w.id);
+            if (!r.ok) throw new Error();
+            const { world } = await r.json();
+            const worldJson = JSON.stringify({ worldName: 'custom', options: world.options });
+            simPanel.loadWorld(worldJson);
+            main.saveWorldToDb(worldJson);
+            $dialog.close();
+          } catch (e) {
+            showErrorModal('월드를 불러오는 데 실패했습니다.');
+          }
+        });
+        $deleteBtn.click(function() {
+          fetch('/api/worlds/' + w.id, { method: 'DELETE' })
+            .then(res => res.json())
+            .then(data => {
+              if (data.ok) $row.remove();
+              if ($grid.children().length === 0) { $grid.hide(); $empty.show(); }
+            })
+            .catch(() => showErrorModal('월드 삭제에 실패했습니다.'));
+        });
+        $grid.append($row);
+      });
+    } catch (e) {
+      $grid.hide();
+      $empty.text('월드 목록을 불러오는 데 실패했습니다.').show();
+    }
+  };
+
   // Toggle worlds menu
   this.toggleWorldsMenu = function(e) {
     if ($('.worldsMenuDropDown').length == 0) {
@@ -549,6 +611,7 @@ var main = new function() {
         {html: i18n.get('#main-arena#'), line: true, callback: self.arenaWindow},
         {html: i18n.get('#main-world_load_file#'), line: false, callback: simPanel.loadWorldLocal},
         {html: i18n.get('#main-world_save_file#'), line: false, callback: simPanel.saveWorld},
+        {html: '내 월드 불러오기', line: false, callback: self.loadWorldFromDb},
       ];
 
       menuDropDown(self.$worldsMenu, menuItems, {className: 'worldsMenuDropDown', align: 'activityBar'});

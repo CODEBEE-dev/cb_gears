@@ -2230,6 +2230,72 @@ var builder = new function() {
     });
   };
 
+  // Load world from DB (user's saved worlds)
+  this.loadWorldFromDb = async function() {
+    let $body = $('<div class="dbWorldList"></div>');
+    let $grid = $('<div class="dbWorldGrid"></div>');
+    let $empty = $('<div class="dbWorldEmpty">저장된 월드가 없습니다.</div>').hide();
+    $body.append($grid).append($empty);
+
+    let $closeBtn = $('<button type="button" class="btn btn-light">닫기</button>');
+    let $dialog = dialog('내 월드 불러오기', $body, $closeBtn);
+    $closeBtn.click(function() { $dialog.close(); });
+
+    try {
+      const res = await fetch('/api/worlds');
+      if (!res.ok) throw new Error();
+      const { worlds } = await res.json();
+
+      if (worlds.length === 0) {
+        $grid.hide();
+        $empty.show();
+        return;
+      }
+
+      worlds.forEach(function(w) {
+        let $row = $('<div class="dbWorldRow"></div>');
+        let $img = $('<img class="dbWorldThumb">');
+        $img.attr('src', w.thumbnail || 'images/worlds/default_thumbnail.png');
+        let $name = $('<div class="dbWorldName"></div>').text(w.name);
+        let $btns = $('<div class="dbWorldBtns"></div>');
+        let $selectBtn = $('<button class="dbWorldSelectBtn">불러오기</button>');
+        let $deleteBtn = $('<button class="dbWorldDeleteBtn"><span class="material-symbols-rounded">delete</span></button>');
+        $btns.append($selectBtn).append($deleteBtn);
+        $row.append($img).append($name).append($btns);
+        $selectBtn.click(async function() {
+          try {
+            const r = await fetch('/api/worlds/' + w.id);
+            if (!r.ok) throw new Error();
+            const { world } = await r.json();
+            self._dbWorldId = world.id;
+            self._dbWorldName = world.name;
+            self.worldOptions = JSON.parse(JSON.stringify(worlds[0].defaultOptions));
+            Object.assign(self.worldOptions, world.options);
+            self.clearHistory();
+            self.saveHistory();
+            self.resetScene();
+            $dialog.close();
+          } catch (e) {
+            showErrorModal('월드를 불러오는 데 실패했습니다.');
+          }
+        });
+        $deleteBtn.click(function() {
+          fetch('/api/worlds/' + w.id, { method: 'DELETE' })
+            .then(res => res.json())
+            .then(data => {
+              if (data.ok) $row.remove();
+              if ($grid.children().length === 0) { $grid.hide(); $empty.show(); }
+            })
+            .catch(() => showErrorModal('월드 삭제에 실패했습니다.'));
+        });
+        $grid.append($row);
+      });
+    } catch (e) {
+      $grid.hide();
+      $empty.text('월드 목록을 불러오는 데 실패했습니다.').show();
+    }
+  };
+
   // Toggle filemenu
   this.toggleFileMenu = function(e) {
     if ($('.fileMenuDropDown').length == 0) {
@@ -2240,7 +2306,8 @@ var builder = new function() {
         {html: i18n.get('#builder-new_world#'), line: true, callback: self.newWorld},
         {html: i18n.get('#builder-load_world#'), line: false, callback: self.loadWorldLocal},
         {html: i18n.get('#builder-save_world#'), line: false, callback: self.saveWorld},
-        {html: i18n.get('#builder-save_world_db#'), line: false, callback: self.saveWorldToDb},
+        {html: i18n.get('#builder-save_world_db#'), line: true, callback: self.saveWorldToDb},
+        {html: '내 월드 불러오기', line: false, callback: self.loadWorldFromDb},
         {html: i18n.get('#builder-load_object#'), line: false, callback: self.loadObjectLocal},
         {html: i18n.get('#builder-save_object#'), line: false, callback: self.saveObject},
       ];

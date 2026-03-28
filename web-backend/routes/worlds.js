@@ -48,6 +48,23 @@ router.post('/', requireAuth, async (req, res) => {
   }
 })
 
+// 월드 단건 조회 (options 포함)
+router.get('/:id', requireAuth, async (req, res) => {
+  try {
+    const userId = req.session.user.id
+    const { id } = req.params
+    const result = await query(
+      'SELECT id, name, options, thumbnail, updated_at FROM worlds WHERE id = $1 AND user_id = $2',
+      [id, userId]
+    )
+    if (result.rows.length === 0) return res.status(404).json({ error: 'Not found' })
+    res.json({ world: result.rows[0] })
+  } catch (err) {
+    console.error('[DB] 월드 조회 실패:', err)
+    res.status(500).json({ error: 'Internal server error' })
+  }
+})
+
 // 월드 삭제
 router.delete('/:id', requireAuth, async (req, res) => {
   try {

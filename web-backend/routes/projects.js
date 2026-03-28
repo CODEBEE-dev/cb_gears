@@ -100,4 +100,21 @@ router.put('/:id', requireAuth, async (req, res) => {
   }
 })
 
+// 프로젝트 삭제
+router.delete('/:id', requireAuth, async (req, res) => {
+  try {
+    const userId = req.session.user.id
+    const { id } = req.params
+    const result = await query(
+      'DELETE FROM projects WHERE id = $1 AND user_id = $2 RETURNING id',
+      [id, userId]
+    )
+    if (result.rows.length === 0) return res.status(404).json({ error: 'Not found' })
+    res.json({ ok: true })
+  } catch (err) {
+    console.error('[DB] 프로젝트 삭제 실패:', err)
+    res.status(500).json({ error: 'Internal server error' })
+  }
+})
+
 module.exports = router

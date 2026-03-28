@@ -1815,6 +1815,10 @@ let MSGS = {
     en: 'Home',
     ko: '홈',
   },
+  '#main-save#': {
+    en: 'Save',
+    ko: '저장',
+  },
   '#main-saving#': {
     en: 'Saving',
     ko: '저장 중',
@@ -3417,6 +3421,18 @@ let MSGS = {
     en: 'Save world to file',
     ko: '월드: 파일에 저장하기',
   },
+  '#builder-world_name#': {
+    en: 'World Name',
+    ko: '월드 이름',
+  },
+  '#builder-save_world_db#': {
+    en: 'Save to My Worlds',
+    ko: '내 월드에 저장',
+  },
+  '#builder-save_world_db_done#': {
+    en: 'Saved to My Worlds',
+    ko: '내 월드에 저장됨',
+  },
   '#builder-sync_world#': {
     en: 'Use world in simulator',
     ko: '월드: 시뮬레이터에서 사용하기',
@@ -3735,6 +3751,14 @@ let MSGS = {
   '#configurator-save_robot#': {
     en: 'Save to file',
     ko: '로봇: 파일에 저장하기',
+  },
+  '#configurator-save_robot_db#': {
+    en: 'Save to My Robots',
+    ko: '내 로봇에 저장',
+  },
+  '#configurator-save_robot_db_done#': {
+    en: 'Saved to My Robots',
+    ko: '내 로봇에 저장됨',
   },
   '#configurator-sync_robot#': {
     en: 'Use robot in simulator',
@@ -4074,6 +4098,18 @@ let MSGS = {
   '#dash-open#': {
     en: 'Open',
     ko: '열기',
+  },
+  '#dash-delete_confirm#': {
+    en: 'Delete this project?',
+    ko: '이 프로젝트를 삭제할까요?',
+  },
+  '#dash-delete_desc#': {
+    en: 'This action cannot be undone.',
+    ko: '이 작업은 되돌릴 수 없습니다.',
+  },
+  '#dash-delete#': {
+    en: 'Delete',
+    ko: '삭제',
   },
   '#nav-projects#': {
     en: 'Projects',

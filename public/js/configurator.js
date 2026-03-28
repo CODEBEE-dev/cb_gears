@@ -1280,6 +1280,8 @@ var configurator = new function() {
     self.$snapMenu = $('.snapMenu');
 
     self.$robotName = $('#robotName');
+    self._dbRobotId = null;
+    self._dbRobotName = null;
 
     self.$addComponent = $('.addComponent');
     self.$deleteComponent = $('.deleteComponent');
@@ -2003,6 +2005,36 @@ var configurator = new function() {
     acknowledgeDialog({ title: i18n.get('#configurator-sync_robot#'), message: i18n.get('#configurator-sync_robot_done#') });
   };
 
+  // Save robot to DB
+  this.saveRobotToDb = function() {
+    const defaultName = self._dbRobotName || self.$robotName.val().trim() || robot.options.name || '';
+    var $dialog = confirmDialog({
+      title: i18n.get('#configurator-save_robot_db#'),
+      message: '<label style="display:block;margin-bottom:0.3em;">' + i18n.get('#configurator-robot_name#') + '</label>' +
+               '<input id="dbRobotNameInput" type="text" class="form-control" value="' + defaultName + '" style="width:100%;box-sizing:border-box;">',
+      confirm: i18n.get('#main-save#'),
+    }, function() {
+      const name = document.getElementById('dbRobotNameInput').value.trim();
+      if (!name) return;
+      self._dbRobotName = name;
+      const id = self._dbRobotId || null;
+
+      BABYLON.Tools.CreateScreenshot(babylon.engine, babylon.scene.activeCamera, { width: 300, height: 300 }, function(thumbnail) {
+        fetch('/api/robots', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id, name, options: robot.options, thumbnail })
+        })
+        .then(r => r.json())
+        .then(data => {
+          self._dbRobotId = data.robot.id;
+        })
+        .catch(err => console.error('[DB] 로봇 저장 실패:', err));
+      });
+    });
+    setTimeout(() => document.getElementById('dbRobotNameInput')?.focus(), 100);
+  };
+
   // Load robot from json file
   this.loadRobotLocal = function() {
     var hiddenElement = document.createElement('input');
@@ -2133,6 +2165,7 @@ var configurator = new function() {
       let menuItems = [
         {html: i18n.get('#configurator-load_robot#'), line: false, callback: self.loadRobotLocal},
         {html: i18n.get('#configurator-save_robot#'), line: false, callback: self.saveRobot},
+        {html: i18n.get('#configurator-save_robot_db#'), line: false, callback: self.saveRobotToDb},
         {html: i18n.get('#configurator-sync_robot#'), line: true, callback: self.syncRobotToMain},
       ];
 

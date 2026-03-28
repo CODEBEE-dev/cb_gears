@@ -1,0 +1,1 @@
+ALTER TABLE robots ADD COLUMN IF NOT EXISTS thumbnail TEXT;

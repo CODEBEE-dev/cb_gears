@@ -1108,6 +1108,9 @@ var builder = new function() {
     self.$fileMenu = $('.fileMenu');
     self.$worldMenu = $('.worldMenu');
     self.$snapMenu = $('.snapMenu');
+    self.$worldName = $('#worldName');
+    self._dbWorldId = null;
+    self._dbWorldName = null;
 
     self.$addObject = $('.addObject');
     self.$cloneObject = $('.cloneObject');
@@ -2119,6 +2122,36 @@ var builder = new function() {
     acknowledgeDialog({ title: i18n.get('#builder-sync_world#'), message: i18n.get('#builder-sync_world_done#') });
   };
 
+  // Save world to DB
+  this.saveWorldToDb = function() {
+    const defaultName = self._dbWorldName || '';
+    var $dialog = confirmDialog({
+      title: i18n.get('#builder-save_world_db#'),
+      message: '<label style="display:block;margin-bottom:0.3em;">' + i18n.get('#builder-world_name#') + '</label>' +
+               '<input id="dbWorldNameInput" type="text" class="form-control" value="' + defaultName + '" style="width:100%;box-sizing:border-box;">',
+      confirm: i18n.get('#main-save#'),
+    }, function() {
+      const name = document.getElementById('dbWorldNameInput').value.trim();
+      if (!name) return;
+      self._dbWorldName = name;
+      const id = self._dbWorldId || null;
+
+      BABYLON.Tools.CreateScreenshot(babylon.engine, babylon.scene.activeCamera, { width: 300, height: 300 }, function(thumbnail) {
+        fetch('/api/worlds', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id, name, options: self.worldOptions, thumbnail })
+        })
+        .then(r => r.json())
+        .then(data => {
+          self._dbWorldId = data.world.id;
+        })
+        .catch(err => console.error('[DB] 월드 저장 실패:', err));
+      });
+    });
+    setTimeout(() => document.getElementById('dbWorldNameInput')?.focus(), 100);
+  };
+
   // Load object from json file
   this.loadObjectLocal = function() {
     var hiddenElement = document.createElement('input');
@@ -2216,10 +2249,10 @@ var builder = new function() {
         {html: i18n.get('#builder-new_world#'), line: true, callback: self.newWorld},
         {html: i18n.get('#builder-load_world#'), line: false, callback: self.loadWorldLocal},
         {html: i18n.get('#builder-save_world#'), line: false, callback: self.saveWorld},
+        {html: i18n.get('#builder-save_world_db#'), line: false, callback: self.saveWorldToDb},
         {html: i18n.get('#builder-sync_world#'), line: true, callback: self.syncWorldToMain},
         {html: i18n.get('#builder-load_object#'), line: false, callback: self.loadObjectLocal},
         {html: i18n.get('#builder-save_object#'), line: false, callback: self.saveObject},
-
       ];
 
       menuDropDown(self.$fileMenu, menuItems, {className: 'fileMenuDropDown', align: 'activityBar'});

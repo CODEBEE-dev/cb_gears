@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS worlds (
   user_id     VARCHAR(36),
   name        VARCHAR(255) NOT NULL,
   options     JSONB NOT NULL DEFAULT '{}',
+  thumbnail   TEXT,
   created_at  TIMESTAMP NOT NULL DEFAULT NOW(),
   updated_at  TIMESTAMP NOT NULL DEFAULT NOW()
 );
@@ -12,6 +13,7 @@ CREATE TABLE IF NOT EXISTS robots (
   user_id     VARCHAR(36),
   name        VARCHAR(255) NOT NULL,
   options     JSONB NOT NULL DEFAULT '{}',
+  thumbnail   TEXT,
   created_at  TIMESTAMP NOT NULL DEFAULT NOW(),
   updated_at  TIMESTAMP NOT NULL DEFAULT NOW()
 );
@@ -29,6 +31,10 @@ CREATE TABLE IF NOT EXISTS projects (
   FOREIGN KEY (world_id) REFERENCES worlds(id),
   FOREIGN KEY (robot_id) REFERENCES robots(id)
 );
+
+-- 시퀀스 초기화 (기본값 INSERT 후 충돌 방지)
+SELECT setval('worlds_id_seq', 1);
+SELECT setval('robots_id_seq', 1);
 
 -- 디폴트 월드 (Grid Map)
 INSERT INTO worlds (id, user_id, name, options) VALUES (

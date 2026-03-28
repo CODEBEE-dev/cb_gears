@@ -101,6 +101,18 @@
     </div>
   </div>
 
+  <!-- 삭제 확인 모달 -->
+  <div class="modal-overlay" id="deleteModalOverlay">
+    <div class="modal">
+      <h2 id="deleteModalTitle"></h2>
+      <p id="deleteModalDesc" style="margin:0; font-size:0.9rem; color:#666;"></p>
+      <div class="modal-actions">
+        <button class="btn-cancel" id="btnDeleteCancel"></button>
+        <button class="btn-delete-confirm" id="btnDeleteConfirm"></button>
+      </div>
+    </div>
+  </div>
+
   <!-- 새 프로젝트 모달 -->
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal">
@@ -131,6 +143,10 @@
     document.getElementById('loginModalTitle').textContent = i18n.get('#dash-login_modal_title#')
     document.getElementById('loginModalDesc').textContent = i18n.get('#dash-login_modal_desc#')
     document.getElementById('btnLoginModalConfirm').textContent = i18n.get('#dash-confirm#')
+    document.getElementById('deleteModalTitle').textContent = i18n.get('#dash-delete_confirm#')
+    document.getElementById('deleteModalDesc').textContent = i18n.get('#dash-delete_desc#')
+    document.getElementById('btnDeleteCancel').textContent = i18n.get('#dash-cancel#')
+    document.getElementById('btnDeleteConfirm').textContent = i18n.get('#dash-delete#')
 
     // ── 상태 ──
     let currentUser = null
@@ -142,6 +158,30 @@
       window.location.href = `/editor?projectId=${projectId}`
     }
 
+    function deleteProject(projectId, item) {
+      const overlay = document.getElementById('deleteModalOverlay')
+      overlay.classList.add('open')
+
+      function onConfirm() {
+        fetch(`/api/projects/${projectId}`, { method: 'DELETE' })
+          .then(() => item.remove())
+        cleanup()
+      }
+      function cleanup() {
+        overlay.classList.remove('open')
+        document.getElementById('btnDeleteConfirm').removeEventListener('click', onConfirm)
+        document.getElementById('btnDeleteCancel').removeEventListener('click', cleanup)
+        overlay.removeEventListener('click', onOverlayClick)
+      }
+      function onOverlayClick(e) {
+        if (e.target === overlay) cleanup()
+      }
+
+      document.getElementById('btnDeleteConfirm').addEventListener('click', onConfirm)
+      document.getElementById('btnDeleteCancel').addEventListener('click', cleanup)
+      overlay.addEventListener('click', onOverlayClick)
+    }
+
     function makeProjectItem(p) {
       const item = document.createElement('div')
       item.className = 'project-item'
@@ -149,8 +189,15 @@
         <span class="material-symbols-rounded project-item-icon">folder</span>
         <span class="project-item-name">${p.name}</span>
         <span class="project-item-date">${new Date(p.updated_at).toLocaleDateString()}</span>
+        <button class="btn-delete" title="${i18n.get('#dash-delete_confirm#')}">
+          <span class="material-symbols-rounded">delete</span>
+        </button>
       `
       item.addEventListener('click', () => openEditor(p.id))
+      item.querySelector('.btn-delete').addEventListener('click', (e) => {
+        e.stopPropagation()
+        deleteProject(p.id, item)
+      })
       return item
     }
 

@@ -850,7 +850,7 @@ var main = new function() {
 
     blockly.saveLocalStorage();
     if (!filesManager.modified) {
-      pythonPanel.loadPythonFromBlockly();
+      filesManager.files['main.py'] = blockly.generator.genCode();
     }
     filesManager.updateCurrentFile();
     filesManager.saveToDb();
@@ -907,7 +907,7 @@ var main = new function() {
 
     blockly.saveLocalStorage();
     if (!filesManager.modified) {
-      pythonPanel.loadPythonFromBlockly();
+      filesManager.files['main.py'] = blockly.generator.genCode();
     }
     filesManager.updateCurrentFile();
     filesManager.saveToDb();

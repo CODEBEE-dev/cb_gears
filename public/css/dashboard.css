@@ -275,7 +275,29 @@ main {
   font-size: 0.78rem;
   color: var(--color-text-muted);
   flex-shrink: 0;
-  margin-right: 0.5rem;
+}
+
+.btn-delete {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  padding: 0.2rem;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  border-radius: 0.3rem;
+  flex-shrink: 0;
+  transition: color 0.15s, background 0.15s;
+}
+
+.btn-delete:hover {
+  color: #e53935;
+  background: #fdecea;
+}
+
+.btn-delete .material-symbols-rounded {
+  font-size: 1.1rem;
 }
 
 /* ── Empty / Message ── */
@@ -381,6 +403,21 @@ main {
 }
 
 .btn-create:hover { background: var(--color-primary-hover); }
+
+.btn-delete-confirm {
+  background: #e53935;
+  color: #fff;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.45rem 1.2rem;
+  font-size: 0.88rem;
+  font-family: "Nunito", sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btn-delete-confirm:hover { background: #c62828; }
 
 /* ── Search ── */
 .search-bar {

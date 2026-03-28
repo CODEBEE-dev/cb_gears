@@ -5,6 +5,8 @@ const path = require('path')
 const cookieParser = require('cookie-parser')
 const { router: authRouter, initKeycloak, requireAuth } = require('./auth')
 const projectsRouter = require('./routes/projects')
+const robotsRouter = require('./routes/robots')
+const worldsRouter = require('./routes/worlds')
 const session = require('express-session')
 const port = process.env.WEB_BACKEND_PORT
 
@@ -22,6 +24,8 @@ app.use(express.json())
 app.use(cookieParser())
 app.use('/auth', authRouter)
 app.use('/api/projects', projectsRouter)
+app.use('/api/robots', robotsRouter)
+app.use('/api/worlds', worldsRouter)
 
 /**
  * 다른 페이지들 로그인 체크

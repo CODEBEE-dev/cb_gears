@@ -1376,12 +1376,3 @@ var simPanel = new function() {
 
 simPanel.init();
 
-// Page-to-page sync: listen for world updates from builder.html
-(function() {
-  var bc = new BroadcastChannel('gears_sync');
-  bc.onmessage = function(event) {
-    if (event.data.type === 'world_updated' && event.data.data) {
-      simPanel.loadWorld(event.data.data);
-    }
-  };
-})();

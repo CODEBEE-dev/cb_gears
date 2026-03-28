@@ -2111,16 +2111,6 @@ var builder = new function() {
     hiddenElement.dispatchEvent(new MouseEvent('click'));
   };
 
-  this.syncWorldToMain = function() {
-    let world = {
-      worldName: 'custom',
-      options: self.worldOptions
-    };
-    const bc = new BroadcastChannel('gears_sync');
-    bc.postMessage({ type: 'world_updated', data: JSON.stringify(world) });
-    bc.close();
-    acknowledgeDialog({ title: i18n.get('#builder-sync_world#'), message: i18n.get('#builder-sync_world_done#') });
-  };
 
   // Save world to DB
   this.saveWorldToDb = function() {
@@ -2136,6 +2126,7 @@ var builder = new function() {
       self._dbWorldName = name;
       const id = self._dbWorldId || null;
 
+      babylon.scene.render();
       BABYLON.Tools.CreateScreenshot(babylon.engine, babylon.scene.activeCamera, { width: 300, height: 300 }, function(thumbnail) {
         fetch('/api/worlds', {
           method: 'POST',
@@ -2250,7 +2241,6 @@ var builder = new function() {
         {html: i18n.get('#builder-load_world#'), line: false, callback: self.loadWorldLocal},
         {html: i18n.get('#builder-save_world#'), line: false, callback: self.saveWorld},
         {html: i18n.get('#builder-save_world_db#'), line: false, callback: self.saveWorldToDb},
-        {html: i18n.get('#builder-sync_world#'), line: true, callback: self.syncWorldToMain},
         {html: i18n.get('#builder-load_object#'), line: false, callback: self.loadObjectLocal},
         {html: i18n.get('#builder-save_object#'), line: false, callback: self.saveObject},
       ];

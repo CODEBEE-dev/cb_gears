@@ -15,7 +15,8 @@ CREATE TABLE IF NOT EXISTS robots (
   options     JSONB NOT NULL DEFAULT '{}',
   thumbnail   TEXT,
   created_at  TIMESTAMP NOT NULL DEFAULT NOW(),
-  updated_at  TIMESTAMP NOT NULL DEFAULT NOW()
+  updated_at  TIMESTAMP NOT NULL DEFAULT NOW(),
+  UNIQUE (user_id, name)
 );
 
 CREATE TABLE IF NOT EXISTS projects (

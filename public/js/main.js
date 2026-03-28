@@ -472,12 +472,68 @@ var main = new function() {
         {html: i18n.get('#main-robot_configurator#'), line: true, callback: self.configuratorWindow},
         {html: i18n.get('#main-robot_load_file#'), line: false, callback: self.loadRobotLocal},
         {html: i18n.get('#main-robot_save_file#'), line: true, callback: self.saveRobot},
+        {html: '내 로봇 불러오기', line: true, callback: self.loadRobotFromDb},
         {html: i18n.get('#main-display_position#'), line: false, callback: self.displayPosition},
         {html: i18n.get('#main-save_position#'), line: false, callback: self.savePosition},
         {html: i18n.get('#main-clear_position#'), line: false, callback: self.clearPosition},
       ];
 
       menuDropDown(self.$robotMenu, menuItems, {className: 'robotMenuDropDown', align: 'activityBar'});
+    }
+  };
+
+  // Load robot from DB (user's saved robots)
+  this.loadRobotFromDb = async function() {
+    let $body = $('<div class="dbRobotList"></div>');
+    let $grid = $('<div class="dbRobotGrid"></div>');
+    let $empty = $('<div class="dbRobotEmpty">저장된 로봇이 없습니다.</div>').hide();
+    $body.append($grid).append($empty);
+
+    let $closeBtn = $('<button type="button" class="btn btn-light">닫기</button>');
+    let $dialog = dialog('내 로봇 불러오기', $body, $closeBtn);
+    $closeBtn.click(function() { $dialog.close(); });
+
+    try {
+      const res = await fetch('/api/robots');
+      if (!res.ok) throw new Error();
+      const { robots } = await res.json();
+
+      if (robots.length === 0) {
+        $grid.hide();
+        $empty.show();
+        return;
+      }
+
+      robots.forEach(function(r) {
+        let $row = $('<div class="dbRobotRow"></div>');
+        let $img = $('<img class="dbRobotThumb">');
+        $img.attr('src', r.thumbnail || 'images/robots/default_thumbnail.png');
+        let $name = $('<div class="dbRobotName"></div>').text(r.name);
+        let $btns = $('<div class="dbRobotBtns"></div>');
+        let $selectBtn = $('<button class="dbRobotSelectBtn">불러오기</button>');
+        let $deleteBtn = $('<button class="dbRobotDeleteBtn"><span class="material-symbols-rounded">delete</span></button>');
+        $btns.append($selectBtn).append($deleteBtn);
+        $row.append($img).append($name).append($btns);
+        $selectBtn.click(function() {
+          const robotJson = JSON.stringify(r.options);
+          main.loadRobot(robotJson);
+          main.saveRobotToDb(robotJson);
+          $dialog.close();
+        });
+        $deleteBtn.click(function() {
+          fetch('/api/robots/' + r.id, { method: 'DELETE' })
+            .then(res => res.json())
+            .then(data => {
+              if (data.ok) $row.remove();
+              if ($grid.children().length === 0) { $grid.hide(); $empty.show(); }
+            })
+            .catch(() => showErrorModal('로봇 삭제에 실패했습니다.'));
+        });
+        $grid.append($row);
+      });
+    } catch (e) {
+      $grid.hide();
+      $empty.text('로봇 목록을 불러오는 데 실패했습니다.').show();
     }
   };
 
@@ -1070,16 +1126,3 @@ var main = new function() {
 main.init();
 
 
-// Page-to-page sync: listen for robot/world updates from configurator/builder
-(function() {
-  var bc = new BroadcastChannel('gears_sync');
-  bc.onmessage = function(event) {
-    if (event.data.type === 'robot_updated' && event.data.data) {
-      main.loadRobot(event.data.data);
-      main.saveRobotToDb(event.data.data);
-    }
-    if (event.data.type === 'world_updated' && event.data.data) {
-      main.saveWorldToDb(event.data.data);
-    }
-  };
-})();

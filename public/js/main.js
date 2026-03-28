@@ -846,13 +846,14 @@ var main = new function() {
   this.autoSave = function() {
     const projectId = window.currentProjectId;
     if (!projectId) return;
-    if (!blockly.unsaved && !filesManager.unsaved) return;
+    const pythonEmpty = !filesManager.files['main.py'] || filesManager.files['main.py'].trim() === '';
+    if (!blockly.unsaved && !filesManager.unsaved && !pythonEmpty) return;
 
     blockly.saveLocalStorage();
-    if (!filesManager.modified) {
+    filesManager.updateCurrentFile();
+    if (!filesManager.modified || pythonEmpty) {
       filesManager.files['main.py'] = blockly.generator.genCode();
     }
-    filesManager.updateCurrentFile();
     filesManager.saveToDb();
 
     self.saveProjectName();
@@ -903,13 +904,14 @@ var main = new function() {
   this.checkUnsaved = function() {
     const projectId = window.currentProjectId;
     if (!projectId) return;
-    if (!blockly.unsaved && !filesManager.unsaved) return;
+    const pythonEmpty = !filesManager.files['main.py'] || filesManager.files['main.py'].trim() === '';
+    if (!blockly.unsaved && !filesManager.unsaved && !pythonEmpty) return;
 
     blockly.saveLocalStorage();
-    if (!filesManager.modified) {
+    filesManager.updateCurrentFile();
+    if (!filesManager.modified || pythonEmpty) {
       filesManager.files['main.py'] = blockly.generator.genCode();
     }
-    filesManager.updateCurrentFile();
     filesManager.saveToDb();
 
     self.saveProjectName();

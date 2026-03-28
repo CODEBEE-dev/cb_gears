@@ -85,6 +85,7 @@ var blockly = new function() {
   this.generator = ev3dev2_generator;
 
   this.mirror = true;
+  this.mirrorTimer = null;
 
   // Run on page load
   this.init = function() {
@@ -407,9 +408,14 @@ var blockly = new function() {
 
   // Clear all blocks from displayed workspace
   this.clearDisplayedWorkspace = function() {
+    if (self.mirrorTimer) {
+      clearTimeout(self.mirrorTimer);
+      self.mirrorTimer = null;
+    }
     self.mirror = false;
     self.displayedWorkspace.clear();
-    setTimeout(function() {
+    self.mirrorTimer = setTimeout(function() {
+      self.mirrorTimer = null;
       self.mirror = true;
     }, 200);
   };
@@ -429,6 +435,10 @@ var blockly = new function() {
 
   // Copy blocks of specified page into displayed workspace
   this.showPage = function(page) {
+    if (self.mirrorTimer) {
+      clearTimeout(self.mirrorTimer);
+      self.mirrorTimer = null;
+    }
     self.mirror = false;
     self.displayedWorkspace.clear();
 
@@ -461,7 +471,8 @@ var blockly = new function() {
       }
     });
     self.displayedWorkspace.scrollCenter();
-    setTimeout(function() {
+    self.mirrorTimer = setTimeout(function() {
+      self.mirrorTimer = null;
       self.mirror = true;
     }, 200);
   };

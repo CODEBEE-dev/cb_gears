@@ -489,9 +489,21 @@ var main = new function() {
     let $empty = $('<div class="dbRobotEmpty">저장된 로봇이 없습니다.</div>').hide();
     $body.append($grid).append($empty);
 
-    let $closeBtn = $('<button type="button" class="btn btn-light">닫기</button>');
-    let $dialog = dialog('내 로봇 불러오기', $body, $closeBtn);
-    $closeBtn.click(function() { $dialog.close(); });
+    let $footerBtns = $(
+      '<button type="button" class="push-left btn-light">기본 로봇으로 초기화</button>' +
+      '<button type="button" class="btn-light close-btn">닫기</button>'
+    );
+    let $dialog = dialog('내 로봇 불러오기', $body, $footerBtns);
+    $footerBtns.siblings('.push-left').click(function() {
+      robot.options = JSON.parse(JSON.stringify(defaultRobotOptions));
+      main.saveRobotToDb(JSON.stringify(robot.options));
+      babylon.resetScene();
+      skulpt.hardInterrupt = true;
+      simPanel.setRunIcon('run');
+      simPanel.initSensorsPanel();
+      $dialog.close();
+    });
+    $footerBtns.siblings('.close-btn').click(function() { $dialog.close(); });
 
     try {
       const res = await fetch('/api/robots');
@@ -544,9 +556,20 @@ var main = new function() {
     let $empty = $('<div class="dbWorldEmpty">저장된 월드가 없습니다.</div>').hide();
     $body.append($grid).append($empty);
 
-    let $closeBtn = $('<button type="button" class="btn btn-light">닫기</button>');
-    let $dialog = dialog('내 월드 불러오기', $body, $closeBtn);
-    $closeBtn.click(function() { $dialog.close(); });
+    let $footerBtns = $(
+      '<button type="button" class="push-left btn-light">기본 월드로 초기화</button>' +
+      '<button type="button" class="btn-light close-btn">닫기</button>'
+    );
+    let $dialog = dialog('내 월드 불러오기', $body, $footerBtns);
+    $footerBtns.siblings('.push-left').click(function() {
+      babylon.world = worlds[0];
+      simPanel.worldOptionsSetting = {};
+      simPanel.resetSim();
+      const worldJson = JSON.stringify({ worldName: worlds[0].name, options: worlds[0].defaultOptions });
+      main.saveWorldToDb(worldJson);
+      $dialog.close();
+    });
+    $footerBtns.siblings('.close-btn').click(function() { $dialog.close(); });
 
     try {
       const res = await fetch('/api/worlds');
@@ -670,6 +693,7 @@ var main = new function() {
       e.stopPropagation();
 
       let menuItems = [
+        {html: '프로젝트 저장', line: true, callback: self.saveNow},
         {html: i18n.get('#main-new_program#'), line: true, callback: self.newProgram},
         {html: i18n.get('#main-load_blocks#'), line: false, callback: self.loadFromComputer},
         {html: i18n.get('#main-import_functions#'), line: false, callback: self.importFunctionsFromFile},
@@ -959,6 +983,35 @@ var main = new function() {
       console.log(reader.error);
     };
     reader.readAsText(e.target.files[0]);
+  };
+
+  // 수동 저장 — unsaved 조건 무시하고 강제 저장
+  this.saveNow = function() {
+    const projectId = window.currentProjectId;
+    if (!projectId) return;
+
+    blockly.saveLocalStorage();
+    filesManager.updateCurrentFile();
+    if (!filesManager.modified) {
+      filesManager.files['main.py'] = blockly.generator.genCode();
+    }
+    filesManager.saveToDb();
+
+    self.saveProjectName();
+    const payload = {
+      name: self.$projectName.val(),
+      block_xml: blockly.getXmlText(),
+      python: filesManager.files
+    };
+
+    self.showSaving();
+    fetch('/api/projects/' + projectId, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    })
+    .then(() => self.hideSaving())
+    .catch(err => { console.error('[DB] 저장 실패:', err); self.hideSaving(); });
   };
 
   // 통합 자동저장 — block_xml + python 한 번에 저장

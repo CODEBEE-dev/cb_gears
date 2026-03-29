@@ -1700,3 +1700,34 @@ var robotTemplates = [
     "options": {}
   }
 ];
+
+var defaultRobotOptions = {
+  name: 'singleFollower',
+  bodyHeight: 4,
+  bodyWidth: 14,
+  bodyLength: 16,
+  wheels: true,
+  wheelDiameter: 5.6,
+  wheelWidth: 0.8,
+  wheelToBodyOffset: 0.2,
+  bodyEdgeToWheelCenterY: 1,
+  bodyEdgeToWheelCenterZ: 2,
+  bodyMass: 1000,
+  wheelMass: 200,
+  casterMass: 0,
+  caster: true,
+  wheelFriction: 10,
+  bodyFriction: 0,
+  casterFriction: 0,
+  color: '#F09C0D',
+  imageType: 'all',
+  imageURL: '',
+  components: [
+    { type: 'ColorSensor', position: [0, -1, 9], rotation: [Math.PI/2, 0, 0], options: null },
+    { type: 'UltrasonicSensor', position: [0, 2.5, 8], rotation: [0, 0, 0], options: null },
+    { type: 'GyroSensor', position: [0, 2.5, 2.5], options: null },
+    { type: 'GPSSensor', position: [0, 2.5, 5], options: null },
+    { type: 'MagnetActuator', position: [0, -1, 3], rotation: [0, 0, 0], options: null },
+    { type: 'Pen', position: [0, 0, 6], rotation: [0, 0, 0], options: null }
+  ]
+};

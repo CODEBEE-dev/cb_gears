@@ -59,6 +59,10 @@
         <span class="material-symbols-rounded">settings</span>
         <span class="activity-label"></span>
       </div>
+      <div class="activity-bar-item activity-bar-admin" data-key="admin" style="display:none;">
+        <span class="material-symbols-rounded">manage_accounts</span>
+        <span class="activity-label"></span>
+      </div>
     </nav>
     <div class="container">
       <!-- Home 뷰 -->
@@ -240,7 +244,6 @@
     document.getElementById('searchInput').addEventListener('input', applySearch)
 
     // ── 뷰 전환 ──
-    const views = { home: 'viewHome', projects: 'viewProjects' }
     let currentView = 'home'
 
     function switchView(key) {
@@ -248,6 +251,7 @@
       document.getElementById('viewHome').style.display = key === 'home' ? '' : 'none'
       document.getElementById('viewProjects').style.display = key === 'projects' ? '' : 'none'
       if (key === 'projects' && currentUser) loadAll()
+      history.replaceState(null, '', '#' + key)
     }
 
     // ── 액티비티바 ──
@@ -255,17 +259,23 @@
       home: i18n.get('#nav-home#'),
       projects: i18n.get('#nav-projects#'),
       settings: i18n.get('#nav-settings#'),
+      admin: i18n.get('#nav-admin#'),
     }
     document.querySelectorAll('.activity-bar-item').forEach(item => {
       const key = item.dataset.key
       item.querySelector('.activity-label').textContent = navLabels[key]
       item.setAttribute('data-tooltip', navLabels[key])
       item.addEventListener('click', () => {
+        if (key === 'admin') {
+          window.location.href = '/admin'
+          return
+        }
         document.querySelectorAll('.activity-bar-item').forEach(i => i.classList.remove('active'))
         item.classList.add('active')
         switchView(key)
       })
     })
+
 
     document.getElementById('activityBarToggle').addEventListener('click', () => {
       document.getElementById('activityBar').classList.toggle('expanded')
@@ -334,10 +344,29 @@
         document.getElementById('welcomeLabel').textContent =
           i18n.get('#main-welcome#').replace('{name}', data.user.name)
         document.getElementById('logoutBtn').querySelector('.auth-label').textContent = i18n.get('#main-logout#')
-        loadRecent()
+        if (data.user.role === 'school_admin' || data.user.role === 'teacher') {
+          document.querySelector('.activity-bar-admin').style.display = ''
+        }
+        // hash로 초기 뷰 결정
+        const initialView = window.location.hash.replace('#', '')
+        if (initialView === 'projects') {
+          document.querySelectorAll('.activity-bar-item').forEach(i => i.classList.remove('active'))
+          document.querySelector('.activity-bar-item[data-key="projects"]').classList.add('active')
+          switchView('projects')
+        } else {
+          loadRecent()
+          history.replaceState(null, '', '#home')
+        }
       } else {
         document.getElementById('loginLabel').textContent = i18n.get('#main-login#')
         renderLoginRequired(document.getElementById('recentList'))
+        // 비로그인 상태에서도 hash 처리 (뷰 전환만, 데이터 없이)
+        const initialView = window.location.hash.replace('#', '')
+        if (initialView === 'projects') {
+          document.querySelectorAll('.activity-bar-item').forEach(i => i.classList.remove('active'))
+          document.querySelector('.activity-bar-item[data-key="projects"]').classList.add('active')
+          switchView('projects')
+        }
       }
     })()
   </script>

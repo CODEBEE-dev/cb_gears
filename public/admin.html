@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="icon" href="codebridgeai_favicon.png">
+
+  <script src="js/common/config.js"></script>
+
+  <!-- Google Font & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20,400,1,0" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/admin.css">
+
+  <script src="js/msg.js"></script>
+
+  <title>Account Management</title>
+</head>
+
+<body>
+  <header>
+    <img class="gearsIcon" src="codebridgeai_favicon.png">
+    <div class="appName" id="appTitle"></div>
+    <div class="headerRight">
+      <div id="userArea" style="display:none; align-items:center; gap:0.2em;">
+        <span class="material-symbols-rounded">person</span>
+        <span class="auth-label" id="welcomeLabel"></span>
+        <a href="/auth/logout" class="authBtn" id="logoutBtn">
+          <span class="material-symbols-rounded">logout</span>
+          <span class="auth-label" id="logoutLabel"></span>
+        </a>
+      </div>
+      <div class="language"><span class="material-symbols-rounded">language</span></div>
+    </div>
+  </header>
+
+  <main>
+    <nav class="activity-bar expanded" id="activityBar">
+      <div class="activity-bar-toggle" id="activityBarToggle">
+        <span class="material-symbols-rounded">apps</span>
+      </div>
+      <div class="activity-bar-item" data-key="home">
+        <span class="material-symbols-rounded">home</span>
+        <span class="activity-label"></span>
+      </div>
+      <div class="activity-bar-item" data-key="projects">
+        <span class="material-symbols-rounded">folder</span>
+        <span class="activity-label"></span>
+      </div>
+      <div class="activity-bar-item" data-key="settings">
+        <span class="material-symbols-rounded">settings</span>
+        <span class="activity-label"></span>
+      </div>
+      <div class="activity-bar-item active" data-key="admin">
+        <span class="material-symbols-rounded">manage_accounts</span>
+        <span class="activity-label"></span>
+      </div>
+    </nav>
+    <div class="container">
+    <div class="admin-container">
+      <div class="admin-toolbar">
+        <div class="search-bar">
+          <span class="material-symbols-rounded">search</span>
+          <input type="text" id="searchInput" placeholder="">
+        </div>
+        <button class="btn-new" id="btnAddUser">
+          <span class="material-symbols-rounded">person_add</span>
+          <span id="labelAddUser"></span>
+        </button>
+      </div>
+
+      <div class="admin-table-wrapper">
+        <table class="admin-table" id="userTable">
+          <thead>
+            <tr>
+              <th id="thUsername"></th>
+              <th id="thEmail"></th>
+              <th id="thName"></th>
+              <th id="thRole"></th>
+              <th id="thStatus"></th>
+              <th id="thActions"></th>
+            </tr>
+          </thead>
+          <tbody id="userTableBody">
+            <tr><td colspan="6" class="table-loading" id="tableLoading"></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    </div>
+  </main>
+
+  <!-- 사용자 추가/수정 모달 -->
+  <div class="modal-overlay" id="userModalOverlay">
+    <div class="modal modal-wide">
+      <h2 id="userModalTitle"></h2>
+      <div class="form-grid">
+        <label>
+          <span id="labelUsername"></span>
+          <input type="text" id="inputUsername" maxlength="100" autocomplete="off">
+        </label>
+        <label>
+          <span id="labelEmail"></span>
+          <input type="email" id="inputEmail" maxlength="200" autocomplete="off">
+        </label>
+        <label>
+          <span id="labelFirstname"></span>
+          <input type="text" id="inputFirstname" maxlength="100" autocomplete="off">
+        </label>
+        <label>
+          <span id="labelLastname"></span>
+          <input type="text" id="inputLastname" maxlength="100" autocomplete="off">
+        </label>
+        <label>
+          <span id="labelPassword"></span>
+          <input type="password" id="inputPassword" maxlength="200" autocomplete="new-password">
+        </label>
+        <label>
+          <span id="labelRole"></span>
+          <select id="inputRole">
+            <option value="student"></option>
+            <option value="teacher"></option>
+            <option value="school_admin"></option>
+          </select>
+        </label>
+        <label class="label-checkbox">
+          <input type="checkbox" id="inputEnabled" checked>
+          <span id="labelEnabled"></span>
+        </label>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel" id="btnUserModalCancel"></button>
+        <button class="btn-create" id="btnUserModalSave"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 삭제 확인 모달 -->
+  <div class="modal-overlay" id="deleteModalOverlay">
+    <div class="modal">
+      <h2 id="deleteModalTitle"></h2>
+      <p id="deleteModalDesc" style="margin:0; font-size:0.9rem; color:#666;"></p>
+      <div class="modal-actions">
+        <button class="btn-cancel" id="btnDeleteCancel"></button>
+        <button class="btn-delete-confirm" id="btnDeleteConfirm"></button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ── i18n ──
+    document.getElementById('appTitle').textContent = i18n.get('#admin-title#')
+    document.getElementById('labelAddUser').textContent = i18n.get('#admin-add_user#')
+    document.getElementById('searchInput').placeholder = i18n.get('#admin-search_placeholder#')
+    document.getElementById('thUsername').textContent = i18n.get('#admin-username#')
+    document.getElementById('thEmail').textContent = i18n.get('#admin-email#')
+    document.getElementById('thName').textContent = i18n.get('#admin-name#')
+    document.getElementById('thRole').textContent = i18n.get('#admin-role#')
+    document.getElementById('thStatus').textContent = i18n.get('#admin-status#')
+    document.getElementById('thActions').textContent = i18n.get('#admin-actions#')
+    document.getElementById('tableLoading').textContent = i18n.get('#admin-loading#')
+    document.getElementById('labelUsername').textContent = i18n.get('#admin-username#')
+    document.getElementById('labelEmail').textContent = i18n.get('#admin-email#')
+    document.getElementById('labelFirstname').textContent = i18n.get('#admin-firstname#')
+    document.getElementById('labelLastname').textContent = i18n.get('#admin-lastname#')
+    document.getElementById('labelPassword').textContent = i18n.get('#admin-password#')
+    document.getElementById('labelRole').textContent = i18n.get('#admin-role#')
+    document.getElementById('labelEnabled').textContent = i18n.get('#admin-enabled#')
+    document.getElementById('btnUserModalCancel').textContent = i18n.get('#admin-cancel#')
+    document.getElementById('deleteModalTitle').textContent = i18n.get('#admin-delete_confirm#')
+    document.getElementById('deleteModalDesc').textContent = i18n.get('#admin-delete_desc#')
+    document.getElementById('btnDeleteCancel').textContent = i18n.get('#admin-cancel#')
+    document.getElementById('btnDeleteConfirm').textContent = i18n.get('#admin-delete#')
+
+    // role select 옵션 텍스트
+    document.querySelector('#inputRole option[value="student"]').textContent = i18n.get('#admin-role_student#')
+    document.querySelector('#inputRole option[value="teacher"]').textContent = i18n.get('#admin-role_teacher#')
+    document.querySelector('#inputRole option[value="school_admin"]').textContent = i18n.get('#admin-role_school_admin#')
+
+    // ── 상태 ──
+    let currentUser = null
+    let editingUserId = null
+    let isSaving = false
+    let searchTimer = null
+
+    // ── 역할 표시 ──
+    function roleLabel(role) {
+      const map = {
+        student: i18n.get('#admin-role_student#'),
+        teacher: i18n.get('#admin-role_teacher#'),
+        school_admin: i18n.get('#admin-role_school_admin#'),
+      }
+      return map[role] || (role || '-')
+    }
+
+    // ── 테이블 렌더링 ──
+    function renderUsers(users) {
+      const tbody = document.getElementById('userTableBody')
+      tbody.innerHTML = ''
+      if (!users.length) {
+        tbody.innerHTML = `<tr><td colspan="6" class="table-empty">${i18n.get('#admin-no_users#')}</td></tr>`
+        return
+      }
+      users.forEach(u => {
+        const role = (u.realmRoles || []).find(r => ['school_admin','teacher','student'].includes(r)) || ''
+        const tr = document.createElement('tr')
+        tr.innerHTML = `
+          <td>${escHtml(u.username || '')}</td>
+          <td>${escHtml(u.email || '')}</td>
+          <td>${escHtml([u.firstName, u.lastName].filter(Boolean).join(' ') || '')}</td>
+          <td><span class="role-badge role-${role}">${escHtml(roleLabel(role))}</span></td>
+          <td><span class="status-badge ${u.enabled ? 'status-active' : 'status-inactive'}">${u.enabled ? i18n.get('#admin-active#') : i18n.get('#admin-inactive#')}</span></td>
+          <td class="actions-cell">
+            <button class="btn-icon" data-action="edit" data-id="${u.id}" title="${i18n.get('#admin-edit#')}">
+              <span class="material-symbols-rounded">edit</span>
+            </button>
+            <button class="btn-icon btn-icon-danger" data-action="delete" data-id="${u.id}" data-name="${escHtml(u.username)}" title="${i18n.get('#admin-delete#')}">
+              <span class="material-symbols-rounded">delete</span>
+            </button>
+          </td>
+        `
+        tbody.appendChild(tr)
+      })
+
+      tbody.querySelectorAll('[data-action="edit"]').forEach(btn => {
+        btn.addEventListener('click', () => openEditModal(btn.dataset.id))
+      })
+      tbody.querySelectorAll('[data-action="delete"]').forEach(btn => {
+        btn.addEventListener('click', () => confirmDelete(btn.dataset.id, btn.dataset.name))
+      })
+    }
+
+    function escHtml(str) {
+      return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')
+    }
+
+    // ── 데이터 로드 ──
+    async function loadUsers(search = '') {
+      const tbody = document.getElementById('userTableBody')
+      tbody.innerHTML = `<tr><td colspan="6" class="table-loading">${i18n.get('#admin-loading#')}</td></tr>`
+      const params = new URLSearchParams({ max: 100 })
+      if (search) params.set('search', search)
+      const res = await fetch(`/api/admin/users?${params}`)
+      if (!res.ok) {
+        tbody.innerHTML = `<tr><td colspan="6" class="table-empty">오류가 발생했습니다.</td></tr>`
+        return
+      }
+      const data = await res.json()
+
+      // 각 유저의 role을 포함해서 렌더링 (목록 API가 realmRoles를 안 줄 수 있으므로 일괄 처리)
+      // Keycloak /users 응답에는 role이 없으므로 users 배열 그대로 사용하고
+      // 개별 조회가 필요한 경우 edit 시점에만 조회
+      renderUsers(data.users)
+    }
+
+    // ── 검색 ──
+    document.getElementById('searchInput').addEventListener('input', () => {
+      clearTimeout(searchTimer)
+      searchTimer = setTimeout(() => loadUsers(document.getElementById('searchInput').value.trim()), 350)
+    })
+
+    // ── 모달 열기/닫기 ──
+    function openAddModal() {
+      editingUserId = null
+      document.getElementById('userModalTitle').textContent = i18n.get('#admin-modal_add_title#')
+      document.getElementById('btnUserModalSave').textContent = i18n.get('#admin-create#')
+      document.getElementById('inputUsername').value = ''
+      document.getElementById('inputEmail').value = ''
+      document.getElementById('inputFirstname').value = ''
+      document.getElementById('inputLastname').value = ''
+      document.getElementById('inputPassword').value = ''
+      document.getElementById('inputPassword').placeholder = ''
+      document.getElementById('inputRole').value = 'student'
+      document.getElementById('inputEnabled').checked = true
+      document.getElementById('inputUsername').disabled = false
+      document.getElementById('userModalOverlay').classList.add('open')
+      document.getElementById('inputUsername').focus()
+    }
+
+    async function openEditModal(userId) {
+      editingUserId = userId
+      document.getElementById('userModalTitle').textContent = i18n.get('#admin-modal_edit_title#')
+      document.getElementById('btnUserModalSave').textContent = i18n.get('#admin-save#')
+      document.getElementById('inputPassword').placeholder = i18n.get('#admin-password_placeholder#')
+
+      const res = await fetch(`/api/admin/users/${userId}`)
+      if (!res.ok) return
+      const { user } = await res.json()
+
+      document.getElementById('inputUsername').value = user.username || ''
+      document.getElementById('inputUsername').disabled = true
+      document.getElementById('inputEmail').value = user.email || ''
+      document.getElementById('inputFirstname').value = user.firstName || ''
+      document.getElementById('inputLastname').value = user.lastName || ''
+      document.getElementById('inputPassword').value = ''
+      const role = (user.realmRoles || []).find(r => ['school_admin','teacher','student'].includes(r)) || 'student'
+      document.getElementById('inputRole').value = role
+      document.getElementById('inputEnabled').checked = !!user.enabled
+      document.getElementById('userModalOverlay').classList.add('open')
+    }
+
+    function closeUserModal() {
+      document.getElementById('userModalOverlay').classList.remove('open')
+      document.getElementById('inputUsername').disabled = false
+    }
+
+    document.getElementById('btnAddUser').addEventListener('click', openAddModal)
+    document.getElementById('btnUserModalCancel').addEventListener('click', closeUserModal)
+    document.getElementById('userModalOverlay').addEventListener('click', e => {
+      if (e.target === document.getElementById('userModalOverlay')) closeUserModal()
+    })
+
+    // ── 저장 ──
+    document.getElementById('btnUserModalSave').addEventListener('click', saveUser)
+
+    async function saveUser() {
+      if (isSaving) return
+      const username = document.getElementById('inputUsername').value.trim()
+      const password = document.getElementById('inputPassword').value
+      const role = document.getElementById('inputRole').value
+
+      if (!editingUserId && (!username || !password)) {
+        document.getElementById(username ? 'inputPassword' : 'inputUsername').focus()
+        return
+      }
+
+      isSaving = true
+      const body = {
+        username,
+        email: document.getElementById('inputEmail').value.trim(),
+        firstName: document.getElementById('inputFirstname').value.trim(),
+        lastName: document.getElementById('inputLastname').value.trim(),
+        role,
+        enabled: document.getElementById('inputEnabled').checked,
+      }
+      if (password) body.password = password
+
+      const url = editingUserId ? `/api/admin/users/${editingUserId}` : '/api/admin/users'
+      const method = editingUserId ? 'PUT' : 'POST'
+
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      })
+      isSaving = false
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        alert(data.error || '저장에 실패했습니다.')
+        return
+      }
+
+      closeUserModal()
+      loadUsers(document.getElementById('searchInput').value.trim())
+    }
+
+    // ── 삭제 ──
+    function confirmDelete(userId, username) {
+      const overlay = document.getElementById('deleteModalOverlay')
+      overlay.classList.add('open')
+
+      function onConfirm() {
+        fetch(`/api/admin/users/${userId}`, { method: 'DELETE' })
+          .then(res => {
+            if (!res.ok) return res.json().then(d => { throw new Error(d.error) })
+          })
+          .then(() => loadUsers(document.getElementById('searchInput').value.trim()))
+          .catch(err => alert(err.message || '삭제에 실패했습니다.'))
+        cleanup()
+      }
+      function cleanup() {
+        overlay.classList.remove('open')
+        document.getElementById('btnDeleteConfirm').removeEventListener('click', onConfirm)
+        document.getElementById('btnDeleteCancel').removeEventListener('click', cleanup)
+        overlay.removeEventListener('click', onOverlayClick)
+      }
+      function onOverlayClick(e) {
+        if (e.target === overlay) cleanup()
+      }
+
+      document.getElementById('btnDeleteConfirm').addEventListener('click', onConfirm)
+      document.getElementById('btnDeleteCancel').addEventListener('click', cleanup)
+      overlay.addEventListener('click', onOverlayClick)
+    }
+
+    // ── 액티비티바 ──
+    const navLabels = {
+      home: i18n.get('#nav-home#'),
+      projects: i18n.get('#nav-projects#'),
+      settings: i18n.get('#nav-settings#'),
+      admin: i18n.get('#nav-admin#'),
+    }
+    const navLinks = { home: '/#home', projects: '/#projects', settings: '/#settings', admin: '/admin' }
+    document.querySelectorAll('.activity-bar-item').forEach(item => {
+      const key = item.dataset.key
+      item.querySelector('.activity-label').textContent = navLabels[key]
+      item.setAttribute('data-tooltip', navLabels[key])
+      item.addEventListener('click', () => {
+        if (key !== 'admin') window.location.href = navLinks[key]
+      })
+    })
+    document.getElementById('activityBarToggle').addEventListener('click', () => {
+      document.getElementById('activityBar').classList.toggle('expanded')
+    })
+
+    // ── 초기화 ──
+    ;(async () => {
+      const res = await fetch('/auth/me')
+      const data = await res.json()
+      if (data.user) {
+        currentUser = data.user
+        document.getElementById('userArea').style.display = 'flex'
+        document.getElementById('welcomeLabel').textContent = i18n.get('#main-welcome#').replace('{name}', data.user.name)
+        document.getElementById('logoutLabel').textContent = i18n.get('#main-logout#')
+      }
+      loadUsers()
+    })()
+  </script>
+</body>
+</html>

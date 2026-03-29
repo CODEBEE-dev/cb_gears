@@ -23,6 +23,19 @@ const requireAuth = (req, res, next) => {
   next()
 }
 
+const requireRole = (...roles) => (req, res, next) => {
+  if (!req.session.user) {
+    req.session.returnTo = req.originalUrl
+    return res.redirect('/auth/login')
+  }
+  if (!roles.includes(req.session.user.role)) {
+    return res.status(403).sendFile(require('path').join(__dirname, '..', 'public', '403.html'), err => {
+      if (err) res.status(403).send('Forbidden')
+    })
+  }
+  next()
+}
+
 router.get('/login', (req, res) => {
   const codeVerifier = generators.codeVerifier()
   const codeChallenge = generators.codeChallenge(codeVerifier)
@@ -99,4 +112,4 @@ router.get('/me', (req, res) => {
   res.json({ user: req.session.user })
 })
 
-module.exports = { router, initKeycloak, requireAuth }
+module.exports = { router, initKeycloak, requireAuth, requireRole }

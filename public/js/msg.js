@@ -4119,6 +4119,130 @@ let MSGS = {
     en: 'Settings',
     ko: '설정',
   },
+  '#nav-admin#': {
+    en: 'Account Management',
+    ko: '계정 관리',
+  },
+  '#admin-title#': {
+    en: 'Account Management',
+    ko: '계정 관리',
+  },
+  '#admin-add_user#': {
+    en: 'Add User',
+    ko: '사용자 추가',
+  },
+  '#admin-search_placeholder#': {
+    en: 'Search by username or email...',
+    ko: '사용자명 또는 이메일 검색...',
+  },
+  '#admin-username#': {
+    en: 'Username',
+    ko: '사용자명',
+  },
+  '#admin-email#': {
+    en: 'Email',
+    ko: '이메일',
+  },
+  '#admin-name#': {
+    en: 'Name',
+    ko: '이름',
+  },
+  '#admin-firstname#': {
+    en: 'First Name',
+    ko: '이름',
+  },
+  '#admin-lastname#': {
+    en: 'Last Name',
+    ko: '성',
+  },
+  '#admin-role#': {
+    en: 'Role',
+    ko: '역할',
+  },
+  '#admin-password#': {
+    en: 'Password',
+    ko: '비밀번호',
+  },
+  '#admin-enabled#': {
+    en: 'Enabled',
+    ko: '활성화',
+  },
+  '#admin-status#': {
+    en: 'Status',
+    ko: '상태',
+  },
+  '#admin-active#': {
+    en: 'Active',
+    ko: '활성',
+  },
+  '#admin-inactive#': {
+    en: 'Inactive',
+    ko: '비활성',
+  },
+  '#admin-actions#': {
+    en: 'Actions',
+    ko: '작업',
+  },
+  '#admin-edit#': {
+    en: 'Edit',
+    ko: '수정',
+  },
+  '#admin-delete#': {
+    en: 'Delete',
+    ko: '삭제',
+  },
+  '#admin-cancel#': {
+    en: 'Cancel',
+    ko: '취소',
+  },
+  '#admin-save#': {
+    en: 'Save',
+    ko: '저장',
+  },
+  '#admin-create#': {
+    en: 'Create',
+    ko: '만들기',
+  },
+  '#admin-modal_add_title#': {
+    en: 'Add User',
+    ko: '사용자 추가',
+  },
+  '#admin-modal_edit_title#': {
+    en: 'Edit User',
+    ko: '사용자 수정',
+  },
+  '#admin-delete_confirm#': {
+    en: 'Delete this user?',
+    ko: '이 사용자를 삭제할까요?',
+  },
+  '#admin-delete_desc#': {
+    en: 'This action cannot be undone.',
+    ko: '이 작업은 되돌릴 수 없습니다.',
+  },
+  '#admin-no_users#': {
+    en: 'No users found.',
+    ko: '사용자가 없습니다.',
+  },
+  '#admin-role_student#': {
+    en: 'Student',
+    ko: '학생',
+  },
+  '#admin-role_teacher#': {
+    en: 'Teacher',
+    ko: '선생님',
+  },
+  '#admin-role_school_admin#': {
+    en: 'School Admin',
+    ko: '학교 관리자',
+  },
+  '#admin-password_placeholder#': {
+    en: 'Leave blank to keep current',
+    ko: '변경하지 않으려면 비워두세요',
+  },
+  '#admin-loading#': {
+    en: 'Loading...',
+    ko: '불러오는 중...',
+  },
 };
 let MSGS_KEYS = Object.keys(MSGS);
 

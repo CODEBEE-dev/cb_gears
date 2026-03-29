@@ -7,6 +7,7 @@ const { router: authRouter, initKeycloak, requireAuth } = require('./auth')
 const projectsRouter = require('./routes/projects')
 const robotsRouter = require('./routes/robots')
 const worldsRouter = require('./routes/worlds')
+const adminRouter = require('./routes/admin')
 const session = require('express-session')
 const port = process.env.WEB_BACKEND_PORT
 
@@ -26,6 +27,7 @@ app.use('/auth', authRouter)
 app.use('/api/projects', projectsRouter)
 app.use('/api/robots', robotsRouter)
 app.use('/api/worlds', worldsRouter)
+app.use('/api/admin', adminRouter)
 
 /**
  * 다른 페이지들 로그인 체크
@@ -52,6 +54,16 @@ app.get('/arena', requireAuth, (req, res) => {
 
 app.get('/arenaFrame', requireAuth, (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'arenaFrame.html'))
+})
+
+app.get('/admin', requireAuth, (req, res) => {
+  const role = req.session.user?.role
+  if (role !== 'school_admin' && role !== 'teacher') {
+    return res.status(403).sendFile(path.join(__dirname, '..', 'public', '403.html'), err => {
+      if (err) res.status(403).send('Forbidden')
+    })
+  }
+  res.sendFile(path.join(__dirname, '..', 'public', 'admin.html'))
 })
 
 app.use(express.static(path.join(__dirname, '..', 'public')))

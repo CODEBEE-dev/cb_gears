@@ -5,7 +5,7 @@ const ADMIN_ROLES = ['school_admin', 'teacher']
 
 // Keycloak Admin REST API 호출용 헬퍼
 async function getAdminToken() {
-  const url = `${process.env.KEYCLOAK_URL}/realms/master/protocol/openid-connect/token`
+  const url = `${process.env.KEYCLOAK_URL}/realms/${process.env.KEYCLOAK_REALM}/protocol/openid-connect/token`
   const body = new URLSearchParams({
     grant_type: 'client_credentials',
     client_id: process.env.KEYCLOAK_ADMIN_CLIENT_ID || process.env.KEYCLOAK_CLIENT_ID,
@@ -38,7 +38,7 @@ async function keycloakFetch(path, options = {}) {
   return res
 }
 
-// 사용자 목록 조회
+// 사용자 목록 조회 (role 포함)
 router.get('/users', requireRole(...ADMIN_ROLES), async (req, res) => {
   try {
     const { search = '', first = 0, max = 50 } = req.query
@@ -47,7 +47,17 @@ router.get('/users', requireRole(...ADMIN_ROLES), async (req, res) => {
     const r = await keycloakFetch(`/users?${params}`)
     if (!r.ok) return res.status(r.status).json({ error: 'Keycloak 사용자 목록 조회 실패' })
     const users = await r.json()
-    res.json({ users })
+
+    // 각 사용자의 realm role을 병렬 조회
+    const ALLOWED_ROLES = ['school_admin', 'teacher', 'student']
+    const usersWithRoles = await Promise.all(users.map(async u => {
+      const rolesR = await keycloakFetch(`/users/${u.id}/role-mappings/realm`)
+      const roles = rolesR.ok ? await rolesR.json() : []
+      const realmRoles = roles.filter(r => ALLOWED_ROLES.includes(r.name)).map(r => r.name)
+      return { ...u, realmRoles }
+    }))
+
+    res.json({ users: usersWithRoles })
   } catch (err) {
     console.error('[Admin] 사용자 목록 조회 실패:', err)
     res.status(500).json({ error: 'Internal server error' })
@@ -182,17 +192,19 @@ router.get('/roles', requireRole(...ADMIN_ROLES), async (req, res) => {
 
 // role 할당 헬퍼
 async function assignRole(userId, roleName) {
-  // 기존 ALLOWED_ROLES 중 다른 것 제거하고 새로 할당
   const ALLOWED_ROLES = ['school_admin', 'teacher', 'student']
 
-  const allRolesR = await keycloakFetch('/roles')
-  if (!allRolesR.ok) return
-  const allRoles = await allRolesR.json()
-
-  const currentRolesR = await keycloakFetch(`/users/${userId}/role-mappings/realm`)
-  const currentRoles = currentRolesR.ok ? await currentRolesR.json() : []
+  // 할당할 role을 이름으로 직접 조회 (id 확보)
+  const roleR = await keycloakFetch(`/roles/${roleName}`)
+  if (!roleR.ok) {
+    console.error(`[Admin] role 조회 실패: ${roleName}, status: ${roleR.status}`)
+    return
+  }
+  const roleObj = await roleR.json()
 
   // 기존 allowed role 제거
+  const currentRolesR = await keycloakFetch(`/users/${userId}/role-mappings/realm`)
+  const currentRoles = currentRolesR.ok ? await currentRolesR.json() : []
   const toRemove = currentRoles.filter(r => ALLOWED_ROLES.includes(r.name))
   if (toRemove.length > 0) {
     await keycloakFetch(`/users/${userId}/role-mappings/realm`, {
@@ -202,13 +214,10 @@ async function assignRole(userId, roleName) {
   }
 
   // 새 role 할당
-  const roleObj = allRoles.find(r => r.name === roleName)
-  if (roleObj) {
-    await keycloakFetch(`/users/${userId}/role-mappings/realm`, {
-      method: 'POST',
-      body: JSON.stringify([roleObj]),
-    })
-  }
+  await keycloakFetch(`/users/${userId}/role-mappings/realm`, {
+    method: 'POST',
+    body: JSON.stringify([roleObj]),
+  })
 }
 
 module.exports = router

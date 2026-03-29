@@ -109,12 +109,12 @@
           <input type="email" id="inputEmail" maxlength="200" autocomplete="off">
         </label>
         <label>
-          <span id="labelFirstname"></span>
-          <input type="text" id="inputFirstname" maxlength="100" autocomplete="off">
-        </label>
-        <label>
           <span id="labelLastname"></span>
           <input type="text" id="inputLastname" maxlength="100" autocomplete="off">
+        </label>
+        <label>
+          <span id="labelFirstname"></span>
+          <input type="text" id="inputFirstname" maxlength="100" autocomplete="off">
         </label>
         <label>
           <span id="labelPassword"></span>
@@ -212,7 +212,7 @@
         tr.innerHTML = `
           <td>${escHtml(u.username || '')}</td>
           <td>${escHtml(u.email || '')}</td>
-          <td>${escHtml([u.firstName, u.lastName].filter(Boolean).join(' ') || '')}</td>
+          <td>${escHtml([u.lastName, u.firstName].filter(Boolean).join(' ') || '')}</td>
           <td><span class="role-badge role-${role}">${escHtml(roleLabel(role))}</span></td>
           <td><span class="status-badge ${u.enabled ? 'status-active' : 'status-inactive'}">${u.enabled ? i18n.get('#admin-active#') : i18n.get('#admin-inactive#')}</span></td>
           <td class="actions-cell">
@@ -311,9 +311,6 @@
 
     document.getElementById('btnAddUser').addEventListener('click', openAddModal)
     document.getElementById('btnUserModalCancel').addEventListener('click', closeUserModal)
-    document.getElementById('userModalOverlay').addEventListener('click', e => {
-      if (e.target === document.getElementById('userModalOverlay')) closeUserModal()
-    })
 
     // ── 저장 ──
     document.getElementById('btnUserModalSave').addEventListener('click', saveUser)

@@ -126,8 +126,6 @@ var main = new function() {
   };
 
   this.saveProjectName = function() {
-    let filtered = self.$projectName.val().replace(/[^0-9a-zA-Z_\- ]/g, '').trim();
-    self.$projectName.val(filtered);
   };
 
   // Load project data from DB and apply to editor

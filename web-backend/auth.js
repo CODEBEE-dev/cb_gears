@@ -75,10 +75,12 @@ router.get('/callback', async (req, res) => {
     , '') || null
 
     // 세션에 저장
+    const displayName = [userInfo.family_name, userInfo.given_name].filter(Boolean).join(' ') || userInfo.name
+
     req.session.user = {
       id: userInfo.sub,
       email: userInfo.email,
-      name: userInfo.name,
+      name: displayName,
       role,
       group,
     }

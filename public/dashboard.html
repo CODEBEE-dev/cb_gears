@@ -125,6 +125,7 @@
         <span id="labelName"></span>
         <input type="text" id="inputName" maxlength="100">
       </label>
+      <p id="inputNameError" style="margin:0.3rem 0 0; font-size:0.82rem; color:#c62828; display:none;"></p>
       <div class="modal-actions">
         <button class="btn-cancel" id="btnCancel"></button>
         <button class="btn-create" id="btnCreate"></button>
@@ -294,6 +295,7 @@
 
     function closeModal() {
       document.getElementById('modalOverlay').classList.remove('open')
+      document.getElementById('inputNameError').style.display = 'none'
     }
 
     document.getElementById('btnNewProject').addEventListener('click', openNewProjectModal)
@@ -318,6 +320,8 @@
     async function createProject() {
       if (isCreating) return
       const name = document.getElementById('inputName').value.trim()
+      const errorEl = document.getElementById('inputNameError')
+      errorEl.style.display = 'none'
       if (!name) { document.getElementById('inputName').focus(); return }
       isCreating = true
       const res = await fetch('/api/projects', {
@@ -330,6 +334,10 @@
         const data = await res.json()
         closeModal()
         openEditor(data.project.id)
+      } else if (res.status === 409) {
+        errorEl.textContent = i18n.get('#dash-duplicate_name#')
+        errorEl.style.display = ''
+        document.getElementById('inputName').focus()
       }
     }
 

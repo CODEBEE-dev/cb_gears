@@ -4111,6 +4111,10 @@ let MSGS = {
     en: 'Delete',
     ko: '삭제',
   },
+  '#dash-duplicate_name#': {
+    en: 'A project with this name already exists.',
+    ko: '같은 이름의 프로젝트가 이미 있습니다.',
+  },
   '#nav-projects#': {
     en: 'Projects',
     ko: '프로젝트',

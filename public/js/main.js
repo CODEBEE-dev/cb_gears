@@ -128,11 +128,17 @@ var main = new function() {
   this.saveProjectName = function() {
   };
 
+  // DB 로드 완료 전까지 autoSave 차단
+  this.projectLoaded = false;
+
   // Load project data from DB and apply to editor
   this.loadProjectFromDb = async function() {
     const urlParams = new URLSearchParams(window.location.search);
     const projectId = urlParams.get('projectId');
-    if (!projectId) return;
+    if (!projectId) {
+      self.projectLoaded = true;
+      return;
+    }
     window.currentProjectId = projectId;
     try {
       const res = await fetch('/api/projects/' + projectId);
@@ -146,6 +152,8 @@ var main = new function() {
       if (p.world_options) simPanel.loadWorld(JSON.stringify({ worldName: 'custom', options: p.world_options }));
     } catch (err) {
       console.error('[DB] 프로젝트 로드 실패:', err);
+    } finally {
+      self.projectLoaded = true;
     }
   };
 
@@ -1014,6 +1022,7 @@ var main = new function() {
 
   // 통합 자동저장 — block_xml + python 한 번에 저장
   this.autoSave = function() {
+    if (!self.projectLoaded) return;
     const projectId = window.currentProjectId;
     if (!projectId) return;
     const pythonEmpty = !filesManager.files['main.py'] || filesManager.files['main.py'].trim() === '';

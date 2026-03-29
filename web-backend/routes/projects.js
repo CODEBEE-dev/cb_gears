@@ -26,6 +26,13 @@ router.post('/', requireAuth, async (req, res) => {
     if (!name || !name.trim()) {
       return res.status(400).json({ error: 'Project name is required' })
     }
+    const dup = await query(
+      'SELECT id FROM projects WHERE user_id = $1 AND name = $2',
+      [userId, name.trim()]
+    )
+    if (dup.rows.length > 0) {
+      return res.status(409).json({ error: 'duplicate' })
+    }
     const result = await query(
       'INSERT INTO projects (user_id, name) VALUES ($1, $2) RETURNING id, name, updated_at',
       [userId, name.trim()]

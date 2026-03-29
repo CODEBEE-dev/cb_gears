@@ -403,6 +403,18 @@ var blockly = new function() {
       self.loadXmlText(blockXml);
     } else {
       self.loadDefaultWorkspace();
+      return;
+    }
+    // 로드 후 시작 블록이 없으면 강제 주입
+    const hasStartBlock = self.workspace.getAllBlocks().some(b => b.type === 'when_started');
+    if (!hasStartBlock) {
+      const startXml = '<xml xmlns="https://developers.google.com/blockly/xml">' +
+        '<block type="when_started" x="63" y="38" deletable="false"><data>Main</data></block>' +
+        '</xml>';
+      const dom = Blockly.utils.xml.textToDom(startXml);
+      Blockly.Xml.domToWorkspace(dom, self.workspace);
+      self.assignOrphenToPage('Main');
+      self.showPage('Main');
     }
   };
 

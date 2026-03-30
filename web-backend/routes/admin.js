@@ -99,6 +99,7 @@ router.post('/users', requireRole(...ADMIN_ROLES), async (req, res) => {
         firstName,
         lastName,
         enabled,
+        emailVerified: true,
         credentials: [{ type: 'password', value: password, temporary: false }],
       }),
     })

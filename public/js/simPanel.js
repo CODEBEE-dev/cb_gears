@@ -1197,13 +1197,15 @@ var simPanel = new function() {
 
       babylon.world = worlds.find(world => world.name == loadedSave.worldName);
       self.worldOptionsSetting = loadedSave.options;
-      if (typeof babylon.world.setOptions == 'function') {
-        babylon.world.setOptions(self.worldOptionsSetting);
-      }
-      self.resetSim().then(function(){
-        babylon.resetCamera();
-        babylon.setCameraMode('follow');
-        self.$camera.html('<span class="icon-cameraFollow"></span>');
+      let optionsPromise = (typeof babylon.world.setOptions == 'function')
+        ? babylon.world.setOptions(self.worldOptionsSetting)
+        : Promise.resolve();
+      optionsPromise.then(function() {
+        self.resetSim().then(function(){
+          babylon.resetCamera();
+          babylon.setCameraMode('follow');
+          self.$camera.html('<span class="icon-cameraFollow"></span>');
+        });
       });
     } catch (e) {
       showErrorModal(i18n.get('#sim-invalid_world_file_json#'));

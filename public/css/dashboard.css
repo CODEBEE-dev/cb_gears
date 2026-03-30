@@ -528,3 +528,48 @@ main {
   width: 100%;
 }
 .search-bar input::placeholder { color: var(--color-text-muted); }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  :root {
+    --activity-bar-expanded: 160px;
+  }
+
+  .content {
+    padding: 1.2rem 1rem;
+  }
+
+  .shortcut-bar {
+    flex-direction: column;
+  }
+
+  .content-header {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .project-item-date {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  header .auth-label,
+  header .appName {
+    display: none;
+  }
+
+  .activity-bar,
+  .activity-bar.expanded {
+    width: var(--activity-bar-collapsed);
+    min-width: var(--activity-bar-collapsed);
+  }
+
+  .activity-label {
+    display: none;
+  }
+
+  .content {
+    padding: 1rem 0.75rem;
+  }
+}

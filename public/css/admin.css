@@ -85,6 +85,7 @@
   font-weight: 700;
   background: #e8eaf6;
   color: #3949ab;
+  white-space: nowrap;
 }
 
 .role-badge.role-school_admin { background: #fce4ec; color: #c62828; }
@@ -97,6 +98,7 @@
   border-radius: 0.9rem;
   font-size: 0.78rem;
   font-weight: 700;
+  white-space: nowrap;
 }
 
 .status-active   { background: #e8f5e9; color: #2e7d32; }
@@ -184,4 +186,33 @@
   height: 1rem;
   cursor: pointer;
   accent-color: var(--color-primary);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .admin-container {
+    padding: 1.2rem 1rem;
+  }
+
+  .admin-toolbar {
+    flex-wrap: wrap;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .label-checkbox {
+    grid-column: span 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-container {
+    padding: 1rem 0.75rem;
+  }
+
+  .modal-wide {
+    max-width: 95vw;
+  }
 }

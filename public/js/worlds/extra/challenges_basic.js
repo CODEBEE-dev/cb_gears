@@ -182,14 +182,16 @@ var challenges_basic = new function() {
           self.ended = true;
           let time = Math.round((Date.now() - self.challengeStartTime) / 100) / 10;
 
+          let nextUrl = self.notifyComplete();
           self.playVictory();
           acknowledgeDialog({
             title: 'COMPLETED!',
             message: $(
-              '<p>Completion code: ' + completionCode + '</p>' +
-              '<p>Time: ' + time + ' seconds</p>'
-            )
-          });
+              '<p>Time: ' + time + ' seconds</p>' +
+              (nextUrl ? '<p>OK를 누르면 다음 도전 과제로 이동합니다.</p>' : '')
+            ),
+            ok: nextUrl ? '다음 도전 과제 →' : 'OK'
+          }, nextUrl ? function() { window.location.href = nextUrl; } : undefined);
         }
       } else {
         self.ended = true;
@@ -264,14 +266,16 @@ var challenges_basic = new function() {
           self.ended = true;
           let time = Math.round((Date.now() - self.challengeStartTime) / 100) / 10;
 
+          let nextUrl = self.notifyComplete();
           self.playVictory();
           acknowledgeDialog({
             title: 'COMPLETED!',
             message: $(
-              '<p>Completion code: ' + completionCode + '</p>' +
-              '<p>Time: ' + time + ' seconds</p>'
-            )
-          });
+              '<p>Time: ' + time + ' seconds</p>' +
+              (nextUrl ? '<p>OK를 누르면 다음 도전 과제로 이동합니다.</p>' : '')
+            ),
+            ok: nextUrl ? '다음 도전 과제 →' : 'OK'
+          }, nextUrl ? function() { window.location.href = nextUrl; } : undefined);
         }
       } else {
         self.ended = true;
@@ -285,6 +289,38 @@ var challenges_basic = new function() {
         });
       }
     }
+  };
+
+  // 챌린지 완료 처리: DB 저장 + BroadcastChannel 알림
+  // 다음 챌린지가 있으면 해당 URL을 반환, 없으면 null
+  this.notifyComplete = function() {
+    const params = new URLSearchParams(window.location.search);
+    const challengeId = params.get('challenge');
+    if (!challengeId) return null;
+
+    fetch('/api/challenges/complete', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ challenge_id: challengeId })
+    }).catch(function() {});
+
+    try {
+      const bc = new BroadcastChannel('cb_challenge_complete');
+      bc.postMessage({ type: 'CHALLENGE_COMPLETE', challenge_id: challengeId });
+      bc.close();
+    } catch(e) {}
+
+    if (typeof ALL_CHALLENGE_IDS === 'undefined' || typeof CHALLENGE_MAP === 'undefined') return null;
+    const idx = ALL_CHALLENGE_IDS.indexOf(challengeId);
+    if (idx === -1 || idx + 1 >= ALL_CHALLENGE_IDS.length) return null;
+    const nextId = ALL_CHALLENGE_IDS[idx + 1];
+    const nextCh = CHALLENGE_MAP[nextId];
+    if (!nextCh) return null;
+    const worldConfig = JSON.stringify({
+      worldName: 'challenges_basic',
+      options: { jsonFile: nextCh.json, useDefaultRobot: true }
+    });
+    return '/editor?worldScripts=challenges_basic&worldJSON=' + encodeURIComponent(worldConfig) + '&challenge=' + nextId;
   };
 
   // Create the scene

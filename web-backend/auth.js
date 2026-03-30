@@ -17,6 +17,9 @@ const initKeycloak = async () => {
 
 const requireAuth = (req, res, next) => {
   if (!req.session.user) {
+    if (req.originalUrl.startsWith('/api/') || req.xhr || req.headers.accept?.includes('application/json')) {
+      return res.status(401).json({ error: 'Unauthorized' })
+    }
     req.session.returnTo = req.originalUrl
     return res.redirect('/auth/login')
   }

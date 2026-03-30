@@ -17,24 +17,28 @@ router.get('/', requireAuth, async (req, res) => {
   }
 })
 
-// 월드 저장 (생성 또는 수정)
+// 월드 저장 (name 기준 upsert)
 router.post('/', requireAuth, async (req, res) => {
   try {
     const userId = req.session.user.id
-    const { id, name, options, thumbnail } = req.body
+    const { name, options, thumbnail } = req.body
     if (!name || !name.trim()) {
       return res.status(400).json({ error: 'World name is required' })
     }
 
+    const existing = await query(
+      'SELECT id FROM worlds WHERE user_id = $1 AND name = $2',
+      [userId, name.trim()]
+    )
+
     let result
-    if (id) {
+    if (existing.rows.length > 0) {
       result = await query(
-        `UPDATE worlds SET name = $3, options = $4, thumbnail = $5, updated_at = NOW()
+        `UPDATE worlds SET options = $3, thumbnail = $4, updated_at = NOW()
          WHERE id = $1 AND user_id = $2
          RETURNING id, name, updated_at`,
-        [id, userId, name.trim(), options, thumbnail || null]
+        [existing.rows[0].id, userId, options, thumbnail || null]
       )
-      if (result.rows.length === 0) return res.status(404).json({ error: 'Not found' })
     } else {
       result = await query(
         'INSERT INTO worlds (user_id, name, options, thumbnail) VALUES ($1, $2, $3, $4) RETURNING id, name, updated_at',

@@ -2124,14 +2124,12 @@ var builder = new function() {
       const name = document.getElementById('dbWorldNameInput').value.trim();
       if (!name) return;
       self._dbWorldName = name;
-      const id = self._dbWorldId || null;
-
       babylon.scene.render();
       BABYLON.Tools.CreateScreenshot(babylon.engine, babylon.scene.activeCamera, { width: 300, height: 300 }, function(thumbnail) {
         fetch('/api/worlds', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ id, name, options: self.worldOptions, thumbnail })
+          body: JSON.stringify({ name, options: self.worldOptions, thumbnail })
         })
         .then(r => r.json())
         .then(data => {
@@ -2244,15 +2242,15 @@ var builder = new function() {
     try {
       const res = await fetch('/api/worlds');
       if (!res.ok) throw new Error();
-      const { worlds } = await res.json();
+      const { worlds: savedWorlds } = await res.json();
 
-      if (worlds.length === 0) {
+      if (savedWorlds.length === 0) {
         $grid.hide();
         $empty.show();
         return;
       }
 
-      worlds.forEach(function(w) {
+      savedWorlds.forEach(function(w) {
         let $row = $('<div class="dbWorldRow"></div>');
         let $img = $('<img class="dbWorldThumb">');
         $img.attr('src', w.thumbnail || 'images/worlds/default_thumbnail.png');

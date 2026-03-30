@@ -570,9 +570,10 @@ var main = new function() {
     $footerBtns.siblings('.push-left').click(function() {
       babylon.world = worlds[0];
       simPanel.worldOptionsSetting = {};
-      simPanel.resetSim();
-      const worldJson = JSON.stringify({ worldName: worlds[0].name, options: worlds[0].defaultOptions });
-      main.saveWorldToDb(worldJson);
+      simPanel.resetSim().then(function() {
+        const worldJson = JSON.stringify({ worldName: babylon.world.name, options: babylon.world.options });
+        main.saveWorldToDb(worldJson);
+      });
       $dialog.close();
     });
     $footerBtns.siblings('.close-btn').click(function() { $dialog.close(); });
@@ -580,15 +581,15 @@ var main = new function() {
     try {
       const res = await fetch('/api/worlds');
       if (!res.ok) throw new Error();
-      const { worlds } = await res.json();
+      const { worlds: savedWorlds } = await res.json();
 
-      if (worlds.length === 0) {
+      if (savedWorlds.length === 0) {
         $grid.hide();
         $empty.show();
         return;
       }
 
-      worlds.forEach(function(w) {
+      savedWorlds.forEach(function(w) {
         let $row = $('<div class="dbWorldRow"></div>');
         let $img = $('<img class="dbWorldThumb">');
         $img.attr('src', w.thumbnail || 'images/worlds/default_thumbnail.png');

@@ -1298,7 +1298,7 @@ var configurator = new function() {
     self.$deleteComponent.click(self.deleteComponent);
     self.$undo.click(self.undo);
 
-    self.$robotName.change(self.setRobotName);
+    self.$robotName.on('change input', self.setRobotName);
 
     babylon.scene.physicsEnabled = false;
     babylon.setCameraMode('arc')
@@ -2000,7 +2000,7 @@ var configurator = new function() {
 
   // Save robot to DB
   this.saveRobotToDb = function() {
-    const defaultName = self.$robotName.val().trim() || robot.options.name || '';
+    const defaultName = self._dbRobotName || self.$robotName.val().trim() || robot.options.name || '';
     var $dialog = confirmDialog({
       title: i18n.get('#configurator-save_robot_db#'),
       message: '<label style="display:block;margin-bottom:0.3em;">' + i18n.get('#configurator-robot_name#') + '</label>' +
@@ -2009,6 +2009,9 @@ var configurator = new function() {
     }, function() {
       const name = document.getElementById('dbRobotNameInput').value.trim();
       if (!name) return;
+      self._dbRobotName = name;
+      robot.options.name = name;
+      self.$robotName.val(name);
       babylon.scene.render();
       BABYLON.Tools.CreateScreenshot(babylon.engine, babylon.scene.activeCamera, { width: 300, height: 300 }, function(thumbnail) {
         fetch('/api/robots', {
@@ -2016,10 +2019,71 @@ var configurator = new function() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ name, options: robot.options, thumbnail })
         })
+        .then(r => r.json())
+        .then(data => { self._dbRobotId = data.robot.id; })
         .catch(err => console.error('[DB] 로봇 저장 실패:', err));
       });
     });
     setTimeout(() => document.getElementById('dbRobotNameInput')?.focus(), 100);
+  };
+
+  // Load robot from DB (user's saved robots)
+  this.loadRobotFromDb = async function() {
+    let $body = $('<div class="dbWorldList"></div>');
+    let $grid = $('<div class="dbWorldGrid"></div>');
+    let $empty = $('<div class="dbWorldEmpty">저장된 로봇이 없습니다.</div>').hide();
+    $body.append($grid).append($empty);
+
+    let $closeBtn = $('<button type="button" class="btn btn-light">닫기</button>');
+    let $dialog = dialog('내 로봇 불러오기', $body, $closeBtn);
+    $closeBtn.click(function() { $dialog.close(); });
+
+    try {
+      const res = await fetch('/api/robots');
+      if (!res.ok) throw new Error();
+      const { robots: savedRobots } = await res.json();
+
+      if (savedRobots.length === 0) {
+        $grid.hide();
+        $empty.show();
+        return;
+      }
+
+      savedRobots.forEach(function(r) {
+        let $row = $('<div class="dbWorldRow"></div>');
+        let $img = $('<img class="dbWorldThumb">');
+        $img.attr('src', r.thumbnail || 'images/robots/default_thumbnail.png');
+        let $name = $('<div class="dbWorldName"></div>').text(r.name);
+        let $btns = $('<div class="dbWorldBtns"></div>');
+        let $selectBtn = $('<button class="dbWorldSelectBtn">불러오기</button>');
+        let $deleteBtn = $('<button class="dbWorldDeleteBtn"><span class="material-symbols-rounded">delete</span></button>');
+        $btns.append($selectBtn).append($deleteBtn);
+        $row.append($img).append($name).append($btns);
+        $selectBtn.click(function() {
+          self._dbRobotId = r.id;
+          self._dbRobotName = r.name;
+          robot.options = JSON.parse(JSON.stringify(r.options));
+          robot.options.name = r.name;
+          self.clearHistory();
+          self.saveHistory();
+          self.resetScene();
+          $dialog.close();
+        });
+        $deleteBtn.click(function() {
+          fetch('/api/robots/' + r.id, { method: 'DELETE' })
+            .then(res => res.json())
+            .then(data => {
+              if (data.ok) $row.remove();
+              if ($grid.children().length === 0) { $grid.hide(); $empty.show(); }
+            })
+            .catch(() => showErrorModal('로봇 삭제에 실패했습니다.'));
+        });
+        $grid.append($row);
+      });
+    } catch (e) {
+      $grid.hide();
+      $empty.text('로봇 목록을 불러오는 데 실패했습니다.').show();
+    }
   };
 
   // Load robot from json file
@@ -2153,6 +2217,7 @@ var configurator = new function() {
         {html: i18n.get('#configurator-load_robot#'), line: false, callback: self.loadRobotLocal},
         {html: i18n.get('#configurator-save_robot#'), line: false, callback: self.saveRobot},
         {html: i18n.get('#configurator-save_robot_db#'), line: false, callback: self.saveRobotToDb},
+        {html: '내 로봇 불러오기', line: false, callback: self.loadRobotFromDb},
       ];
 
       menuDropDown(self.$fileMenu, menuItems, {className: 'fileMenuDropDown', align: 'activityBar'});

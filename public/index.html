@@ -317,15 +317,30 @@
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-bash.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/prismjs@1.30.0/components/prism-sql.min.js"></script>
   <script src="js/aiTutor.js"></script>
+  <script src="js/challengeData.js"></script>
 
   <script>
     // Init classes
     blockly.init();
 
+    function loadChallengeToolbox() {
+      let challengeId = readGET('challenge');
+      if (!challengeId) return;
+      let challenge = CHALLENGE_MAP[challengeId];
+      if (!challenge || !challenge.toolbox) return;
+      blockly.loadToolboxFilter({ show: { categories: challenge.toolbox } });
+    }
+
     function loadWorldFromGET() {
       let worldJSON = readGET('worldJSON');
       if (worldJSON) {
-        simPanel.loadWorldURL(decodeURIComponent(worldJSON));
+        let decoded = decodeURIComponent(worldJSON);
+        // JSON 문자열이면 직접 loadWorld, URL이면 fetch해서 loadWorld
+        if (decoded.trimStart().startsWith('{')) {
+          simPanel.loadWorld(decoded);
+        } else {
+          simPanel.loadWorldURL(decoded);
+        }
       }
     }
 
@@ -380,6 +395,7 @@
         loadWorldFromGET();
         loadRobotFromGET();
         loadFilterFromGET();
+        loadChallengeToolbox();
         main.loadProjectFromDb();
       } else {
         setTimeout(loadWhenReady, 100);

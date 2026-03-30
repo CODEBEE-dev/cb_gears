@@ -18,49 +18,17 @@
   <link rel="stylesheet" href="css/admin.css">
 
   <script src="js/msg.js"></script>
+  <script src="js/common/activityBar.js"></script>
+  <script src="js/common/header.js"></script>
 
   <title>Account Management</title>
 </head>
 
 <body>
-  <header>
-    <img class="gearsIcon" src="codebridgeai_favicon.png">
-    <div class="appName" id="appTitle"></div>
-    <div class="headerRight">
-      <div id="userArea" style="display:none; align-items:center; gap:0.2em;">
-        <span class="material-symbols-rounded">person</span>
-        <span class="auth-label" id="welcomeLabel"></span>
-        <a href="/auth/logout" class="authBtn" id="logoutBtn">
-          <span class="material-symbols-rounded">logout</span>
-          <span class="auth-label" id="logoutLabel"></span>
-        </a>
-      </div>
-      <div class="language"><span class="material-symbols-rounded">language</span></div>
-    </div>
-  </header>
+  <header id="appHeader"></header>
 
   <main>
-    <nav class="activity-bar expanded" id="activityBar">
-      <div class="activity-bar-toggle" id="activityBarToggle">
-        <span class="material-symbols-rounded">apps</span>
-      </div>
-      <div class="activity-bar-item" data-key="home">
-        <span class="material-symbols-rounded">home</span>
-        <span class="activity-label"></span>
-      </div>
-      <div class="activity-bar-item" data-key="projects">
-        <span class="material-symbols-rounded">folder</span>
-        <span class="activity-label"></span>
-      </div>
-      <div class="activity-bar-item" data-key="settings">
-        <span class="material-symbols-rounded">settings</span>
-        <span class="activity-label"></span>
-      </div>
-      <div class="activity-bar-item active" data-key="admin">
-        <span class="material-symbols-rounded">manage_accounts</span>
-        <span class="activity-label"></span>
-      </div>
-    </nav>
+    <nav class="activity-bar expanded" id="activityBar"></nav>
     <div class="container">
     <div class="admin-container">
       <div class="admin-toolbar">
@@ -154,7 +122,7 @@
 
   <script>
     // ── i18n ──
-    document.getElementById('appTitle').textContent = i18n.get('#admin-title#')
+    // appTitle은 initHeader에서 처리
     document.getElementById('labelAddUser').textContent = i18n.get('#admin-add_user#')
     document.getElementById('searchInput').placeholder = i18n.get('#admin-search_placeholder#')
     document.getElementById('thUsername').textContent = i18n.get('#admin-username#')
@@ -386,36 +354,9 @@
       overlay.addEventListener('click', onOverlayClick)
     }
 
-    // ── 액티비티바 ──
-    const navLabels = {
-      home: i18n.get('#nav-home#'),
-      projects: i18n.get('#nav-projects#'),
-      settings: i18n.get('#nav-settings#'),
-      admin: i18n.get('#nav-admin#'),
-    }
-    const navLinks = { home: '/#home', projects: '/#projects', settings: '/#settings', admin: '/admin' }
-    document.querySelectorAll('.activity-bar-item').forEach(item => {
-      const key = item.dataset.key
-      item.querySelector('.activity-label').textContent = navLabels[key]
-      item.setAttribute('data-tooltip', navLabels[key])
-      item.addEventListener('click', () => {
-        if (key !== 'admin') window.location.href = navLinks[key]
-      })
-    })
-    document.getElementById('activityBarToggle').addEventListener('click', () => {
-      document.getElementById('activityBar').classList.toggle('expanded')
-    })
-
-    // ── 초기화 ──
     ;(async () => {
-      const res = await fetch('/auth/me')
-      const data = await res.json()
-      if (data.user) {
-        currentUser = data.user
-        document.getElementById('userArea').style.display = 'flex'
-        document.getElementById('welcomeLabel').textContent = i18n.get('#main-welcome#').replace('{name}', data.user.name)
-        document.getElementById('logoutLabel').textContent = i18n.get('#main-logout#')
-      }
+      const user = await initHeader(i18n.get('#admin-title#'))
+      if (user) currentUser = user
       loadUsers()
     })()
   </script>

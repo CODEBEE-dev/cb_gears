@@ -172,10 +172,10 @@ var challenges_basic = new function() {
         if (usedBlocks > blocksLimit && blocksLimit > 0) {
           self.ended = true;
           acknowledgeDialog({
-            title: 'Try Again!',
+            title: i18n.get('#ch-try_again#'),
             message: $(
-              '<p>You completed the mission, but used too many blocks!</p>' +
-              '<p>You used ' + usedBlocks + ' blocks, and will need to reduce it to ' + blocksLimit + ' blocks.</p>'
+              '<p>' + i18n.get('#ch-too_many_blocks#') + '</p>' +
+              '<p>' + i18n.get('#ch-reduce_blocks#').replace('{used}', usedBlocks).replace('{limit}', blocksLimit) + '</p>'
             )
           });
         } else {
@@ -185,21 +185,21 @@ var challenges_basic = new function() {
           let nextUrl = self.notifyComplete();
           self.playVictory();
           acknowledgeDialog({
-            title: 'COMPLETED!',
+            title: i18n.get('#ch-completed#'),
             message: $(
-              '<p>Time: ' + time + ' seconds</p>' +
-              (nextUrl ? '<p>OK를 누르면 다음 도전 과제로 이동합니다.</p>' : '')
+              '<p>' + i18n.get('#ch-time#').replace('{time}', time) + '</p>' +
+              (nextUrl ? '<p>' + i18n.get('#ch-next_challenge_msg#') + '</p>' : '')
             ),
-            ok: nextUrl ? '다음 도전 과제 →' : 'OK'
+            ok: nextUrl ? i18n.get('#ch-next_challenge#') : 'OK'
           }, nextUrl ? function() { window.location.href = nextUrl; } : undefined);
         }
       } else {
         self.ended = true;
         acknowledgeDialog({
-          title: 'Try Again!',
+          title: i18n.get('#ch-try_again#'),
           message: $(
-            '<p>You didn\'t make it this time, but don\'t give up!</p>' +
-            '<p>Click the "Reset" button then try again!</p>'
+            '<p>' + i18n.get('#ch-didnt_make_it#') + '</p>' +
+            '<p>' + i18n.get('#ch-try_again_msg#') + '</p>'
           )
         });
       }
@@ -256,10 +256,10 @@ var challenges_basic = new function() {
         if (usedBlocks > blocksLimit && blocksLimit > 0) {
           self.ended = true;
           acknowledgeDialog({
-            title: 'Try Again!',
+            title: i18n.get('#ch-try_again#'),
             message: $(
-              '<p>You completed the mission, but used too many blocks!</p>' +
-              '<p>You used ' + usedBlocks + ' blocks, and will need to reduce it to ' + blocksLimit + ' blocks.</p>'
+              '<p>' + i18n.get('#ch-too_many_blocks#') + '</p>' +
+              '<p>' + i18n.get('#ch-reduce_blocks#').replace('{used}', usedBlocks).replace('{limit}', blocksLimit) + '</p>'
             )
           });
         } else {
@@ -269,22 +269,22 @@ var challenges_basic = new function() {
           let nextUrl = self.notifyComplete();
           self.playVictory();
           acknowledgeDialog({
-            title: 'COMPLETED!',
+            title: i18n.get('#ch-completed#'),
             message: $(
-              '<p>Time: ' + time + ' seconds</p>' +
-              (nextUrl ? '<p>OK를 누르면 다음 도전 과제로 이동합니다.</p>' : '')
+              '<p>' + i18n.get('#ch-time#').replace('{time}', time) + '</p>' +
+              (nextUrl ? '<p>' + i18n.get('#ch-next_challenge_msg#') + '</p>' : '')
             ),
-            ok: nextUrl ? '다음 도전 과제 →' : 'OK'
+            ok: nextUrl ? i18n.get('#ch-next_challenge#') : 'OK'
           }, nextUrl ? function() { window.location.href = nextUrl; } : undefined);
         }
       } else {
         self.ended = true;
         let remaining = boxes.length - completed;
         acknowledgeDialog({
-          title: 'Try Again!',
+          title: i18n.get('#ch-try_again#'),
           message: $(
-            '<p>You missed ' + remaining + ' boxes.</p>' +
-            '<p>Click the "Reset" button then try again!</p>'
+            '<p>' + i18n.get('#ch-missed_boxes#').replace('{remaining}', remaining) + '</p>' +
+            '<p>' + i18n.get('#ch-try_again_msg#') + '</p>'
           )
         });
       }
@@ -376,255 +376,70 @@ var challenges_basic = new function() {
   };
 
   this.displayMission = function() {
-    let $message;
+    let parts = [];
+    const f = self.options.jsonFile;
+    const _ = (key) => i18n.get(key);
 
-    if (self.options.jsonFile.includes('basic-1.json')) {
-      $message = $(
-        '<p>Move your robot into the green box and stop inside.</p>'
-      );
-    } else if (self.options.jsonFile.includes('basic-2.json')) {
-      $message = $(
-        '<p>Move your robot into the green box and stop inside.</p>' +
-        '<p>Try using multiple "Move Forward" blocks.</p>'
-      );
-    } else if (self.options.jsonFile.includes('basic-3.json')) {
-      $message = $(
-        '<p>Move your robot into the green box and stop inside.</p>' +
-        '<p>You will need to use a "Turn" block.</p>'
-      );
-    } else if (self.options.jsonFile.includes('basic-4.json')) {
-      $message = $(
-        '<p>Move your robot into the green box and stop inside.</p>' +
-        '<p>You will need to use a "Turn" block.</p>'
-      );
-    } else if (self.options.jsonFile.includes('basic-5.json')) {
-      $message = $(
-        '<p>Move your robot into the green box and stop inside.</p>' +
-        '<p>Sometimes the box is behind you!</p>'
-      );
-    } else if (self.options.jsonFile.includes('sleep-1.json')) {
-      $message = $(
-        '<p>Move your robot into every box.</p>' +
-        '<p>You will need to stop inside each box for 1 second before moving to the next!</p>'
-      );
-    } else if (self.options.jsonFile.includes('sleep-2.json')) {
-      $message = $(
-        '<p>Move your robot into every box.</p>' +
-        '<p>You will need to stop inside each box for 1 second before moving to the next!</p>'
-      );
-    } else if (self.options.jsonFile.includes('maze-1.json')) {
-      $message = $(
-        '<p>Move your robot into every box.</p>' +
-        '<p>You will need to stop inside each box for 1 second before moving to the next!</p>'
-      );
-    } else if (self.options.jsonFile.includes('maze-2.json')) {
-      $message = $(
-        '<p>Move your robot into every box.</p>' +
-        '<p>You will need to stop inside each box for 1 second before moving to the next!</p>'
-      );
-    } else if (self.options.jsonFile.includes('maze-3.json')) {
-      $message = $(
-        '<p>Move your robot into every box.</p>' +
-        '<p>You will need to stop inside each box for 1 second before moving to the next!</p>'
-      );
-    } else if (self.options.jsonFile.includes('maze-4.json')) {
-      $message = $(
-        '<p>Move your robot into every box.</p>' +
-        '<p>You will need to stop inside each box for 1 second before moving to the next!</p>'
-      );
-    } else if (self.options.jsonFile.includes('maze-5.json')) {
-      $message = $(
-        '<p>Move your robot into every box.</p>' +
-        '<p>You will need to stop inside each box for 1 second before moving to the next!</p>'
-      );
-    } else if (self.options.jsonFile.includes('maze-6.json')) {
-      $message = $(
-        '<p>Move your robot into every box.</p>' +
-        '<p>You will need to stop inside each box for 1 second before moving to the next!</p>'
-      );
-    } else if (self.options.jsonFile.includes('dungeon-0.json')) {
-      $message = $(
-        '<p>Move your robot into the green box and stop inside.</p>'
-      );
-    } else if (self.options.jsonFile.includes('dungeon-1.json')) {
-      $message = $(
-        '<p>Move your robot into the green box and stop inside.</p>'
-      );
-    } else if (self.options.jsonFile.includes('dungeon-2.json')) {
-      $message = $(
-        '<p>Move your robot into the green box and stop inside.</p>' +
-        '<p>Be careful! The shortest route isn\'t always the best...</p>'
-      );
-    } else if (self.options.jsonFile.includes('dungeon-3.json')) {
-      $message = $(
-        '<p>Move your robot into the green box and stop inside.</p>' +
-        '<p>Watch out for the monster!</p>'
-      );
-    } else if (self.options.jsonFile.includes('dungeon-4.json')) {
-      $message = $(
-        '<p>Move your robot into the green box and stop inside.</p>' +
-        '<p>How can we get that gate open?</p>'
-      );
-    } else if (self.options.jsonFile.includes('dungeon-5.json')) {
-      $message = $(
-        '<p>Move your robot into the green box and stop inside.</p>' +
-        '<p>You\'ll need to use everything you\'ve learned!</p>'
-      );
-    } else if (self.options.jsonFile.includes('dungeon-6.json')) {
-      $message = $(
-        '<p>Move your robot into the green box and stop inside.</p>' +
-        '<p>Watch out for the ghost!</p>'
-      );
-    } else if (self.options.jsonFile.includes('loops-0.json')) {
-      $message = $(
-        '<p>Move your robot into the green box and stop inside.</p>' +
-        '<p>You\'re may only use 4 blocks.</p>'
-      );
-    } else if (self.options.jsonFile.includes('loops-0b.json')) {
-      $message = $(
-        '<p>Move your robot into the green box and stop inside.</p>' +
-        '<p>You\'re may only use 4 blocks.</p>'
-      );
-    } else if (self.options.jsonFile.includes('loops-1.json')) {
-      $message = $(
-        '<p>Move your robot into the green box and stop inside.</p>' +
-        '<p>You\'re may only use 5 blocks.</p>'
-      );
-    } else if (self.options.jsonFile.includes('loops-2.json')) {
-      $message = $(
-        '<p>Move your robot into the green box and stop inside.</p>' +
-        '<p>You\'re may only use 6 blocks.</p>'
-      );
-    } else if (self.options.jsonFile.includes('loops-2b.json')) {
-      $message = $(
-        '<p>Move your robot into the green box and stop inside.</p>' +
-        '<p>You\'re may only use 4 blocks.</p>'
-      );
-    } else if (self.options.jsonFile.includes('loops-2c.json')) {
-      $message = $(
-        '<p>Move your robot into every box and stop for 1 second.</p>' +
-        '<p>You\'re may only use 9 blocks.</p>'
-      );
-    } else if (self.options.jsonFile.includes('loops-2d.json')) {
-      $message = $(
-        '<p>Move your robot into every box and stop for 1 second.</p>' +
-        '<p>You\'re may only use 10 blocks.</p>'
-      );
-    } else if (self.options.jsonFile.includes('loops-2e.json')) {
-      $message = $(
-        '<p>Move your robot into every box and stop for 1 second.</p>' +
-        '<p>You\'re may only use 10 blocks.</p>'
-      );
-    } else if (self.options.jsonFile.includes('loops-3.json')) {
-      $message = $(
-        '<p>Move your robot into the green box and stop inside.</p>' +
-        '<p>You may need to use more than one repeat loop.</p>' +
-        '<p>You\'re may only use 4 blocks.</p>'
-      );
-    } else if (self.options.jsonFile.includes('loops-3b.json')) {
-      $message = $(
-        '<p>Move your robot into the green box and stop inside.</p>' +
-        '<p>You may need to use more than one repeat loop.</p>' +
-        '<p>You\'re may only use 4 blocks.</p>'
-      );
-    } else if (self.options.jsonFile.includes('loops-4.json')) {
-      $message = $(
-        '<p>Move your robot into the green box and stop inside.</p>' +
-        '<p>Not every block needs to be inside a loop.</p>' +
-        '<p>You\'re may only use 6 blocks.</p>'
-      );
-    } else if (self.options.jsonFile.includes('loops-4b.json')) {
-      $message = $(
-        '<p>Move your robot into the green box and stop inside.</p>' +
-        '<p>You\'re may only use 7 blocks.</p>'
-      );
-    } else if (self.options.jsonFile.includes('loops-5.json')) {
-      $message = $(
-        '<p>Collect all the coins.</p>' +
-        '<p>You\'re may only use 4 blocks.</p>'
-      );
-    } else if (self.options.jsonFile.includes('loops-5b.json')) {
-      $message = $(
-        '<p>Collect all the coins.</p>' +
-        '<p>You\'re may only use 7 blocks.</p>'
-      );
-    } else if (self.options.jsonFile.includes('loops-6.json')) {
-      $message = $(
-        '<p>Collect all the coins.</p>' +
-        '<p>You\'re may only use 10 blocks.</p>'
-      );
-    } else if (self.options.jsonFile.includes('loops-7.json')) {
-      $message = $(
-        '<p>Move your robot into the green box and stop inside.</p>' +
-        '<p>Hint: Look at the example.</p>' +
-        '<p>You\'re may only use 8 blocks.</p>'
-      );
-    } else if (self.options.jsonFile.includes('conditions-')) {
-      $message = $(
-        '<p>Drive into the green box.</p>' +
-        '<p>The position of the box changes randomly every time the world is reset.</p>' +
-        '<p>Use the color on the ground to figure out where it will appear.</p>'
-      );
-    } else if (self.options.jsonFile.includes('abstraction-1.json')) {
-      $message = $(
-        '<p>Move your robot into the green box and stop inside.</p>' +
-        '<p>Don\'t get distracted by the alien!</p>'
-      );
-    } else if (self.options.jsonFile.includes('abstraction-2.json')) {
-      $message = $(
-        '<p>Move your robot into the green box and stop inside.</p>' +
-        '<p>Why is there a zebra in the dungeon?</p>'
-      );
-    } else if (self.options.jsonFile.includes('abstraction-3.json')) {
-      $message = $(
-        '<p>Move your robot into the green box and stop inside.</p>' +
-        '<p>The cat looks fascinated by the ball!</p>' +
-        '<p>You\'re may only use 5 blocks.</p>'
-      );
-    } else if (self.options.jsonFile.includes('abstraction-4.json')) {
-      $message = $(
-        '<p>Collect all the coins.</p>' +
-        '<p>Everything is spinning!</p>' +
-        '<p>You\'re may only use 4 blocks.</p>'
-      );
-    } else if (self.options.jsonFile.includes('abstraction-5.json')) {
-      $message = $(
-        '<p>Move your robot into the green box and stop inside.</p>' +
-        '<p>Don\'t let the water distract you! The green box changes position on reset.</p>'
-      );
-    } else if (self.options.jsonFile.includes('abstraction-6.json')) {
-      $message = $(
-        '<p>Move your robot into the green box and stop inside.</p>' +
-        '<p>You\'re may only use 1 block.</p>'
-      );
-    } else if (self.options.jsonFile.includes('abstraction-7.json')) {
-      $message = $(
-        '<p>Move your robot into the green box and stop inside.</p>' +
-        '<p>You\'re may only use 8 block.</p>'
-      );
-    } else if (self.options.jsonFile.includes('abstraction-8.json')) {
-      $message = $(
-        '<p>Move your robot into the green box and stop inside.</p>' +
-        '<p>You\'re may only use 11 block.</p>'
-      );
-    } else if (self.options.jsonFile.includes('abstraction-9.json')) {
-      $message = $(
-        '<p>Move your robot into the green box and stop inside.</p>' +
-        '<p>You\'re may only use 12 block.</p>'
-      );
-    } else if (self.options.jsonFile.includes('abstraction-10.json')) {
-      $message = $(
-        '<p>Collect all the coins.</p>' +
-        '<p>You\'re may only use 5 blocks.</p>'      );
-    } else if (self.options.jsonFile.includes('abstraction-11.json')) {
-      $message = $(
-        '<p>Move your robot into the green box and stop inside.</p>' +
-        '<p>No blocks limits, but the green box changes position on reset.</p>'
-      );
+    if (f.includes('basic-1.json')) {
+      parts = [_('#ch-hint_move_into_box#')];
+    } else if (f.includes('basic-2.json')) {
+      parts = [_('#ch-hint_move_into_box#'), _('#ch-hint_multiple_move#')];
+    } else if (f.includes('basic-3.json') || f.includes('basic-4.json')) {
+      parts = [_('#ch-hint_move_into_box#'), _('#ch-hint_use_turn#')];
+    } else if (f.includes('basic-5.json')) {
+      parts = [_('#ch-hint_move_into_box#'), _('#ch-hint_box_behind#')];
+    } else if (f.includes('sleep-1.json') || f.includes('sleep-2.json') ||
+               f.includes('maze-1.json') || f.includes('maze-2.json') ||
+               f.includes('maze-3.json') || f.includes('maze-4.json') ||
+               f.includes('maze-5.json') || f.includes('maze-6.json')) {
+      parts = [_('#ch-hint_move_every_box#'), _('#ch-hint_stop_1sec#')];
+    } else if (f.includes('dungeon-0.json') || f.includes('dungeon-1.json')) {
+      parts = [_('#ch-hint_move_into_box#')];
+    } else if (f.includes('dungeon-2.json')) {
+      parts = [_('#ch-hint_move_into_box#'), _('#ch-hint_shortest_not_best#')];
+    } else if (f.includes('dungeon-3.json')) {
+      parts = [_('#ch-hint_move_into_box#'), _('#ch-hint_watch_monster#')];
+    } else if (f.includes('dungeon-4.json')) {
+      parts = [_('#ch-hint_move_into_box#'), _('#ch-hint_open_gate#')];
+    } else if (f.includes('dungeon-5.json')) {
+      parts = [_('#ch-hint_move_into_box#'), _('#ch-hint_use_all#')];
+    } else if (f.includes('dungeon-6.json')) {
+      parts = [_('#ch-hint_move_into_box#'), _('#ch-hint_watch_ghost#')];
+    } else if (f.includes('loops-2c.json') || f.includes('loops-2d.json') || f.includes('loops-2e.json')) {
+      parts = [_('#ch-hint_move_stop_1sec#')];
+    } else if (f.includes('loops-3.json') || f.includes('loops-3b.json')) {
+      parts = [_('#ch-hint_move_into_box#'), _('#ch-hint_multi_loop#')];
+    } else if (f.includes('loops-4.json')) {
+      parts = [_('#ch-hint_move_into_box#'), _('#ch-hint_not_all_in_loop#')];
+    } else if (f.includes('loops-5.json') || f.includes('loops-5b.json') ||
+               f.includes('loops-6.json') || f.includes('abstraction-4.json') ||
+               f.includes('abstraction-10.json')) {
+      parts = [_('#ch-hint_collect_coins#')];
+    } else if (f.includes('loops-7.json')) {
+      parts = [_('#ch-hint_move_into_box#'), _('#ch-hint_look_example#')];
+    } else if (f.includes('loops-')) {
+      parts = [_('#ch-hint_move_into_box#')];
+    } else if (f.includes('conditions-')) {
+      parts = [_('#ch-hint_drive_green_box#'), _('#ch-hint_color_condition#'), _('#ch-hint_use_ground_color#')];
+    } else if (f.includes('abstraction-1.json')) {
+      parts = [_('#ch-hint_move_into_box#'), _('#ch-hint_alien#')];
+    } else if (f.includes('abstraction-2.json')) {
+      parts = [_('#ch-hint_move_into_box#'), _('#ch-hint_zebra#')];
+    } else if (f.includes('abstraction-3.json')) {
+      parts = [_('#ch-hint_move_into_box#'), _('#ch-hint_cat_ball#')];
+    } else if (f.includes('abstraction-5.json')) {
+      parts = [_('#ch-hint_water#')];
+    } else if (f.includes('abstraction-11.json')) {
+      parts = [_('#ch-hint_no_limit_random#')];
+    } else if (f.includes('abstraction-')) {
+      parts = [_('#ch-hint_move_into_box#')];
     }
 
+    const $message = $('<div></div>');
+    parts.forEach(p => $message.append('<p>' + p + '</p>'));
+
     acknowledgeDialog({
-      title: 'Mission',
+      title: _('#ch-mission#'),
       message: $message
     });
   };

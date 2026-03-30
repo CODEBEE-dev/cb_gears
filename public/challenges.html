@@ -220,7 +220,7 @@
         <span id="progressText">0 / 0</span>
       </div>
       <div id="challengeRoot">
-        <div id="loadingMsg">불러오는 중...</div>
+        <div id="loadingMsg"></div>
       </div>
     </div>
   </div>
@@ -232,8 +232,8 @@
     <h2 id="modalTitle">챌린지 이름</h2>
     <p id="modalDesc">설명</p>
     <div class="modal-buttons">
-      <button class="btn btn-secondary" id="modalCancel">취소</button>
-      <button class="btn btn-primary" id="modalStart">시작하기</button>
+      <button class="btn btn-secondary" id="modalCancel"></button>
+      <button class="btn btn-primary" id="modalStart"></button>
     </div>
   </div>
 </div>
@@ -241,6 +241,10 @@
 <script src="js/challengeData.js"></script>
 <script>
   let currentChallenge = null;
+
+  document.getElementById('loadingMsg').textContent = i18n.get('#ch-loading#')
+  document.getElementById('modalCancel').textContent = i18n.get('#ch-cancel#')
+  document.getElementById('modalStart').textContent = i18n.get('#ch-start#')
 
   initHeader(i18n.get('#nav-challenges#'))
 
@@ -330,7 +334,7 @@
   function openModal(ch, isDone) {
     currentChallenge = ch;
     document.getElementById('modalTitle').textContent = ch.title;
-    document.getElementById('modalDesc').textContent = ch.desc + (isDone ? ' (완료됨)' : '');
+    document.getElementById('modalDesc').textContent = ch.desc + (isDone ? ' ' + i18n.get('#ch-done_label#') : '');
     document.getElementById('startModal').classList.add('open');
   }
 

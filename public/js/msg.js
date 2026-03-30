@@ -4127,6 +4127,176 @@ let MSGS = {
     en: 'Challenges',
     ko: '도전 과제',
   },
+
+  // ── 챌린지 다이얼로그 ──
+  '#ch-completed#': {
+    en: 'COMPLETED!',
+    ko: '완료!',
+  },
+  '#ch-try_again#': {
+    en: 'Try Again!',
+    ko: '다시 도전!',
+  },
+  '#ch-mission#': {
+    en: 'Mission',
+    ko: '미션',
+  },
+  '#ch-time#': {
+    en: 'Time: {time} seconds',
+    ko: '시간: {time}초',
+  },
+  '#ch-next_challenge#': {
+    en: 'Next Challenge →',
+    ko: '다음 도전 과제 →',
+  },
+  '#ch-next_challenge_msg#': {
+    en: 'Click OK to go to the next challenge.',
+    ko: 'OK를 누르면 다음 도전 과제로 이동합니다.',
+  },
+  '#ch-too_many_blocks#': {
+    en: 'You completed the mission, but used too many blocks!',
+    ko: '미션을 완료했지만 블록을 너무 많이 사용했습니다!',
+  },
+  '#ch-reduce_blocks#': {
+    en: 'You used {used} blocks, and will need to reduce it to {limit} blocks.',
+    ko: '{used}개의 블록을 사용했습니다. {limit}개 이하로 줄여야 합니다.',
+  },
+  '#ch-missed_boxes#': {
+    en: 'You missed {remaining} boxes.',
+    ko: '{remaining}개의 박스를 놓쳤습니다.',
+  },
+  '#ch-didnt_make_it#': {
+    en: "You didn't make it this time, but don't give up!",
+    ko: '이번엔 아쉽지만 포기하지 마세요!',
+  },
+  '#ch-try_again_msg#': {
+    en: 'Click the "Reset" button then try again!',
+    ko: '"초기화" 버튼을 클릭하고 다시 시도하세요!',
+  },
+
+  // ── 챌린지 카드/모달 ──
+  '#ch-loading#': {
+    en: 'Loading...',
+    ko: '불러오는 중...',
+  },
+  '#ch-done_label#': {
+    en: '(Completed)',
+    ko: '(완료됨)',
+  },
+  '#ch-start#': {
+    en: 'Start',
+    ko: '시작하기',
+  },
+  '#ch-cancel#': {
+    en: 'Cancel',
+    ko: '취소',
+  },
+  '#ch-load_error#': {
+    en: 'Failed to load. Click to retry.',
+    ko: '목록을 불러오지 못했습니다. 클릭하여 다시 시도하세요.',
+  },
+
+  // ── 챌린지 미션 힌트 ──
+  '#ch-hint_move_into_box#': {
+    en: 'Move your robot into the green box and stop inside.',
+    ko: '로봇을 초록 박스 안으로 이동시키고 멈추세요.',
+  },
+  '#ch-hint_move_every_box#': {
+    en: 'Move your robot into every box.',
+    ko: '모든 박스 안으로 이동하세요.',
+  },
+  '#ch-hint_collect_coins#': {
+    en: 'Collect all the coins.',
+    ko: '모든 코인을 수집하세요.',
+  },
+  '#ch-hint_drive_green_box#': {
+    en: 'Drive into the green box.',
+    ko: '초록 박스 안으로 이동하세요.',
+  },
+  '#ch-hint_multiple_move#': {
+    en: 'Try using multiple "Move Forward" blocks.',
+    ko: '"앞으로 이동" 블록을 여러 개 사용해보세요.',
+  },
+  '#ch-hint_use_turn#': {
+    en: 'You will need to use a "Turn" block.',
+    ko: '"회전" 블록을 사용해야 합니다.',
+  },
+  '#ch-hint_box_behind#': {
+    en: 'Sometimes the box is behind you!',
+    ko: '박스가 뒤에 있을 수도 있습니다!',
+  },
+  '#ch-hint_stop_1sec#': {
+    en: 'You will need to stop inside each box for 1 second before moving to the next!',
+    ko: '다음으로 이동하기 전에 각 박스 안에서 1초 동안 멈춰야 합니다!',
+  },
+  '#ch-hint_shortest_not_best#': {
+    en: "Be careful! The shortest route isn't always the best...",
+    ko: '주의! 최단 경로가 항상 정답은 아닙니다...',
+  },
+  '#ch-hint_watch_monster#': {
+    en: 'Watch out for the monster!',
+    ko: '몬스터를 조심하세요!',
+  },
+  '#ch-hint_open_gate#': {
+    en: 'How can we get that gate open?',
+    ko: '게이트를 어떻게 열 수 있을까요?',
+  },
+  '#ch-hint_use_all#': {
+    en: "You'll need to use everything you've learned!",
+    ko: '지금까지 배운 모든 것을 활용해야 합니다!',
+  },
+  '#ch-hint_watch_ghost#': {
+    en: 'Watch out for the ghost!',
+    ko: '유령을 조심하세요!',
+  },
+  '#ch-hint_multi_loop#': {
+    en: 'You may need to use more than one repeat loop.',
+    ko: '반복 루프를 두 개 이상 사용해야 할 수도 있습니다.',
+  },
+  '#ch-hint_not_all_in_loop#': {
+    en: 'Not every block needs to be inside a loop.',
+    ko: '모든 블록이 루프 안에 있을 필요는 없습니다.',
+  },
+  '#ch-hint_look_example#': {
+    en: 'Hint: Look at the example.',
+    ko: '힌트: 예시를 살펴보세요.',
+  },
+  '#ch-hint_color_condition#': {
+    en: 'The position of the box changes randomly every time the world is reset.',
+    ko: '박스 위치는 월드를 초기화할 때마다 무작위로 바뀝니다.',
+  },
+  '#ch-hint_use_ground_color#': {
+    en: 'Use the color on the ground to figure out where it will appear.',
+    ko: '바닥의 색상을 사용하여 어디에 나타날지 알아보세요.',
+  },
+  '#ch-hint_alien#': {
+    en: "Don't get distracted by the alien!",
+    ko: '외계인에게 정신 팔리지 마세요!',
+  },
+  '#ch-hint_zebra#': {
+    en: 'Why is there a zebra in the dungeon?',
+    ko: '던전에 왜 얼룩말이 있을까요?',
+  },
+  '#ch-hint_cat_ball#': {
+    en: 'The cat looks fascinated by the ball!',
+    ko: '고양이가 공에 흠뻑 빠져있네요!',
+  },
+  '#ch-hint_spinning#': {
+    en: 'Everything is spinning!',
+    ko: '모든 것이 빙글빙글 돌고 있어요!',
+  },
+  '#ch-hint_water#': {
+    en: "Don't let the water distract you! The green box changes position on reset.",
+    ko: '물에 정신 팔리지 마세요! 초기화할 때마다 초록 박스 위치가 바뀝니다.',
+  },
+  '#ch-hint_no_limit_random#': {
+    en: 'No blocks limits, but the green box changes position on reset.',
+    ko: '블록 제한은 없지만 초기화할 때마다 초록 박스 위치가 바뀝니다.',
+  },
+  '#ch-hint_move_stop_1sec#': {
+    en: 'Move your robot into every box and stop for 1 second.',
+    ko: '모든 박스 안으로 이동하고 1초 동안 멈추세요.',
+  },
   '#nav-admin#': {
     en: 'Account Management',
     ko: '계정 관리',

@@ -257,6 +257,11 @@ main {
   color: #388e3c;
 }
 
+.shortcut-card-challenge .shortcut-card-icon {
+  background: #fff8e1;
+  color: #f59e0b;
+}
+
 .shortcut-card-title {
   font-size: 0.95rem;
   font-weight: 800;

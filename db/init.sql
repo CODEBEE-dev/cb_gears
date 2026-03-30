@@ -19,6 +19,14 @@ CREATE TABLE IF NOT EXISTS robots (
   UNIQUE (user_id, name)
 );
 
+CREATE TABLE IF NOT EXISTS challenge_progress (
+  id           SERIAL PRIMARY KEY,
+  user_id      VARCHAR(36) NOT NULL,
+  challenge_id VARCHAR(50) NOT NULL,
+  completed_at TIMESTAMP NOT NULL DEFAULT NOW(),
+  UNIQUE (user_id, challenge_id)
+);
+
 CREATE TABLE IF NOT EXISTS projects (
   id             SERIAL PRIMARY KEY,
   user_id        VARCHAR(36) NOT NULL,

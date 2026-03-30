@@ -4123,6 +4123,10 @@ let MSGS = {
     en: 'Settings',
     ko: '설정',
   },
+  '#nav-challenges#': {
+    en: 'Challenges',
+    ko: '도전 과제',
+  },
   '#nav-admin#': {
     en: 'Account Management',
     ko: '계정 관리',

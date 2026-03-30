@@ -8,6 +8,7 @@ const projectsRouter = require('./routes/projects')
 const robotsRouter = require('./routes/robots')
 const worldsRouter = require('./routes/worlds')
 const adminRouter = require('./routes/admin')
+const challengesRouter = require('./routes/challenges')
 const session = require('express-session')
 const port = process.env.WEB_BACKEND_PORT
 
@@ -28,6 +29,7 @@ app.use('/api/projects', projectsRouter)
 app.use('/api/robots', robotsRouter)
 app.use('/api/worlds', worldsRouter)
 app.use('/api/admin', adminRouter)
+app.use('/api/challenges', challengesRouter)
 
 /**
  * 다른 페이지들 로그인 체크
@@ -54,6 +56,14 @@ app.get('/arena', requireAuth, (req, res) => {
 
 app.get('/arenaFrame', requireAuth, (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'arenaFrame.html'))
+})
+
+app.get('/challenges', requireAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'public', 'challenges.html'))
+})
+
+app.get('/settings', requireAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'public', 'settings.html'))
 })
 
 app.get('/admin', requireAuth, (req, res) => {

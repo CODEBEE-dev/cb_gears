@@ -188,6 +188,68 @@
   accent-color: var(--color-primary);
 }
 
+/* ── 그룹 트리 ── */
+.group-tree {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.group-node {
+  border: 1px solid var(--color-border);
+  border-radius: 0.6rem;
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+.group-node-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.7rem 1rem;
+  background: var(--color-surface);
+}
+
+.group-node-row .material-symbols-rounded {
+  font-size: 1.1rem;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+}
+
+.group-node-display {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--color-text);
+  flex: 1;
+}
+
+.group-node-id {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 0.35rem;
+  padding: 0.1rem 0.45rem;
+  font-family: monospace;
+}
+
+.group-children {
+  border-top: 1px solid var(--color-border);
+  background: var(--color-bg);
+  padding: 0.5rem 0.5rem 0.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.group-children .group-node {
+  background: var(--color-surface);
+}
+
+.group-children .group-children {
+  padding-left: 2rem;
+}
+
 /* ── Responsive ── */
 @media (max-width: 768px) {
   .admin-container {

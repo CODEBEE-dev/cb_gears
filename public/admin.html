@@ -31,35 +31,63 @@
     <nav class="activity-bar expanded" id="activityBar"></nav>
     <div class="container">
     <div class="admin-container">
-      <div class="admin-toolbar">
-        <div class="search-bar">
-          <span class="material-symbols-rounded">search</span>
-          <input type="text" id="searchInput" placeholder="">
-        </div>
-        <button class="btn-new" id="btnAddUser">
-          <span class="material-symbols-rounded">person_add</span>
-          <span id="labelAddUser"></span>
+
+      <!-- 탭 (school_admin만 그룹 탭 표시) -->
+      <div class="tab-bar" id="adminTabBar" style="display:none;">
+        <button class="tab-btn active" id="tabAccounts">
+          <span class="material-symbols-rounded">people</span>
+          <span id="tabLabelAccounts"></span>
+        </button>
+        <button class="tab-btn" id="tabGroups">
+          <span class="material-symbols-rounded">account_tree</span>
+          <span id="tabLabelGroups"></span>
         </button>
       </div>
 
-      <div class="admin-table-wrapper">
-        <table class="admin-table" id="userTable">
-          <thead>
-            <tr>
-              <th id="thUsername"></th>
-              <th id="thEmail"></th>
-              <th id="thName"></th>
-              <th id="thRole"></th>
-              <th id="thGroup"></th>
-              <th id="thStatus"></th>
-              <th id="thActions"></th>
-            </tr>
-          </thead>
-          <tbody id="userTableBody">
-            <tr><td colspan="7" class="table-loading" id="tableLoading"></td></tr>
-          </tbody>
-        </table>
+      <!-- 계정 뷰 -->
+      <div id="viewAccounts">
+        <div class="admin-toolbar">
+          <div class="search-bar">
+            <span class="material-symbols-rounded">search</span>
+            <input type="text" id="searchInput" placeholder="">
+          </div>
+          <button class="btn-new" id="btnAddUser">
+            <span class="material-symbols-rounded">person_add</span>
+            <span id="labelAddUser"></span>
+          </button>
+        </div>
+        <div class="admin-table-wrapper">
+          <table class="admin-table" id="userTable">
+            <thead>
+              <tr>
+                <th id="thUsername"></th>
+                <th id="thEmail"></th>
+                <th id="thName"></th>
+                <th id="thRole"></th>
+                <th id="thGroup"></th>
+                <th id="thStatus"></th>
+                <th id="thActions"></th>
+              </tr>
+            </thead>
+            <tbody id="userTableBody">
+              <tr><td colspan="7" class="table-loading" id="tableLoading"></td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
+
+      <!-- 그룹 뷰 (school_admin만) -->
+      <div id="viewGroups" style="display:none;">
+        <div class="admin-toolbar" style="justify-content:space-between;">
+          <div></div>
+          <button class="btn-new" id="btnAddGroup">
+            <span class="material-symbols-rounded">add</span>
+            <span id="labelAddGroup"></span>
+          </button>
+        </div>
+        <div id="groupTree"></div>
+      </div>
+
     </div>
     </div>
   </main>
@@ -116,6 +144,29 @@
     </div>
   </div>
 
+  <!-- 그룹 생성 모달 -->
+  <div class="modal-overlay" id="groupModalOverlay">
+    <div class="modal modal-wide">
+      <h2 id="groupModalTitle"></h2>
+      <div class="form-grid" style="grid-template-columns:1fr;">
+        <label>
+          <span id="labelGroupId"></span>
+          <input type="text" id="inputGroupId" maxlength="100">
+        </label>
+        <label>
+          <span id="labelGroupParent"></span>
+          <select id="inputGroupParent">
+            <option value=""></option>
+          </select>
+        </label>
+      </div>
+      <div class="modal-actions">
+        <button class="btn-cancel" id="btnGroupModalCancel"></button>
+        <button class="btn-create" id="btnGroupModalSave"></button>
+      </div>
+    </div>
+  </div>
+
   <!-- 삭제 확인 모달 -->
   <div class="modal-overlay" id="deleteModalOverlay">
     <div class="modal">
@@ -150,6 +201,15 @@
     document.getElementById('labelEnabled').textContent = i18n.get('#admin-enabled#')
     document.getElementById('labelGroup').textContent = i18n.get('#admin-group#')
     document.getElementById('btnUserModalCancel').textContent = i18n.get('#admin-cancel#')
+    document.getElementById('tabLabelAccounts').textContent = i18n.get('#admin-accounts#')
+    document.getElementById('tabLabelGroups').textContent = i18n.get('#admin-groups#')
+    document.getElementById('labelAddGroup').textContent = i18n.get('#admin-add_group#')
+    document.getElementById('groupModalTitle').textContent = i18n.get('#admin-add_group#')
+    document.getElementById('labelGroupId').textContent = i18n.get('#admin-group_id#')
+    document.getElementById('labelGroupParent').textContent = i18n.get('#admin-group_parent#')
+    document.getElementById('inputGroupId').placeholder = i18n.get('#admin-group_id_placeholder#')
+    document.getElementById('btnGroupModalCancel').textContent = i18n.get('#admin-cancel#')
+    document.getElementById('btnGroupModalSave').textContent = i18n.get('#admin-create#')
     document.getElementById('deleteModalTitle').textContent = i18n.get('#admin-delete_confirm#')
     document.getElementById('deleteModalDesc').textContent = i18n.get('#admin-delete_desc#')
     document.getElementById('btnDeleteCancel').textContent = i18n.get('#admin-cancel#')
@@ -415,10 +475,166 @@
       overlay.addEventListener('click', onOverlayClick)
     }
 
+    // ── 탭 전환 ──
+    function switchAdminTab(tab) {
+      const isAccounts = tab === 'accounts'
+      document.getElementById('viewAccounts').style.display = isAccounts ? '' : 'none'
+      document.getElementById('viewGroups').style.display   = isAccounts ? 'none' : ''
+      document.getElementById('tabAccounts').classList.toggle('active', isAccounts)
+      document.getElementById('tabGroups').classList.toggle('active', !isAccounts)
+      if (!isAccounts) loadGroupTree()
+    }
+
+    document.getElementById('tabAccounts').addEventListener('click', () => switchAdminTab('accounts'))
+    document.getElementById('tabGroups').addEventListener('click', () => switchAdminTab('groups'))
+
+    // ── 그룹 트리 렌더링 ──
+    let groupTreeData = []
+
+    async function loadGroupTree() {
+      const treeEl = document.getElementById('groupTree')
+      treeEl.innerHTML = `<div class="empty-msg">${i18n.get('#admin-loading#')}</div>`
+      const res = await fetch('/api/admin/groups')
+      if (!res.ok) { treeEl.innerHTML = `<div class="empty-msg">오류가 발생했습니다.</div>`; return }
+      const data = await res.json()
+      groupTreeData = data.groups || []
+      // 그룹 추가 모달의 상위 그룹 select도 업데이트 (flat)
+      const flatRes = await fetch('/api/admin/groups?flat=true')
+      if (flatRes.ok) {
+        const flatData = await flatRes.json()
+        const parentSelect = document.getElementById('inputGroupParent')
+        parentSelect.innerHTML = `<option value="">${i18n.get('#admin-group_parent_root#')}</option>`
+        flatData.groups.forEach(g => {
+          const depth = (g.path.match(/\//g) || []).length - 1
+          const opt = document.createElement('option')
+          opt.value = g.id
+          opt.textContent = '\u00a0\u00a0'.repeat(depth) + g.name
+          parentSelect.appendChild(opt)
+        })
+      }
+      if (groupTreeData.length === 0) {
+        treeEl.innerHTML = `<div class="empty-msg">${i18n.get('#admin-no_groups#')}</div>`
+        return
+      }
+      treeEl.innerHTML = ''
+      const tree = renderGroupTree(groupTreeData)
+      tree.className = 'group-tree'
+      treeEl.appendChild(tree)
+    }
+
+    function renderGroupTree(nodes) {
+      const container = document.createElement('div')
+      container.className = 'group-tree'
+      nodes.forEach(g => {
+        const node = document.createElement('div')
+        node.className = 'group-node'
+
+        const row = document.createElement('div')
+        row.className = 'group-node-row'
+        row.innerHTML = `
+          <span class="material-symbols-rounded">folder</span>
+          <span class="group-node-display">${escHtml(g.name)}</span>
+          <button class="btn-icon btn-icon-danger" title="${i18n.get('#admin-delete#')}">
+            <span class="material-symbols-rounded">delete</span>
+          </button>
+        `
+        row.querySelector('.btn-icon').addEventListener('click', () => confirmDeleteGroup(g.id, g.name))
+        node.appendChild(row)
+
+        if (g.children?.length) {
+          const childrenWrap = document.createElement('div')
+          childrenWrap.className = 'group-children'
+          const childTree = renderGroupTree(g.children)
+          childrenWrap.appendChild(childTree)
+          node.appendChild(childrenWrap)
+        }
+
+        container.appendChild(node)
+      })
+      return container
+    }
+
+    // ── 그룹 생성 모달 ──
+    function openGroupModal() {
+      document.getElementById('inputGroupId').value = ''
+      document.getElementById('inputGroupParent').value = ''
+      document.getElementById('groupModalOverlay').classList.add('open')
+      document.getElementById('inputGroupDisplayName').focus()
+    }
+
+    function closeGroupModal() {
+      document.getElementById('groupModalOverlay').classList.remove('open')
+    }
+
+    document.getElementById('btnAddGroup').addEventListener('click', openGroupModal)
+    document.getElementById('btnGroupModalCancel').addEventListener('click', closeGroupModal)
+    document.getElementById('groupModalOverlay').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('groupModalOverlay')) closeGroupModal()
+    })
+
+    document.getElementById('btnGroupModalSave').addEventListener('click', async () => {
+      const name     = document.getElementById('inputGroupId').value.trim()
+      const parentId = document.getElementById('inputGroupParent').value
+
+      if (!name) {
+        document.getElementById('inputGroupId').focus()
+        return
+      }
+
+      const res = await fetch('/api/admin/groups', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, parentId: parentId || null }),
+      })
+      if (res.ok) {
+        closeGroupModal()
+        loadGroupTree()
+        // 계정 생성 드롭다운도 갱신
+        await loadGroups()
+      } else {
+        const data = await res.json().catch(() => ({}))
+        alert(data.error || '그룹 생성에 실패했습니다.')
+      }
+    })
+
+    // ── 그룹 삭제 ──
+    function confirmDeleteGroup(groupId, displayName) {
+      const overlay = document.getElementById('deleteModalOverlay')
+      overlay.classList.add('open')
+
+      function onConfirm() {
+        fetch(`/api/admin/groups/${groupId}`, { method: 'DELETE' })
+          .then(async r => {
+            if (!r.ok) {
+              const d = await r.json().catch(() => ({}))
+              alert(d.error || '삭제에 실패했습니다.')
+            } else {
+              loadGroupTree()
+              await loadGroups()
+            }
+          })
+        cleanup()
+      }
+      function cleanup() {
+        overlay.classList.remove('open')
+        document.getElementById('btnDeleteConfirm').removeEventListener('click', onConfirm)
+        document.getElementById('btnDeleteCancel').removeEventListener('click', cleanup)
+        overlay.removeEventListener('click', onOverlayClick)
+      }
+      function onOverlayClick(e) { if (e.target === overlay) cleanup() }
+
+      document.getElementById('btnDeleteConfirm').addEventListener('click', onConfirm)
+      document.getElementById('btnDeleteCancel').addEventListener('click', cleanup)
+      overlay.addEventListener('click', onOverlayClick)
+    }
+
     ;(async () => {
       const user = await initHeader(i18n.get('#admin-title#'))
       if (user) currentUser = user
-      if (currentUser?.role === 'school_admin') await loadGroups()
+      if (currentUser?.role === 'school_admin') {
+        document.getElementById('adminTabBar').style.display = ''
+        await loadGroups()
+      }
       loadUsers()
     })()
   </script>

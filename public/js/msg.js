@@ -4433,6 +4433,42 @@ let MSGS = {
     en: '(No group)',
     ko: '(그룹 없음)',
   },
+  '#admin-groups#': {
+    en: 'Groups',
+    ko: '그룹 관리',
+  },
+  '#admin-accounts#': {
+    en: 'Accounts',
+    ko: '계정',
+  },
+  '#admin-add_group#': {
+    en: 'New Group',
+    ko: '그룹 추가',
+  },
+  '#admin-group_id#': {
+    en: 'Group ID',
+    ko: '그룹 ID',
+  },
+  '#admin-group_id_placeholder#': {
+    en: 'e.g. class-1 (letters, numbers, - and _ only)',
+    ko: '예: class-1 (영문, 숫자, -, _ 만 사용)',
+  },
+  '#admin-group_parent#': {
+    en: 'Parent Group',
+    ko: '상위 그룹',
+  },
+  '#admin-group_parent_root#': {
+    en: '(Top level)',
+    ko: '(최상위)',
+  },
+  '#admin-group_delete_confirm#': {
+    en: 'Delete this group?',
+    ko: '이 그룹을 삭제하시겠습니까?',
+  },
+  '#admin-no_groups#': {
+    en: 'No groups yet. Add a group to get started.',
+    ko: '그룹이 없습니다. 그룹을 추가해보세요.',
+  },
   '#admin-status#': {
     en: 'Status',
     ko: '상태',

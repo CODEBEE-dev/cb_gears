@@ -283,40 +283,122 @@ router.get('/roles', requireRole(...ADMIN_ROLES), async (req, res) => {
 })
 
 // 그룹 목록 조회
-// 그룹 목록 조회
-// - school_admin: 본인 root 그룹의 서브그룹을 재귀적으로 flat하게 반환
-// - teacher: 사용 안 함
+// school_admin의 root 그룹 id 조회 헬퍼
+async function getRootGroup(sessionGroup) {
+  const rootName = sessionGroup.replace(/^\//, '').split('/')[0]
+  const r = await keycloakFetch(`/groups?search=${encodeURIComponent(rootName)}&exact=true`)
+  if (!r.ok) return null
+  const candidates = await r.json()
+  return candidates.find(g => g.name === rootName) || null
+}
+
+// 서브그룹을 트리 구조로 재귀 수집
+async function collectSubGroupsTree(groupId) {
+  const r = await keycloakFetch(`/groups/${groupId}/children`)
+  if (!r.ok) return []
+  const children = await r.json()
+  return Promise.all(children.map(async child => ({
+    id: child.id,
+    name: child.name,
+    path: child.path,
+    subGroupCount: child.subGroupCount || 0,
+    children: await collectSubGroupsTree(child.id),
+  })))
+}
+
+// 서브그룹을 flat하게 재귀 수집 (계정 생성 드롭다운용)
+async function collectSubGroupsFlat(groupId) {
+  const r = await keycloakFetch(`/groups/${groupId}/children`)
+  if (!r.ok) return []
+  const children = await r.json()
+  const result = []
+  for (const child of children) {
+    result.push(child)
+    result.push(...await collectSubGroupsFlat(child.id))
+  }
+  return result
+}
+
+// 그룹 목록 조회 (트리 구조)
 router.get('/groups', requireRole(...ADMIN_ROLES), async (req, res) => {
   try {
-    const sessionGroup = req.session.user.group  // ex) "/python_middle_school"
+    const sessionGroup = req.session.user.group
     if (!sessionGroup) return res.json({ groups: [] })
-
-    // root 그룹 찾기
-    const rootName = sessionGroup.replace(/^\//, '').split('/')[0]
-    const searchR = await keycloakFetch(`/groups?search=${encodeURIComponent(rootName)}&exact=true`)
-    if (!searchR.ok) return res.status(500).json({ error: '그룹 조회 실패' })
-    const candidates = await searchR.json()
-    const rootGroup = candidates.find(g => g.name === rootName)
+    const rootGroup = await getRootGroup(sessionGroup)
     if (!rootGroup) return res.json({ groups: [] })
-
-    // 서브그룹 재귀 수집
-    const collectSubGroups = async (groupId) => {
-      const r = await keycloakFetch(`/groups/${groupId}/children`)
-      if (!r.ok) return []
-      const children = await r.json()
-      const result = []
-      for (const child of children) {
-        result.push(child)
-        const grandChildren = await collectSubGroups(child.id)
-        result.push(...grandChildren)
-      }
-      return result
+    const flat = req.query.flat === 'true'
+    if (flat) {
+      const groups = await collectSubGroupsFlat(rootGroup.id)
+      return res.json({ groups })
     }
-
-    const subGroups = await collectSubGroups(rootGroup.id)
-    res.json({ groups: subGroups })
+    const tree = await collectSubGroupsTree(rootGroup.id)
+    res.json({ groups: tree, rootId: rootGroup.id })
   } catch (err) {
     console.error('[Admin] 그룹 목록 조회 실패:', err)
+    res.status(500).json({ error: 'Internal server error' })
+  }
+})
+
+// 그룹 생성 (school_admin만)
+router.post('/groups', requireRole('school_admin'), async (req, res) => {
+  try {
+    const { name, parentId } = req.body
+    if (!name) {
+      return res.status(400).json({ error: 'name은 필수입니다' })
+    }
+    if (!/^[a-zA-Z0-9_-]+$/.test(name)) {
+      return res.status(400).json({ error: '그룹ID는 영문, 숫자, 하이픈, 언더스코어만 사용 가능합니다' })
+    }
+
+    const sessionGroup = req.session.user.group
+    const rootGroup = await getRootGroup(sessionGroup)
+    if (!rootGroup) return res.status(400).json({ error: 'Root 그룹을 찾을 수 없습니다' })
+
+    const targetParentId = parentId || rootGroup.id
+
+    const r = await keycloakFetch(`/groups/${targetParentId}/children`, {
+      method: 'POST',
+      body: JSON.stringify({ name }),
+    })
+    if (!r.ok) {
+      const body = await r.text()
+      const msg = body.includes('already exists') ? '이미 존재하는 그룹ID입니다' : `그룹 생성 실패 (${r.status})`
+      return res.status(r.status).json({ error: msg })
+    }
+    res.status(201).json({ message: '그룹이 생성되었습니다' })
+  } catch (err) {
+    console.error('[Admin] 그룹 생성 실패:', err)
+    res.status(500).json({ error: 'Internal server error' })
+  }
+})
+
+// 그룹 삭제 (school_admin만)
+router.delete('/groups/:id', requireRole('school_admin'), async (req, res) => {
+  try {
+    const sessionGroup = req.session.user.group
+    const rootGroup = await getRootGroup(sessionGroup)
+    if (!rootGroup) return res.status(400).json({ error: 'Root 그룹을 찾을 수 없습니다' })
+
+    // root 그룹 삭제 방지
+    if (req.params.id === rootGroup.id) {
+      return res.status(403).json({ error: 'Root 그룹은 삭제할 수 없습니다' })
+    }
+
+    // 멤버 또는 서브그룹 존재 여부 확인
+    const [membersR, childrenR] = await Promise.all([
+      keycloakFetch(`/groups/${req.params.id}/members?max=1`),
+      keycloakFetch(`/groups/${req.params.id}/children?max=1`),
+    ])
+    const members = membersR.ok ? await membersR.json() : []
+    const children = childrenR.ok ? await childrenR.json() : []
+    if (members.length > 0) return res.status(409).json({ error: '그룹에 속한 멤버가 있어 삭제할 수 없습니다' })
+    if (children.length > 0) return res.status(409).json({ error: '하위 그룹이 있어 삭제할 수 없습니다' })
+
+    const r = await keycloakFetch(`/groups/${req.params.id}`, { method: 'DELETE' })
+    if (!r.ok) return res.status(r.status).json({ error: '그룹 삭제 실패' })
+    res.json({ message: '그룹이 삭제되었습니다' })
+  } catch (err) {
+    console.error('[Admin] 그룹 삭제 실패:', err)
     res.status(500).json({ error: 'Internal server error' })
   }
 })

@@ -22,6 +22,7 @@ router.get('/', requireAuth, async (req, res) => {
 router.post('/', requireAuth, async (req, res) => {
   try {
     const userId = req.session.user.id
+    const groupName = req.session.user.group || null
     const { name } = req.body
     if (!name || !name.trim()) {
       return res.status(400).json({ error: 'Project name is required' })
@@ -34,8 +35,8 @@ router.post('/', requireAuth, async (req, res) => {
       return res.status(409).json({ error: 'duplicate' })
     }
     const result = await query(
-      'INSERT INTO projects (user_id, name) VALUES ($1, $2) RETURNING id, name, updated_at',
-      [userId, name.trim()]
+      'INSERT INTO projects (user_id, group_name, name) VALUES ($1, $2, $3) RETURNING id, name, updated_at',
+      [userId, groupName, name.trim()]
     )
     res.status(201).json({ project: result.rows[0] })
   } catch (err) {
@@ -65,6 +66,7 @@ router.get('/:id', requireAuth, async (req, res) => {
 router.put('/:id', requireAuth, async (req, res) => {
   try {
     const userId = req.session.user.id
+    const groupName = req.session.user.group || null
     const { id } = req.params
     const { name, block_xml, python, robot_options, world_options } = req.body
 
@@ -75,6 +77,7 @@ router.put('/:id', requireAuth, async (req, res) => {
            python        = COALESCE($5, python),
            world_options = COALESCE($6, world_options),
            robot_options = COALESCE($7, robot_options),
+           group_name    = $8,
            updated_at    = NOW()
        WHERE id = $1 AND user_id = $2
        RETURNING id, name, updated_at`,
@@ -84,7 +87,8 @@ router.put('/:id', requireAuth, async (req, res) => {
         block_xml ?? null,
         python ? python : null,
         world_options ? JSON.stringify(world_options) : null,
-        robot_options ? JSON.stringify(robot_options) : null
+        robot_options ? JSON.stringify(robot_options) : null,
+        groupName,
       ]
     )
     if (result.rows.length === 0) return res.status(404).json({ error: 'Not found' })

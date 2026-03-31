@@ -122,16 +122,10 @@
           <select id="inputRole">
             <option value="student"></option>
             <option value="teacher"></option>
-            <option value="school_admin"></option>
           </select>
         </label>
-        <!-- school_admin만 표시 -->
-        <label id="groupFieldWrap">
-          <span id="labelGroup"></span>
-          <select id="inputGroup">
-            <option value=""></option>
-          </select>
-        </label>
+        <!-- school_admin만 표시: cascade 그룹 선택 영역 -->
+        <div id="groupCascadeWrap" style="display:none; grid-column:1/-1;"></div>
         <label class="label-checkbox">
           <input type="checkbox" id="inputEnabled" checked>
           <span id="labelEnabled"></span>
@@ -199,7 +193,6 @@
     document.getElementById('labelPassword').textContent = i18n.get('#admin-password#')
     document.getElementById('labelRole').textContent = i18n.get('#admin-role#')
     document.getElementById('labelEnabled').textContent = i18n.get('#admin-enabled#')
-    document.getElementById('labelGroup').textContent = i18n.get('#admin-group#')
     document.getElementById('btnUserModalCancel').textContent = i18n.get('#admin-cancel#')
     document.getElementById('tabLabelAccounts').textContent = i18n.get('#admin-accounts#')
     document.getElementById('tabLabelGroups').textContent = i18n.get('#admin-groups#')
@@ -218,36 +211,29 @@
     // role select 옵션 텍스트
     document.querySelector('#inputRole option[value="student"]').textContent = i18n.get('#admin-role_student#')
     document.querySelector('#inputRole option[value="teacher"]').textContent = i18n.get('#admin-role_teacher#')
-    document.querySelector('#inputRole option[value="school_admin"]').textContent = i18n.get('#admin-role_school_admin#')
 
     // ── 상태 ──
     let currentUser = null
     let editingUserId = null
     let isSaving = false
     let searchTimer = null
-    let allGroups = []  // school_admin용 그룹 목록
+    let groupTree = []  // school_admin용 그룹 트리 (root 바로 아래 children)
 
-    // ── 그룹 목록 로드 (school_admin 전용) ──
+    // ── 그룹 목록 로드 (school_admin 전용, 트리 구조로 저장) ──
     async function loadGroups() {
       const res = await fetch('/api/admin/groups')
       if (!res.ok) return
       const data = await res.json()
-      allGroups = data.groups || []
-      const select = document.getElementById('inputGroup')
-      select.innerHTML = `<option value="">${i18n.get('#admin-no_group#')}</option>`
-      allGroups.forEach(g => {
-        // path depth로 들여쓰기 표현 (root 제외한 depth)
-        const depth = (g.path.match(/\//g) || []).length - 1
-        const opt = document.createElement('option')
-        opt.value = g.id
-        opt.textContent = '\u00a0\u00a0'.repeat(depth) + g.name
-        select.appendChild(opt)
-      })
+      groupTree = data.groups || []
     }
 
     function groupName(groups) {
       if (!groups || groups.length === 0) return '-'
-      return groups.map(g => g.name).join(', ')
+      return groups.map(g => {
+        if (!g.path) return g.name
+        // root(첫 번째 segment) 제외: /root/grade/class → grade/class
+        return g.path.replace(/^\/[^/]+\//, '').replace(/\//g, ' / ') || g.name
+      }).join(', ')
     }
 
     // ── 역할 표시 ──
@@ -336,13 +322,124 @@
       if (isTeacher) roleSelect.value = 'student'
     }
 
+    // ── cascade 그룹 선택 ──
+    // nodes: 현재 depth의 그룹 배열, depth: 0부터 시작
+    // selectedIds: 복원용 [depth0Id, depth1Id, ...]
+    function buildCascadeSelects(nodes, depth, selectedIds = []) {
+      const wrap = document.getElementById('groupCascadeWrap')
+
+      // 기존 depth 이후의 select 제거
+      while (wrap.children.length > depth) {
+        wrap.removeChild(wrap.lastChild)
+      }
+
+      if (!nodes || nodes.length === 0) return
+
+      const label = document.createElement('label')
+      const span = document.createElement('span')
+      span.textContent = i18n.get('#admin-group#') || '그룹'
+      const select = document.createElement('select')
+      select.dataset.depth = depth
+
+      const emptyOpt = document.createElement('option')
+      emptyOpt.value = ''
+      emptyOpt.textContent = i18n.get('#admin-no_group#') || '-- 선택 --'
+      select.appendChild(emptyOpt)
+
+      nodes.forEach(g => {
+        const opt = document.createElement('option')
+        opt.value = g.id
+        opt.textContent = g.name
+        opt.dataset.childCount = g.children?.length || 0
+        select.appendChild(opt)
+      })
+
+      // 복원: selectedIds[depth]가 있으면 해당 값 선택
+      if (selectedIds[depth]) {
+        select.value = selectedIds[depth]
+      }
+
+      select.addEventListener('change', () => {
+        const selectedNode = nodes.find(g => g.id === select.value)
+        const role = document.getElementById('inputRole').value
+        if (selectedNode?.children?.length) {
+          buildCascadeSelects(selectedNode.children, depth + 1)
+        } else {
+          // 하위 그룹 없거나 teacher이면 이후 select 제거
+          while (wrap.children.length > depth + 1) {
+            wrap.removeChild(wrap.lastChild)
+          }
+        }
+      })
+
+      label.appendChild(span)
+      label.appendChild(select)
+      wrap.appendChild(label)
+
+      // 복원: 선택된 값이 있고 children이 있으면 다음 depth도 렌더링
+      if (selectedIds[depth]) {
+        const selectedNode = nodes.find(g => g.id === selectedIds[depth])
+        if (selectedNode?.children?.length) {
+          buildCascadeSelects(selectedNode.children, depth + 1, selectedIds)
+        }
+      }
+    }
+
     function applyGroupField(selectedGroupId = '') {
       const isSchoolAdmin = currentUser?.role === 'school_admin'
-      const wrap = document.getElementById('groupFieldWrap')
-      wrap.style.display = isSchoolAdmin ? '' : 'none'
-      if (isSchoolAdmin) {
-        document.getElementById('inputGroup').value = selectedGroupId || ''
+      const wrap = document.getElementById('groupCascadeWrap')
+      if (!isSchoolAdmin) {
+        wrap.style.display = 'none'
+        wrap.innerHTML = ''
+        return
       }
+      wrap.style.display = ''
+
+      const role = document.getElementById('inputRole').value
+
+      if (!selectedGroupId) {
+        buildCascadeSelects(groupTree, 0)
+      } else {
+        // 수정: 기존 그룹 경로를 flat으로 복원
+        restoreCascadeSelection(selectedGroupId)
+      }
+    }
+
+    // 수정 모달 복원: groupId로 경로상의 id 배열을 찾아 cascade 렌더링
+    function restoreCascadeSelection(targetGroupId) {
+      const path = findGroupPath(groupTree, targetGroupId)
+      buildCascadeSelects(groupTree, 0, path)
+    }
+
+    // groupTree에서 targetId까지의 id 경로 배열 반환 (못 찾으면 null)
+    function findGroupPath(nodes, targetId, path = []) {
+      for (const node of nodes) {
+        const current = [...path, node.id]
+        if (node.id === targetId) return current
+        if (node.children?.length) {
+          const found = findGroupPath(node.children, targetId, current)
+          if (found) return found
+        }
+      }
+      return null
+    }
+
+    // cascade에서 선택된 최하위 groupId 반환
+    function getSelectedGroupId() {
+      const wrap = document.getElementById('groupCascadeWrap')
+      const selects = Array.from(wrap.querySelectorAll('select'))
+      if (selects.length === 0) return null
+
+      const role = document.getElementById('inputRole').value
+
+      // teacher/student 모두 최하위까지 cascade, 마지막 select 값 사용
+      const lastSelect = selects[selects.length - 1]
+      if (!lastSelect?.value) return null
+      const selectedOpt = lastSelect.options[lastSelect.selectedIndex]
+      if (parseInt(selectedOpt.dataset.childCount) > 0) {
+        return null  // 아직 최하위까지 선택 안 됨
+      }
+      return lastSelect.value
     }
 
     function openAddModal() {
@@ -380,7 +477,19 @@
       document.getElementById('inputLastname').value = user.lastName || ''
       document.getElementById('inputPassword').value = ''
       const role = (user.realmRoles || []).find(r => ['school_admin','teacher','student'].includes(r)) || 'student'
-      document.getElementById('inputRole').value = role
+      const roleSelect = document.getElementById('inputRole')
+      // school_admin 계정 편집: select에 없는 값이므로 option 임시 추가 후 disabled
+      let tempAdminOpt = null
+      if (role === 'school_admin') {
+        tempAdminOpt = document.createElement('option')
+        tempAdminOpt.value = 'school_admin'
+        tempAdminOpt.textContent = i18n.get('#admin-role_school_admin#') || '학교 관리자'
+        roleSelect.appendChild(tempAdminOpt)
+        roleSelect.disabled = true
+      } else {
+        roleSelect.disabled = false
+      }
+      roleSelect.value = role
       document.getElementById('inputEnabled').checked = !!user.enabled
       applyRoleOptions()
       const currentGroupId = user.groups?.[0]?.id || ''
@@ -391,7 +500,19 @@
     function closeUserModal() {
       document.getElementById('userModalOverlay').classList.remove('open')
       document.getElementById('inputUsername').disabled = false
+      // 임시로 추가한 school_admin option 제거 및 disabled 해제
+      const roleSelect = document.getElementById('inputRole')
+      roleSelect.disabled = false
+      const tmpOpt = roleSelect.querySelector('option[value="school_admin"]')
+      if (tmpOpt) roleSelect.removeChild(tmpOpt)
     }
+
+    // 역할 변경 시 cascade 초기화
+    document.getElementById('inputRole').addEventListener('change', () => {
+      if (currentUser?.role === 'school_admin') {
+        applyGroupField()
+      }
+    })
 
     document.getElementById('btnAddUser').addEventListener('click', openAddModal)
     document.getElementById('btnUserModalCancel').addEventListener('click', closeUserModal)
@@ -421,9 +542,9 @@
         enabled: document.getElementById('inputEnabled').checked,
       }
       if (password) body.password = password
-      // school_admin: 선택한 그룹 ID 전송 / teacher: 서버에서 세션 그룹 자동 할당
+      // school_admin: cascade에서 선택한 그룹 ID 전송 / teacher: 서버에서 세션 그룹 자동 할당
       if (isSchoolAdmin) {
-        body.groupId = document.getElementById('inputGroup').value || null
+        body.groupId = getSelectedGroupId()
       }
 
       const url = editingUserId ? `/api/admin/users/${editingUserId}` : '/api/admin/users'

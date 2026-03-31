@@ -4425,6 +4425,14 @@ let MSGS = {
     en: 'Enabled',
     ko: '활성화',
   },
+  '#admin-group#': {
+    en: 'Group',
+    ko: '그룹',
+  },
+  '#admin-no_group#': {
+    en: '(No group)',
+    ko: '(그룹 없음)',
+  },
   '#admin-status#': {
     en: 'Status',
     ko: '상태',

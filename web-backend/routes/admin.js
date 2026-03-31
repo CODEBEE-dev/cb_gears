@@ -42,22 +42,73 @@ async function keycloakFetch(path, options = {}) {
 router.get('/users', requireRole(...ADMIN_ROLES), async (req, res) => {
   try {
     const { search = '', first = 0, max = 50 } = req.query
+    const sessionRole = req.session.user.role
+    const sessionGroup = req.session.user.group  // teacher의 경우 자기 그룹 path
+
+    const ALLOWED_ROLES = ['school_admin', 'teacher', 'student']
+
+    // teacher: 자기 그룹 멤버만 조회
+    if (sessionRole === 'teacher') {
+      if (!sessionGroup) return res.json({ users: [] })
+
+      // 그룹 id 조회
+      const groupName = sessionGroup.split('/').pop()
+      const searchR = await keycloakFetch(`/groups?search=${encodeURIComponent(groupName)}&exact=true`)
+      if (!searchR.ok) return res.status(500).json({ error: '그룹 조회 실패' })
+      const candidates = await searchR.json()
+      const normalizedSession = sessionGroup.startsWith('/') ? sessionGroup : `/${sessionGroup}`
+      const findByPath = (nodes) => {
+        for (const g of nodes) {
+          if (g.path === normalizedSession) return g
+          if (g.subGroups?.length) {
+            const found = findByPath(g.subGroups)
+            if (found) return found
+          }
+        }
+        return null
+      }
+      const group = findByPath(candidates)
+      if (!group) return res.json({ users: [] })
+
+      const params = new URLSearchParams({ first, max })
+      if (search) params.set('search', search)
+      const membersR = await keycloakFetch(`/groups/${group.id}/members?${params}`)
+      if (!membersR.ok) return res.status(500).json({ error: '그룹 멤버 조회 실패' })
+      const members = await membersR.json()
+
+      const usersWithRoles = await Promise.all(members.map(async u => {
+        const [rolesR, groupsR] = await Promise.all([
+          keycloakFetch(`/users/${u.id}/role-mappings/realm`),
+          keycloakFetch(`/users/${u.id}/groups`),
+        ])
+        const roles = rolesR.ok ? await rolesR.json() : []
+        const groups = groupsR.ok ? await groupsR.json() : []
+        const realmRoles = roles.filter(r => ALLOWED_ROLES.includes(r.name)).map(r => r.name)
+        return { ...u, realmRoles, groups }
+      }))
+
+      return res.json({ users: usersWithRoles.filter(u => u.id !== req.session.user.id) })
+    }
+
+    // school_admin: 전체 조회
     const params = new URLSearchParams({ first, max })
     if (search) params.set('search', search)
     const r = await keycloakFetch(`/users?${params}`)
     if (!r.ok) return res.status(r.status).json({ error: 'Keycloak 사용자 목록 조회 실패' })
     const users = await r.json()
 
-    // 각 사용자의 realm role을 병렬 조회
-    const ALLOWED_ROLES = ['school_admin', 'teacher', 'student']
     const usersWithRoles = await Promise.all(users.map(async u => {
-      const rolesR = await keycloakFetch(`/users/${u.id}/role-mappings/realm`)
+      const [rolesR, groupsR] = await Promise.all([
+        keycloakFetch(`/users/${u.id}/role-mappings/realm`),
+        keycloakFetch(`/users/${u.id}/groups`),
+      ])
       const roles = rolesR.ok ? await rolesR.json() : []
+      const groups = groupsR.ok ? await groupsR.json() : []
       const realmRoles = roles.filter(r => ALLOWED_ROLES.includes(r.name)).map(r => r.name)
-      return { ...u, realmRoles }
+      return { ...u, realmRoles, groups }
     }))
 
-    res.json({ users: usersWithRoles })
+    res.json({ users: usersWithRoles.filter(u => u.id !== req.session.user.id) })
   } catch (err) {
     console.error('[Admin] 사용자 목록 조회 실패:', err)
     res.status(500).json({ error: 'Internal server error' })
@@ -71,11 +122,15 @@ router.get('/users/:id', requireRole(...ADMIN_ROLES), async (req, res) => {
     if (!r.ok) return res.status(r.status).json({ error: '사용자를 찾을 수 없습니다' })
     const user = await r.json()
 
-    // realm role 조회
-    const rolesR = await keycloakFetch(`/users/${req.params.id}/role-mappings/realm`)
+    // realm role + 그룹 병렬 조회
+    const [rolesR, groupsR] = await Promise.all([
+      keycloakFetch(`/users/${req.params.id}/role-mappings/realm`),
+      keycloakFetch(`/users/${req.params.id}/groups`),
+    ])
     const roles = rolesR.ok ? await rolesR.json() : []
+    const groups = groupsR.ok ? await groupsR.json() : []
 
-    res.json({ user: { ...user, realmRoles: roles.map(r => r.name) } })
+    res.json({ user: { ...user, realmRoles: roles.map(r => r.name), groups } })
   } catch (err) {
     console.error('[Admin] 사용자 조회 실패:', err)
     res.status(500).json({ error: 'Internal server error' })
@@ -85,9 +140,43 @@ router.get('/users/:id', requireRole(...ADMIN_ROLES), async (req, res) => {
 // 사용자 생성
 router.post('/users', requireRole(...ADMIN_ROLES), async (req, res) => {
   try {
-    const { username, email, firstName, lastName, password, role, enabled = true } = req.body
+    const { username, email, firstName, lastName, password, role, enabled = true, groupId } = req.body
     if (!username || !password) {
       return res.status(400).json({ error: 'username과 password는 필수입니다' })
+    }
+
+    // teacher: 자기 그룹 자동 할당 / school_admin: 프론트에서 전달한 groupId 사용
+    const sessionRole = req.session.user.role
+    let resolvedGroupId = groupId || null
+    if (sessionRole === 'teacher' && !resolvedGroupId) {
+      const sessionGroup = req.session.user.group  // ex) "/python_middle_school/1st_grade/class_1"
+      if (sessionGroup) {
+        const groupsR = await keycloakFetch('/groups?briefRepresentation=false')
+        if (groupsR.ok) {
+          const groups = await groupsR.json()
+          const normalizedSession = sessionGroup.startsWith('/') ? sessionGroup : `/${sessionGroup}`
+
+          // subGroups가 lazy라 path로 직접 검색
+          const searchR = await keycloakFetch(`/groups?search=${encodeURIComponent(normalizedSession.split('/').pop())}&exact=true`)
+          if (searchR.ok) {
+            const candidates = await searchR.json()
+            // path 정확히 일치하는 것 찾기 (재귀로 subGroups 포함)
+            const findByPath = (nodes) => {
+              for (const g of nodes) {
+                if (g.path === normalizedSession) return g
+                if (g.subGroups?.length) {
+                  const found = findByPath(g.subGroups)
+                  if (found) return found
+                }
+              }
+              return null
+            }
+            const matched = findByPath(candidates)
+            resolvedGroupId = matched?.id || null
+            console.log(`[Admin] teacher 그룹 자동 할당: session.group=${sessionGroup}, matched=${matched?.name}, id=${resolvedGroupId}`)
+          }
+        }
+      }
     }
 
     // 사용자 생성
@@ -114,10 +203,11 @@ router.post('/users', requireRole(...ADMIN_ROLES), async (req, res) => {
     const location = r.headers.get('location') || ''
     const userId = location.split('/').pop()
 
-    // role 할당
-    if (role && userId) {
-      await assignRole(userId, role)
-    }
+    // role 할당 + 그룹 할당 병렬 처리
+    const tasks = []
+    if (role && userId) tasks.push(assignRole(userId, role))
+    if (resolvedGroupId && userId) tasks.push(assignGroup(userId, resolvedGroupId))
+    await Promise.all(tasks)
 
     res.status(201).json({ message: '사용자가 생성되었습니다', userId })
   } catch (err) {
@@ -129,7 +219,7 @@ router.post('/users', requireRole(...ADMIN_ROLES), async (req, res) => {
 // 사용자 수정
 router.put('/users/:id', requireRole(...ADMIN_ROLES), async (req, res) => {
   try {
-    const { username, email, firstName, lastName, enabled, role, password } = req.body
+    const { username, email, firstName, lastName, enabled, role, password, groupId } = req.body
     const userId = req.params.id
 
     const updateBody = {}
@@ -154,10 +244,11 @@ router.put('/users/:id', requireRole(...ADMIN_ROLES), async (req, res) => {
       if (!pwR.ok) return res.status(pwR.status).json({ error: '비밀번호 변경 실패' })
     }
 
-    // role 변경
-    if (role) {
-      await assignRole(userId, role)
-    }
+    // role 변경 + 그룹 변경
+    const tasks = []
+    if (role) tasks.push(assignRole(userId, role))
+    if (groupId !== undefined) tasks.push(reassignGroup(userId, groupId))
+    await Promise.all(tasks)
 
     res.json({ message: '사용자가 수정되었습니다' })
   } catch (err) {
@@ -191,6 +282,45 @@ router.get('/roles', requireRole(...ADMIN_ROLES), async (req, res) => {
   }
 })
 
+// 그룹 목록 조회
+// 그룹 목록 조회
+// - school_admin: 본인 root 그룹의 서브그룹을 재귀적으로 flat하게 반환
+// - teacher: 사용 안 함
+router.get('/groups', requireRole(...ADMIN_ROLES), async (req, res) => {
+  try {
+    const sessionGroup = req.session.user.group  // ex) "/python_middle_school"
+    if (!sessionGroup) return res.json({ groups: [] })
+
+    // root 그룹 찾기
+    const rootName = sessionGroup.replace(/^\//, '').split('/')[0]
+    const searchR = await keycloakFetch(`/groups?search=${encodeURIComponent(rootName)}&exact=true`)
+    if (!searchR.ok) return res.status(500).json({ error: '그룹 조회 실패' })
+    const candidates = await searchR.json()
+    const rootGroup = candidates.find(g => g.name === rootName)
+    if (!rootGroup) return res.json({ groups: [] })
+
+    // 서브그룹 재귀 수집
+    const collectSubGroups = async (groupId) => {
+      const r = await keycloakFetch(`/groups/${groupId}/children`)
+      if (!r.ok) return []
+      const children = await r.json()
+      const result = []
+      for (const child of children) {
+        result.push(child)
+        const grandChildren = await collectSubGroups(child.id)
+        result.push(...grandChildren)
+      }
+      return result
+    }
+
+    const subGroups = await collectSubGroups(rootGroup.id)
+    res.json({ groups: subGroups })
+  } catch (err) {
+    console.error('[Admin] 그룹 목록 조회 실패:', err)
+    res.status(500).json({ error: 'Internal server error' })
+  }
+})
+
 // role 할당 헬퍼
 async function assignRole(userId, roleName) {
   const ALLOWED_ROLES = ['school_admin', 'teacher', 'student']
@@ -219,6 +349,23 @@ async function assignRole(userId, roleName) {
     method: 'POST',
     body: JSON.stringify([roleObj]),
   })
+}
+
+// 그룹 할당 헬퍼
+async function assignGroup(userId, groupId) {
+  await keycloakFetch(`/users/${userId}/groups/${groupId}`, { method: 'PUT' })
+}
+
+// 그룹 재할당 헬퍼 (기존 그룹 모두 제거 후 새 그룹 할당)
+async function reassignGroup(userId, groupId) {
+  const groupsR = await keycloakFetch(`/users/${userId}/groups`)
+  const groups = groupsR.ok ? await groupsR.json() : []
+  await Promise.all(groups.map(g =>
+    keycloakFetch(`/users/${userId}/groups/${g.id}`, { method: 'DELETE' })
+  ))
+  if (groupId) {
+    await keycloakFetch(`/users/${userId}/groups/${groupId}`, { method: 'PUT' })
+  }
 }
 
 module.exports = router

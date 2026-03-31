@@ -50,12 +50,13 @@
               <th id="thEmail"></th>
               <th id="thName"></th>
               <th id="thRole"></th>
+              <th id="thGroup"></th>
               <th id="thStatus"></th>
               <th id="thActions"></th>
             </tr>
           </thead>
           <tbody id="userTableBody">
-            <tr><td colspan="6" class="table-loading" id="tableLoading"></td></tr>
+            <tr><td colspan="7" class="table-loading" id="tableLoading"></td></tr>
           </tbody>
         </table>
       </div>
@@ -96,6 +97,13 @@
             <option value="school_admin"></option>
           </select>
         </label>
+        <!-- school_admin만 표시 -->
+        <label id="groupFieldWrap">
+          <span id="labelGroup"></span>
+          <select id="inputGroup">
+            <option value=""></option>
+          </select>
+        </label>
         <label class="label-checkbox">
           <input type="checkbox" id="inputEnabled" checked>
           <span id="labelEnabled"></span>
@@ -129,6 +137,7 @@
     document.getElementById('thEmail').textContent = i18n.get('#admin-email#')
     document.getElementById('thName').textContent = i18n.get('#admin-name#')
     document.getElementById('thRole').textContent = i18n.get('#admin-role#')
+    document.getElementById('thGroup').textContent = i18n.get('#admin-group#')
     document.getElementById('thStatus').textContent = i18n.get('#admin-status#')
     document.getElementById('thActions').textContent = i18n.get('#admin-actions#')
     document.getElementById('tableLoading').textContent = i18n.get('#admin-loading#')
@@ -139,6 +148,7 @@
     document.getElementById('labelPassword').textContent = i18n.get('#admin-password#')
     document.getElementById('labelRole').textContent = i18n.get('#admin-role#')
     document.getElementById('labelEnabled').textContent = i18n.get('#admin-enabled#')
+    document.getElementById('labelGroup').textContent = i18n.get('#admin-group#')
     document.getElementById('btnUserModalCancel').textContent = i18n.get('#admin-cancel#')
     document.getElementById('deleteModalTitle').textContent = i18n.get('#admin-delete_confirm#')
     document.getElementById('deleteModalDesc').textContent = i18n.get('#admin-delete_desc#')
@@ -155,6 +165,30 @@
     let editingUserId = null
     let isSaving = false
     let searchTimer = null
+    let allGroups = []  // school_admin용 그룹 목록
+
+    // ── 그룹 목록 로드 (school_admin 전용) ──
+    async function loadGroups() {
+      const res = await fetch('/api/admin/groups')
+      if (!res.ok) return
+      const data = await res.json()
+      allGroups = data.groups || []
+      const select = document.getElementById('inputGroup')
+      select.innerHTML = `<option value="">${i18n.get('#admin-no_group#')}</option>`
+      allGroups.forEach(g => {
+        // path depth로 들여쓰기 표현 (root 제외한 depth)
+        const depth = (g.path.match(/\//g) || []).length - 1
+        const opt = document.createElement('option')
+        opt.value = g.id
+        opt.textContent = '\u00a0\u00a0'.repeat(depth) + g.name
+        select.appendChild(opt)
+      })
+    }
+
+    function groupName(groups) {
+      if (!groups || groups.length === 0) return '-'
+      return groups.map(g => g.name).join(', ')
+    }
 
     // ── 역할 표시 ──
     function roleLabel(role) {
@@ -176,12 +210,14 @@
       }
       users.forEach(u => {
         const role = (u.realmRoles || []).find(r => ['school_admin','teacher','student'].includes(r)) || ''
+        const grp = groupName(u.groups)
         const tr = document.createElement('tr')
         tr.innerHTML = `
           <td>${escHtml(u.username || '')}</td>
           <td>${escHtml(u.email || '')}</td>
           <td>${escHtml([u.lastName, u.firstName].filter(Boolean).join(' ') || '')}</td>
           <td><span class="role-badge role-${role}">${escHtml(roleLabel(role))}</span></td>
+          <td>${escHtml(grp)}</td>
           <td><span class="status-badge ${u.enabled ? 'status-active' : 'status-inactive'}">${u.enabled ? i18n.get('#admin-active#') : i18n.get('#admin-inactive#')}</span></td>
           <td class="actions-cell">
             <button class="btn-icon" data-action="edit" data-id="${u.id}" title="${i18n.get('#admin-edit#')}">
@@ -220,9 +256,6 @@
       }
       const data = await res.json()
 
-      // 각 유저의 role을 포함해서 렌더링 (목록 API가 realmRoles를 안 줄 수 있으므로 일괄 처리)
-      // Keycloak /users 응답에는 role이 없으므로 users 배열 그대로 사용하고
-      // 개별 조회가 필요한 경우 edit 시점에만 조회
       renderUsers(data.users)
     }
 
@@ -233,6 +266,25 @@
     })
 
     // ── 모달 열기/닫기 ──
+    function applyRoleOptions() {
+      const isTeacher = currentUser?.role === 'teacher'
+      const roleSelect = document.getElementById('inputRole')
+      // teacher는 student만 생성 가능
+      Array.from(roleSelect.options).forEach(opt => {
+        opt.hidden = isTeacher && opt.value !== 'student'
+      })
+      if (isTeacher) roleSelect.value = 'student'
+    }
+
+    function applyGroupField(selectedGroupId = '') {
+      const isSchoolAdmin = currentUser?.role === 'school_admin'
+      const wrap = document.getElementById('groupFieldWrap')
+      wrap.style.display = isSchoolAdmin ? '' : 'none'
+      if (isSchoolAdmin) {
+        document.getElementById('inputGroup').value = selectedGroupId || ''
+      }
+    }
+
     function openAddModal() {
       editingUserId = null
       document.getElementById('userModalTitle').textContent = i18n.get('#admin-modal_add_title#')
@@ -243,9 +295,10 @@
       document.getElementById('inputLastname').value = ''
       document.getElementById('inputPassword').value = ''
       document.getElementById('inputPassword').placeholder = ''
-      document.getElementById('inputRole').value = 'student'
       document.getElementById('inputEnabled').checked = true
       document.getElementById('inputUsername').disabled = false
+      applyRoleOptions()
+      applyGroupField()
       document.getElementById('userModalOverlay').classList.add('open')
       document.getElementById('inputUsername').focus()
     }
@@ -269,6 +322,9 @@
       const role = (user.realmRoles || []).find(r => ['school_admin','teacher','student'].includes(r)) || 'student'
       document.getElementById('inputRole').value = role
       document.getElementById('inputEnabled').checked = !!user.enabled
+      applyRoleOptions()
+      const currentGroupId = user.groups?.[0]?.id || ''
+      applyGroupField(currentGroupId)
       document.getElementById('userModalOverlay').classList.add('open')
     }
 
@@ -295,6 +351,7 @@
       }
 
       isSaving = true
+      const isSchoolAdmin = currentUser?.role === 'school_admin'
       const body = {
         username,
         email: document.getElementById('inputEmail').value.trim(),
@@ -304,6 +361,10 @@
         enabled: document.getElementById('inputEnabled').checked,
       }
       if (password) body.password = password
+      // school_admin: 선택한 그룹 ID 전송 / teacher: 서버에서 세션 그룹 자동 할당
+      if (isSchoolAdmin) {
+        body.groupId = document.getElementById('inputGroup').value || null
+      }
 
       const url = editingUserId ? `/api/admin/users/${editingUserId}` : '/api/admin/users'
       const method = editingUserId ? 'PUT' : 'POST'
@@ -357,6 +418,7 @@
     ;(async () => {
       const user = await initHeader(i18n.get('#admin-title#'))
       if (user) currentUser = user
+      if (currentUser?.role === 'school_admin') await loadGroups()
       loadUsers()
     })()
   </script>

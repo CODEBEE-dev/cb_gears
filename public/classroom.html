@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="codebridgeai_favicon.png">
+  <title>Classroom - Codebridge</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20,400,1,0" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/dashboard.css">
+  <script src="js/msg.js"></script>
+  <script src="js/challengeData.js"></script>
+  <script src="js/common/activityBar.js"></script>
+  <script src="js/common/header.js"></script>
+
+  <style>
+    /* ── 탭 ── */
+    .tab-bar {
+      display: flex;
+      gap: 0;
+      border-bottom: 2px solid var(--color-border);
+      margin-bottom: 1.5rem;
+    }
+    .tab-btn {
+      background: none;
+      border: none;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      padding: 0.6rem 1.4rem;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--color-text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: color 0.15s;
+    }
+    .tab-btn.active {
+      color: var(--color-primary);
+      border-bottom-color: var(--color-primary);
+    }
+
+    /* ── 공지사항 ── */
+    .announcement-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .announcement-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+      padding: 1rem 1.2rem;
+      cursor: pointer;
+      transition: box-shadow 0.15s;
+    }
+    .announcement-card:hover {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .announcement-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+    .announcement-card-title {
+      font-size: 0.97rem;
+      font-weight: 700;
+      color: var(--color-text);
+      flex: 1;
+    }
+    .announcement-card-actions {
+      display: flex;
+      gap: 0.3rem;
+      flex-shrink: 0;
+    }
+    .btn-icon {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.2rem;
+      border-radius: 0.4rem;
+      color: var(--color-text-muted);
+      display: flex;
+      align-items: center;
+      font-size: 1.1rem;
+      transition: color 0.15s, background 0.15s;
+    }
+    .btn-icon:hover { color: var(--color-primary); background: var(--color-bg); }
+    .btn-icon.danger:hover { color: #c62828; background: #fef2f2; }
+    .announcement-card-meta {
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+      margin-top: 0.25rem;
+    }
+    .announcement-card-body {
+      margin-top: 0.6rem;
+      font-size: 0.88rem;
+      color: var(--color-text);
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+
+    /* ── 리더보드 ── */
+    .leaderboard-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--color-surface);
+      border-radius: 0.75rem;
+      overflow: hidden;
+      border: 1px solid var(--color-border);
+    }
+    .leaderboard-table th {
+      background: var(--color-bg);
+      padding: 0.7rem 1rem;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--color-text-muted);
+      text-align: left;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .leaderboard-table td {
+      padding: 0.75rem 1rem;
+      font-size: 0.9rem;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .leaderboard-table tr:last-child td { border-bottom: none; }
+    .leaderboard-table tr:hover td { background: var(--color-bg); }
+    .rank-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.7rem;
+      height: 1.7rem;
+      border-radius: 50%;
+      font-size: 0.8rem;
+      font-weight: 800;
+    }
+    .rank-1 { background: #ffd700; color: #7a5800; }
+    .rank-2 { background: #c0c0c0; color: #444; }
+    .rank-3 { background: #cd7f32; color: #fff; }
+    .rank-other { background: var(--color-bg); color: var(--color-text-muted); }
+    .progress-cell {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .progress-track {
+      flex: 1;
+      height: 8px;
+      background: var(--color-border);
+      border-radius: 4px;
+      overflow: hidden;
+      min-width: 80px;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--color-primary);
+      border-radius: 4px;
+      transition: width 0.4s ease;
+    }
+    .progress-label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--color-text);
+      min-width: 3rem;
+      text-align: right;
+    }
+
+    /* ── 공지 작성 모달 ── */
+    .modal textarea {
+      width: 100%;
+      min-height: 120px;
+      padding: 0.5rem 0.7rem;
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      font-family: inherit;
+      font-size: 0.9rem;
+      resize: vertical;
+      box-sizing: border-box;
+      margin-top: 0.25rem;
+    }
+    .modal textarea:focus {
+      outline: none;
+      border-color: var(--color-primary);
+    }
+    .modal label {
+      display: flex;
+      flex-direction: column;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--color-text-muted);
+      gap: 0;
+      margin-bottom: 0.8rem;
+    }
+    .modal label input {
+      margin-top: 0.25rem;
+      padding: 0.5rem 0.7rem;
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      font-family: inherit;
+      font-size: 0.9rem;
+    }
+    .modal label input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+    }
+
+    .empty-msg {
+      text-align: center;
+      color: var(--color-text-muted);
+      padding: 2.5rem 0;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+
+<body>
+  <header id="appHeader"></header>
+
+  <main>
+    <nav class="activity-bar expanded" id="activityBar"></nav>
+    <div class="container">
+      <div class="content">
+
+        <div class="content-header">
+          <h2 class="section-title" id="pageTitle"></h2>
+          <!-- 선생님만 표시 -->
+          <button class="btn-new" id="btnNewAnnouncement" style="display:none;">
+            <span class="material-symbols-rounded">add</span>
+            <span id="labelNewAnnouncement"></span>
+          </button>
+        </div>
+
+        <!-- 탭 -->
+        <div class="tab-bar">
+          <button class="tab-btn active" id="tabAnnouncements">
+            <span class="material-symbols-rounded">campaign</span>
+            <span id="tabLabelAnnouncements"></span>
+          </button>
+          <button class="tab-btn" id="tabLeaderboard">
+            <span class="material-symbols-rounded">leaderboard</span>
+            <span id="tabLabelLeaderboard"></span>
+          </button>
+        </div>
+
+        <!-- 공지사항 탭 -->
+        <div id="viewAnnouncements">
+          <div class="announcement-list" id="announcementList"></div>
+        </div>
+
+        <!-- 리더보드 탭 -->
+        <div id="viewLeaderboard" style="display:none;">
+          <table class="leaderboard-table">
+            <thead>
+              <tr>
+                <th id="thRank"></th>
+                <th id="thStudent"></th>
+                <th id="thCompleted"></th>
+                <th id="thProgress"></th>
+              </tr>
+            </thead>
+            <tbody id="leaderboardBody"></tbody>
+          </table>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- 공지사항 작성/수정 모달 -->
+  <div class="modal-overlay" id="announcementModalOverlay">
+    <div class="modal">
+      <h2 id="announcementModalTitle"></h2>
+      <label>
+        <span id="labelTitle"></span>
+        <input type="text" id="inputTitle" maxlength="200">
+      </label>
+      <label>
+        <span id="labelContent"></span>
+        <textarea id="inputContent" maxlength="2000"></textarea>
+      </label>
+      <div class="modal-actions">
+        <button class="btn-cancel" id="btnAnnouncementCancel"></button>
+        <button class="btn-create" id="btnAnnouncementSubmit"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 삭제 확인 모달 -->
+  <div class="modal-overlay" id="deleteModalOverlay">
+    <div class="modal">
+      <h2 id="deleteModalTitle"></h2>
+      <div class="modal-actions">
+        <button class="btn-cancel" id="btnDeleteCancel"></button>
+        <button class="btn-delete-confirm" id="btnDeleteConfirm"></button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ── i18n ──
+    document.getElementById('pageTitle').textContent           = i18n.get('#nav-classroom#')
+    document.getElementById('labelNewAnnouncement').textContent = i18n.get('#classroom-new_announcement#')
+    document.getElementById('tabLabelAnnouncements').textContent = i18n.get('#classroom-announcements#')
+    document.getElementById('tabLabelLeaderboard').textContent  = i18n.get('#classroom-leaderboard#')
+    document.getElementById('thRank').textContent      = i18n.get('#classroom-rank#')
+    document.getElementById('thStudent').textContent   = i18n.get('#classroom-student#')
+    document.getElementById('thCompleted').textContent = i18n.get('#classroom-completed#')
+    document.getElementById('thProgress').textContent  = i18n.get('#classroom-progress#')
+    document.getElementById('labelTitle').textContent   = i18n.get('#classroom-title#')
+    document.getElementById('labelContent').textContent = i18n.get('#classroom-content#')
+    document.getElementById('btnAnnouncementCancel').textContent = i18n.get('#classroom-cancel#')
+    document.getElementById('btnDeleteCancel').textContent       = i18n.get('#classroom-cancel#')
+    document.getElementById('btnDeleteConfirm').textContent      = i18n.get('#classroom-delete#')
+    document.getElementById('deleteModalTitle').textContent      = i18n.get('#classroom-delete_confirm#')
+    document.getElementById('inputTitle').placeholder   = i18n.get('#classroom-title_placeholder#')
+    document.getElementById('inputContent').placeholder = i18n.get('#classroom-content_placeholder#')
+
+    const TOTAL_CHALLENGES = ALL_CHALLENGE_IDS.length
+
+    let currentUser = null
+    let isTeacher = false
+    let editingId = null
+
+    // ── 탭 전환 ──
+    function switchTab(tab) {
+      const isAnn = tab === 'announcements'
+      document.getElementById('viewAnnouncements').style.display = isAnn ? '' : 'none'
+      document.getElementById('viewLeaderboard').style.display   = isAnn ? 'none' : ''
+      document.getElementById('tabAnnouncements').classList.toggle('active', isAnn)
+      document.getElementById('tabLeaderboard').classList.toggle('active', !isAnn)
+      if (!isAnn) loadLeaderboard()
+    }
+
+    document.getElementById('tabAnnouncements').addEventListener('click', () => switchTab('announcements'))
+    document.getElementById('tabLeaderboard').addEventListener('click', () => switchTab('leaderboard'))
+
+    // ── 공지사항 ──
+    function formatDate(iso) {
+      return new Date(iso).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })
+    }
+
+    function makeAnnouncementCard(a) {
+      const card = document.createElement('div')
+      card.className = 'announcement-card'
+      card.dataset.id = a.id
+
+      const actionsHtml = isTeacher && currentUser.id === a.author_id
+        ? `<div class="announcement-card-actions">
+            <button class="btn-icon" data-action="edit" title="${i18n.get('#classroom-edit#')}">
+              <span class="material-symbols-rounded">edit</span>
+            </button>
+            <button class="btn-icon danger" data-action="delete" title="${i18n.get('#classroom-delete#')}">
+              <span class="material-symbols-rounded">delete</span>
+            </button>
+          </div>`
+        : ''
+
+      card.innerHTML = `
+        <div class="announcement-card-header">
+          <div class="announcement-card-title">${escapeHtml(a.title)}</div>
+          ${actionsHtml}
+        </div>
+        <div class="announcement-card-meta">${escapeHtml(a.author_name)} · ${formatDate(a.created_at)}</div>
+        <div class="announcement-card-body">${escapeHtml(a.content)}</div>
+      `
+
+
+      // 수정/삭제 버튼
+      card.querySelector('[data-action="edit"]')?.addEventListener('click', (e) => {
+        e.stopPropagation()
+        openAnnouncementModal(a)
+      })
+      card.querySelector('[data-action="delete"]')?.addEventListener('click', (e) => {
+        e.stopPropagation()
+        openDeleteModal(a.id, card)
+      })
+
+      return card
+    }
+
+    async function loadAnnouncements() {
+      const listEl = document.getElementById('announcementList')
+      listEl.innerHTML = ''
+      try {
+        const res = await fetch('/api/classroom/announcements')
+        if (!res.ok) throw new Error(res.status)
+        const { announcements } = await res.json()
+        if (announcements.length === 0) {
+          listEl.innerHTML = `<div class="empty-msg">${i18n.get('#classroom-no_announcements#')}</div>`
+          return
+        }
+        announcements.forEach(a => listEl.appendChild(makeAnnouncementCard(a)))
+      } catch {
+        listEl.innerHTML = `<div class="empty-msg">${i18n.get('#ch-load_error#')}</div>`
+      }
+    }
+
+    // ── 리더보드 ──
+    async function loadLeaderboard() {
+      const tbody = document.getElementById('leaderboardBody')
+      tbody.innerHTML = ''
+      try {
+        const res = await fetch('/api/classroom/leaderboard')
+        if (!res.ok) throw new Error(res.status)
+        const { leaderboard } = await res.json()
+        if (leaderboard.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="4" class="empty-msg">${i18n.get('#classroom-no_records#')}</td></tr>`
+          return
+        }
+        leaderboard.forEach((row, idx) => {
+          const rank = idx + 1
+          const pct = TOTAL_CHALLENGES > 0 ? Math.round((row.completed / TOTAL_CHALLENGES) * 100) : 0
+          const rankClass = rank <= 3 ? `rank-${rank}` : 'rank-other'
+          const tr = document.createElement('tr')
+          tr.innerHTML = `
+            <td><span class="rank-badge ${rankClass}">${rank}</span></td>
+            <td>${escapeHtml(row.user_name || '-')}</td>
+            <td>${row.completed} / ${TOTAL_CHALLENGES}</td>
+            <td>
+              <div class="progress-cell">
+                <div class="progress-track">
+                  <div class="progress-fill" style="width:${pct}%"></div>
+                </div>
+                <span class="progress-label">${pct}%</span>
+              </div>
+            </td>
+          `
+          tbody.appendChild(tr)
+        })
+      } catch {
+        tbody.innerHTML = `<tr><td colspan="4" class="empty-msg">${i18n.get('#ch-load_error#')}</td></tr>`
+      }
+    }
+
+    // ── 공지사항 모달 ──
+    function openAnnouncementModal(existing = null) {
+      editingId = existing ? existing.id : null
+      document.getElementById('announcementModalTitle').textContent =
+        i18n.get(existing ? '#classroom-edit#' : '#classroom-new_announcement#')
+      document.getElementById('btnAnnouncementSubmit').textContent =
+        i18n.get(existing ? '#classroom-edit#' : '#classroom-post#')
+      document.getElementById('inputTitle').value   = existing ? existing.title   : ''
+      document.getElementById('inputContent').value = existing ? existing.content : ''
+      document.getElementById('announcementModalOverlay').classList.add('open')
+      document.getElementById('inputTitle').focus()
+    }
+
+    function closeAnnouncementModal() {
+      document.getElementById('announcementModalOverlay').classList.remove('open')
+      editingId = null
+    }
+
+    document.getElementById('btnNewAnnouncement').addEventListener('click', () => openAnnouncementModal())
+    document.getElementById('btnAnnouncementCancel').addEventListener('click', closeAnnouncementModal)
+    document.getElementById('announcementModalOverlay').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('announcementModalOverlay')) closeAnnouncementModal()
+    })
+
+    document.getElementById('btnAnnouncementSubmit').addEventListener('click', async () => {
+      const title   = document.getElementById('inputTitle').value.trim()
+      const content = document.getElementById('inputContent').value.trim()
+      if (!title || !content) return
+
+      const url    = editingId ? `/api/classroom/announcements/${editingId}` : '/api/classroom/announcements'
+      const method = editingId ? 'PUT' : 'POST'
+
+      const res = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, content }),
+      })
+      if (res.ok) {
+        closeAnnouncementModal()
+        loadAnnouncements()
+      }
+    })
+
+    // ── 삭제 모달 ──
+    function openDeleteModal(id, cardEl) {
+      const overlay = document.getElementById('deleteModalOverlay')
+      overlay.classList.add('open')
+
+      function onConfirm() {
+        fetch(`/api/classroom/announcements/${id}`, { method: 'DELETE' })
+          .then(r => { if (r.ok) cardEl.remove() })
+        cleanup()
+      }
+      function cleanup() {
+        overlay.classList.remove('open')
+        document.getElementById('btnDeleteConfirm').removeEventListener('click', onConfirm)
+        document.getElementById('btnDeleteCancel').removeEventListener('click', cleanup)
+        overlay.removeEventListener('click', onOverlayClick)
+      }
+      function onOverlayClick(e) { if (e.target === overlay) cleanup() }
+
+      document.getElementById('btnDeleteConfirm').addEventListener('click', onConfirm)
+      document.getElementById('btnDeleteCancel').addEventListener('click', cleanup)
+      overlay.addEventListener('click', onOverlayClick)
+    }
+
+    // ── HTML 이스케이프 ──
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+    }
+
+    // ── 초기화 ──
+    ;(async () => {
+      const user = await initHeader('Classroom')
+      if (!user) return
+
+      currentUser = user
+      isTeacher = user.role === 'teacher' || user.role === 'school_admin'
+
+      if (isTeacher) {
+        document.getElementById('btnNewAnnouncement').style.display = ''
+      }
+
+      loadAnnouncements()
+    })()
+  </script>
+</body>
+</html>

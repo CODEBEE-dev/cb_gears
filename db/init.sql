@@ -22,9 +22,22 @@ CREATE TABLE IF NOT EXISTS robots (
 CREATE TABLE IF NOT EXISTS challenge_progress (
   id           SERIAL PRIMARY KEY,
   user_id      VARCHAR(36) NOT NULL,
+  user_name    VARCHAR(255),
+  group_name   VARCHAR(255),
   challenge_id VARCHAR(50) NOT NULL,
   completed_at TIMESTAMP NOT NULL DEFAULT NOW(),
   UNIQUE (user_id, challenge_id)
+);
+
+CREATE TABLE IF NOT EXISTS announcements (
+  id          SERIAL PRIMARY KEY,
+  author_id   VARCHAR(36) NOT NULL,
+  author_name VARCHAR(255) NOT NULL,
+  group_name  VARCHAR(255) NOT NULL,
+  title       VARCHAR(255) NOT NULL,
+  content     TEXT NOT NULL,
+  created_at  TIMESTAMP NOT NULL DEFAULT NOW(),
+  updated_at  TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
 CREATE TABLE IF NOT EXISTS projects (

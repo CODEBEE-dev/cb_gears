@@ -4127,6 +4127,86 @@ let MSGS = {
     en: 'Challenges',
     ko: '도전 과제',
   },
+  '#nav-classroom#': {
+    en: 'Classroom',
+    ko: '클래스룸',
+  },
+  '#classroom-announcements#': {
+    en: 'Announcements',
+    ko: '공지사항',
+  },
+  '#classroom-leaderboard#': {
+    en: 'Leaderboard',
+    ko: '리더보드',
+  },
+  '#classroom-new_announcement#': {
+    en: 'New Announcement',
+    ko: '공지 작성',
+  },
+  '#classroom-title#': {
+    en: 'Title',
+    ko: '제목',
+  },
+  '#classroom-content#': {
+    en: 'Content',
+    ko: '내용',
+  },
+  '#classroom-post#': {
+    en: 'Post',
+    ko: '등록',
+  },
+  '#classroom-cancel#': {
+    en: 'Cancel',
+    ko: '취소',
+  },
+  '#classroom-edit#': {
+    en: 'Edit',
+    ko: '수정',
+  },
+  '#classroom-delete#': {
+    en: 'Delete',
+    ko: '삭제',
+  },
+  '#classroom-delete_confirm#': {
+    en: 'Delete this announcement?',
+    ko: '이 공지사항을 삭제하시겠습니까?',
+  },
+  '#classroom-no_announcements#': {
+    en: 'No announcements yet.',
+    ko: '아직 공지사항이 없습니다.',
+  },
+  '#classroom-no_group#': {
+    en: 'You are not assigned to a group.',
+    ko: '소속된 그룹이 없습니다.',
+  },
+  '#classroom-rank#': {
+    en: 'Rank',
+    ko: '순위',
+  },
+  '#classroom-student#': {
+    en: 'Student',
+    ko: '학생',
+  },
+  '#classroom-completed#': {
+    en: 'Completed',
+    ko: '완료',
+  },
+  '#classroom-progress#': {
+    en: 'Progress',
+    ko: '진행률',
+  },
+  '#classroom-no_records#': {
+    en: 'No challenge records yet.',
+    ko: '아직 챌린지 기록이 없습니다.',
+  },
+  '#classroom-title_placeholder#': {
+    en: 'Enter announcement title',
+    ko: '공지 제목을 입력하세요',
+  },
+  '#classroom-content_placeholder#': {
+    en: 'Enter announcement content',
+    ko: '공지 내용을 입력하세요',
+  },
 
   // ── 챌린지 다이얼로그 ──
   '#ch-completed#': {

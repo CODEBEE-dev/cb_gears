@@ -14,6 +14,7 @@ const ACTIVITY_BAR_ITEMS = [
   { key: 'home',       icon: 'home',            label: '#nav-home#',     href: '/' },
   { key: 'projects',   icon: 'folder',          label: '#nav-projects#', href: '/#projects' },
   { key: 'challenges', icon: 'emoji_events',    label: '#nav-challenges#', href: '/challenges' },
+  { key: 'classroom',  icon: 'school',          label: '#nav-classroom#',  href: '/classroom' },
   { key: 'settings',   icon: 'settings',        label: '#nav-settings#', href: '/settings' },
   { key: 'admin',      icon: 'manage_accounts', label: '#nav-admin#',    href: '/admin', adminOnly: true },
 ];
@@ -22,6 +23,7 @@ const ACTIVITY_BAR_ITEMS = [
 function _getActiveKey() {
   const path = window.location.pathname;
   if (path === '/challenges') return 'challenges';
+  if (path === '/classroom')  return 'classroom';
   if (path === '/settings')   return 'settings';
   if (path === '/admin')      return 'admin';
   const hash = window.location.hash.replace('#', '');

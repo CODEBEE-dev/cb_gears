@@ -209,6 +209,7 @@
     // ── 데이터 로드 ──
     async function loadRecent() {
       const listEl = document.getElementById('recentList')
+      listEl.innerHTML = `<div class="empty-msg">${i18n.get('#admin-loading#')}</div>`
       try {
         const res = await fetch('/api/projects')
         if (!res.ok) {
@@ -248,6 +249,7 @@
       document.getElementById('viewHome').style.display = key === 'home' ? '' : 'none'
       document.getElementById('viewProjects').style.display = key === 'projects' ? '' : 'none'
       if (key === 'projects' && currentUser) loadAll()
+      if (key === 'home' && currentUser) loadRecent()
       history.replaceState(null, '', '#' + key)
     }
 

@@ -1308,6 +1308,23 @@ var configurator = new function() {
     self.resetScene();
     self.saveRobotOptions();
     self.updateTextLanguage();
+
+    // URL 파라미터로 특정 로봇 바로 로드
+    const _robotId = new URLSearchParams(window.location.search).get('robotId');
+    if (_robotId) {
+      fetch('/api/robots/' + _robotId)
+        .then(res => res.ok ? res.json() : Promise.reject())
+        .then(({ robot: r }) => {
+          self._dbRobotId = r.id;
+          self._dbRobotName = r.name;
+          robot.options = JSON.parse(JSON.stringify(r.options));
+          robot.options.name = r.name;
+          self.clearHistory();
+          self.saveHistory();
+          self.resetScene();
+        })
+        .catch(() => {});
+    }
   };
 
   // Update text language

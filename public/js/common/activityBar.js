@@ -13,8 +13,10 @@
 const ACTIVITY_BAR_ITEMS = [
   { key: 'home',       icon: 'home',            label: '#nav-home#',     href: '/' },
   { key: 'projects',   icon: 'folder',          label: '#nav-projects#', href: '/#projects' },
+  { key: 'robots',     icon: 'smart_toy',       label: '#nav-robots#',   href: '/robots' },
+  { key: 'worlds',     icon: 'map',             label: '#nav-worlds#',   href: '/worlds' },
   { key: 'challenges', icon: 'emoji_events',    label: '#nav-challenges#', href: '/challenges' },
-  { key: 'classroom',  icon: 'school',          label: '#nav-classroom#',  href: '/classroom' },
+  { key: 'classroom',  icon: 'school',          label: '#nav-classroom#',  href: '/classroom', adminHidden: true },
   { key: 'settings',   icon: 'settings',        label: '#nav-settings#', href: '/settings' },
   { key: 'admin',      icon: 'manage_accounts', label: '#nav-admin#',    href: '/admin', adminOnly: true },
 ];
@@ -26,6 +28,8 @@ function _getActiveKey() {
   if (path === '/classroom')  return 'classroom';
   if (path === '/settings')   return 'settings';
   if (path === '/admin')      return 'admin';
+  if (path === '/robots')     return 'robots';
+  if (path === '/worlds')     return 'worlds';
   const hash = window.location.hash.replace('#', '');
   if (hash === 'projects') return 'projects';
   return 'home';
@@ -49,6 +53,7 @@ function initActivityBar(role) {
   // 메뉴 항목
   ACTIVITY_BAR_ITEMS.forEach(item => {
     if (item.adminOnly && !isAdmin) return;
+    if (item.adminHidden && role === 'school_admin') return;
 
     const label = item.label.startsWith('#') ? i18n.get(item.label) : item.label;
 

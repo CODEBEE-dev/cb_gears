@@ -1142,6 +1142,23 @@ var builder = new function() {
     self.saveHistory();
     self.resetScene();
     self.updateTextLanguage();
+
+    // URL 파라미터로 특정 월드 바로 로드
+    const _worldId = new URLSearchParams(window.location.search).get('worldId');
+    if (_worldId) {
+      fetch('/api/worlds/' + _worldId)
+        .then(res => res.ok ? res.json() : Promise.reject())
+        .then(({ world }) => {
+          self._dbWorldId = world.id;
+          self._dbWorldName = world.name;
+          self.worldOptions = JSON.parse(JSON.stringify(worlds[0].defaultOptions));
+          Object.assign(self.worldOptions, world.options);
+          self.clearHistory();
+          self.saveHistory();
+          self.resetScene();
+        })
+        .catch(() => {});
+    }
   };
 
   // Update text language

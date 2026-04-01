@@ -60,6 +60,14 @@ app.get('/arenaFrame', requireAuth, (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'arenaFrame.html'))
 })
 
+app.get('/robots', requireAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'public', 'robots.html'))
+})
+
+app.get('/worlds', requireAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'public', 'worlds.html'))
+})
+
 app.get('/challenges', requireAuth, (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'challenges.html'))
 })

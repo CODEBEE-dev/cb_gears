@@ -4119,6 +4119,38 @@ let MSGS = {
     en: 'Projects',
     ko: '프로젝트',
   },
+  '#nav-robots#': {
+    en: 'My Robots',
+    ko: '내 로봇',
+  },
+  '#nav-worlds#': {
+    en: 'My Worlds',
+    ko: '내 월드',
+  },
+  '#robots-no_robots#': {
+    en: 'No robots saved.',
+    ko: '저장된 로봇이 없습니다.',
+  },
+  '#robots-delete_confirm#': {
+    en: 'Delete',
+    ko: '삭제',
+  },
+  '#robots-search_placeholder#': {
+    en: 'Search robots...',
+    ko: '로봇 검색...',
+  },
+  '#worlds-no_worlds#': {
+    en: 'No worlds saved.',
+    ko: '저장된 월드가 없습니다.',
+  },
+  '#worlds-delete_confirm#': {
+    en: 'Delete',
+    ko: '삭제',
+  },
+  '#worlds-search_placeholder#': {
+    en: 'Search worlds...',
+    ko: '월드 검색...',
+  },
   '#nav-settings#': {
     en: 'Settings',
     ko: '설정',

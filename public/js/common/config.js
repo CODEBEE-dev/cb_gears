@@ -9,7 +9,7 @@ var appConfig = new function() {
         if (logoEl) logoEl.src = self.logo;
 
         var nameEl = document.querySelector('header .appName');
-        if (nameEl) {
+        if (nameEl && !nameEl.querySelector('span')) {
             var nameSuffix = nameEl.textContent.trim();
             nameEl.innerHTML = nameSuffix ? self.name + `<span>${nameSuffix}</span>` : self.name;
         }

@@ -12,7 +12,7 @@
 
 const ACTIVITY_BAR_ITEMS = [
   { key: 'home',       icon: 'home',            label: '#nav-home#',     href: '/' },
-  { key: 'projects',   icon: 'folder',          label: '#nav-projects#', href: '/#projects' },
+  { key: 'projects',   icon: 'folder',          label: '#nav-projects#', href: '/projects' },
   { key: 'robots',     icon: 'smart_toy',       label: '#nav-robots#',   href: '/robots' },
   { key: 'worlds',     icon: 'map',             label: '#nav-worlds#',   href: '/worlds' },
   { key: 'challenges', icon: 'emoji_events',    label: '#nav-challenges#', href: '/challenges' },
@@ -30,8 +30,7 @@ function _getActiveKey() {
   if (path === '/admin')      return 'admin';
   if (path === '/robots')     return 'robots';
   if (path === '/worlds')     return 'worlds';
-  const hash = window.location.hash.replace('#', '');
-  if (hash === 'projects') return 'projects';
+  if (path === '/projects')    return 'projects';
   return 'home';
 }
 
@@ -67,14 +66,7 @@ function initActivityBar(role) {
     `;
 
     el.addEventListener('click', () => {
-      // dashboard 내부 뷰 전환은 해당 페이지가 처리하도록 이벤트 발생
-      if (window.location.pathname === '/' && (item.key === 'home' || item.key === 'projects')) {
-        document.querySelectorAll('.activity-bar-item').forEach(i => i.classList.remove('active'));
-        el.classList.add('active');
-        document.dispatchEvent(new CustomEvent('activityBarSwitch', { detail: item.key }));
-      } else {
-        window.location.href = item.href;
-      }
+      window.location.href = item.href;
     });
 
     bar.appendChild(el);

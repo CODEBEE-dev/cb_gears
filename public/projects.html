@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="icon" href="codebridgeai_favicon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20,400,1,0" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/dashboard.css">
+
+  <script src="js/common/config.js"></script>
+  <script src="js/msg.js"></script>
+  <script src="js/common/activityBar.js"></script>
+  <script src="js/common/header.js"></script>
+
+  <title>Projects</title>
+</head>
+
+<body>
+  <header id="appHeader"></header>
+
+  <main>
+    <nav class="activity-bar expanded" id="activityBar"></nav>
+    <div class="container">
+      <div class="content">
+        <div class="content-header">
+          <h2 class="section-title" id="pageTitle"></h2>
+          <button class="btn-new" id="btnNewProject">
+            <span class="material-symbols-rounded">add</span>
+            <span id="labelNewProject"></span>
+          </button>
+        </div>
+        <div class="search-bar">
+          <span class="material-symbols-rounded">search</span>
+          <input type="text" id="searchInput" placeholder="">
+        </div>
+        <div class="project-list" id="projectList"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- 새 프로젝트 모달 -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <h2 id="modalTitle"></h2>
+      <label>
+        <span id="labelName"></span>
+        <input type="text" id="inputName" maxlength="100">
+      </label>
+      <p id="inputNameError" style="margin:0.3rem 0 0; font-size:0.82rem; color:#c62828; display:none;"></p>
+      <div class="modal-actions">
+        <button class="btn-cancel" id="btnCancel"></button>
+        <button class="btn-create" id="btnCreate"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 삭제 확인 모달 -->
+  <div class="modal-overlay" id="deleteModalOverlay">
+    <div class="modal">
+      <h2 id="deleteModalTitle"></h2>
+      <p id="deleteModalDesc" style="margin:0; font-size:0.9rem; color:#666;"></p>
+      <div class="modal-actions">
+        <button class="btn-cancel" id="btnDeleteCancel"></button>
+        <button class="btn-delete-confirm" id="btnDeleteConfirm"></button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('pageTitle').textContent         = i18n.get('#nav-projects#')
+    document.getElementById('labelNewProject').textContent   = i18n.get('#dash-new_project#')
+    document.getElementById('modalTitle').textContent        = i18n.get('#dash-modal_title#')
+    document.getElementById('labelName').textContent         = i18n.get('#dash-project_name#')
+    document.getElementById('inputName').placeholder         = i18n.get('#dash-project_name_placeholder#')
+    document.getElementById('searchInput').placeholder       = i18n.get('#dash-search_placeholder#')
+    document.getElementById('btnCancel').textContent         = i18n.get('#dash-cancel#')
+    document.getElementById('btnCreate').textContent         = i18n.get('#dash-create#')
+    document.getElementById('deleteModalTitle').textContent  = i18n.get('#dash-delete_confirm#')
+    document.getElementById('deleteModalDesc').textContent   = i18n.get('#dash-delete_desc#')
+    document.getElementById('btnDeleteCancel').textContent   = i18n.get('#dash-cancel#')
+    document.getElementById('btnDeleteConfirm').textContent  = i18n.get('#dash-delete#')
+
+    let allProjects = []
+    let isCreating = false
+
+    function openEditor(projectId) {
+      window.location.href = `/editor?projectId=${projectId}`
+    }
+
+    function makeProjectItem(p) {
+      const item = document.createElement('div')
+      item.className = 'project-item'
+      item.innerHTML = `
+        <span class="material-symbols-rounded project-item-icon">folder</span>
+        <span class="project-item-name">${p.name}</span>
+        <span class="project-item-date">${new Date(p.updated_at).toLocaleDateString()}</span>
+        <button class="btn-delete" title="${i18n.get('#dash-delete_confirm#')}">
+          <span class="material-symbols-rounded">delete</span>
+        </button>
+      `
+      item.addEventListener('click', () => openEditor(p.id))
+      item.querySelector('.btn-delete').addEventListener('click', (e) => {
+        e.stopPropagation()
+        confirmDelete(p.id, item)
+      })
+      return item
+    }
+
+    function renderList(projects) {
+      const listEl = document.getElementById('projectList')
+      listEl.innerHTML = ''
+      if (projects.length === 0) {
+        listEl.innerHTML = `<div class="empty-msg">${i18n.get('#dash-no_projects#')}</div>`
+        return
+      }
+      projects.forEach(p => listEl.appendChild(makeProjectItem(p)))
+    }
+
+    function applySearch() {
+      const q = document.getElementById('searchInput').value.trim().toLowerCase()
+      renderList(q ? allProjects.filter(p => p.name.toLowerCase().includes(q)) : allProjects)
+    }
+
+    document.getElementById('searchInput').addEventListener('input', applySearch)
+
+    function confirmDelete(projectId, item) {
+      const overlay = document.getElementById('deleteModalOverlay')
+      overlay.classList.add('open')
+
+      function onConfirm() {
+        fetch(`/api/projects/${projectId}`, { method: 'DELETE' })
+          .then(() => {
+            allProjects = allProjects.filter(p => p.id !== projectId)
+            item.remove()
+            applySearch()
+          })
+        cleanup()
+      }
+      function cleanup() {
+        overlay.classList.remove('open')
+        document.getElementById('btnDeleteConfirm').removeEventListener('click', onConfirm)
+        document.getElementById('btnDeleteCancel').removeEventListener('click', cleanup)
+        overlay.removeEventListener('click', onOverlayClick)
+      }
+      function onOverlayClick(e) { if (e.target === overlay) cleanup() }
+
+      document.getElementById('btnDeleteConfirm').addEventListener('click', onConfirm)
+      document.getElementById('btnDeleteCancel').addEventListener('click', cleanup)
+      overlay.addEventListener('click', onOverlayClick)
+    }
+
+    function openNewProjectModal() {
+      document.getElementById('inputName').value = ''
+      document.getElementById('inputNameError').style.display = 'none'
+      document.getElementById('modalOverlay').classList.add('open')
+      document.getElementById('inputName').focus()
+    }
+
+    function closeModal() {
+      document.getElementById('modalOverlay').classList.remove('open')
+    }
+
+    document.getElementById('btnNewProject').addEventListener('click', openNewProjectModal)
+    document.getElementById('btnCancel').addEventListener('click', closeModal)
+    document.getElementById('modalOverlay').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('modalOverlay')) closeModal()
+    })
+    document.getElementById('inputName').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') createProject()
+    })
+    document.getElementById('btnCreate').addEventListener('click', createProject)
+
+    async function createProject() {
+      if (isCreating) return
+      const name = document.getElementById('inputName').value.trim()
+      const errorEl = document.getElementById('inputNameError')
+      errorEl.style.display = 'none'
+      if (!name) { document.getElementById('inputName').focus(); return }
+      isCreating = true
+      const res = await fetch('/api/projects', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name }),
+      })
+      isCreating = false
+      if (res.ok) {
+        const data = await res.json()
+        closeModal()
+        openEditor(data.project.id)
+      } else if (res.status === 409) {
+        errorEl.textContent = i18n.get('#dash-duplicate_name#')
+        errorEl.style.display = ''
+        document.getElementById('inputName').focus()
+      }
+    }
+
+    async function loadProjects() {
+      const listEl = document.getElementById('projectList')
+      listEl.innerHTML = `<div class="empty-msg">${i18n.get('#admin-loading#')}</div>`
+      try {
+        const res = await fetch('/api/projects?all=true')
+        if (!res.ok) throw new Error(res.status)
+        const data = await res.json()
+        allProjects = data.projects
+        applySearch()
+      } catch (e) {
+        listEl.innerHTML = `<div class="empty-msg">${i18n.get('#ch-load_error#')}</div>`
+      }
+    }
+
+    ;(async () => {
+      await initHeader(i18n.get('#nav-projects#'))
+      loadProjects()
+    })()
+  </script>
+</body>
+</html>

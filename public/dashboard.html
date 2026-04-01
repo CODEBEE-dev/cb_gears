@@ -63,21 +63,6 @@
         </div>
         <div class="project-list" id="recentList"></div>
       </div>
-      <!-- Projects 뷰 -->
-      <div class="content" id="viewProjects" style="display:none;">
-        <div class="content-header">
-          <h2 class="section-title" id="allProjectsTitle"></h2>
-          <button class="btn-new" id="btnNewProject2">
-            <span class="material-symbols-rounded">add</span>
-            <span id="labelNewProject2"></span>
-          </button>
-        </div>
-        <div class="search-bar">
-          <span class="material-symbols-rounded">search</span>
-          <input type="text" id="searchInput" placeholder="">
-        </div>
-        <div class="project-list" id="allList"></div>
-      </div>
     </div>
   </main>
 
@@ -123,13 +108,10 @@
   <script>
     // ── i18n ──
     document.getElementById('recentTitle').textContent = i18n.get('#dash-recent_projects#')
-    document.getElementById('allProjectsTitle').textContent = i18n.get('#nav-projects#')
     document.getElementById('labelNewProject').textContent = i18n.get('#dash-new_project#')
-    document.getElementById('labelNewProject2').textContent = i18n.get('#dash-new_project#')
     document.getElementById('modalTitle').textContent = i18n.get('#dash-modal_title#')
     document.getElementById('labelName').textContent = i18n.get('#dash-project_name#')
     document.getElementById('inputName').placeholder = i18n.get('#dash-project_name_placeholder#')
-    document.getElementById('searchInput').placeholder = i18n.get('#dash-search_placeholder#')
     document.getElementById('btnCancel').textContent = i18n.get('#dash-cancel#')
     document.getElementById('btnCreate').textContent = i18n.get('#dash-create#')
     document.getElementById('loginModalTitle').textContent = i18n.get('#dash-login_modal_title#')
@@ -143,7 +125,6 @@
     // ── 상태 ──
     let currentUser = null
     let isCreating = false
-    let allProjects = []
 
     // ── 유틸 ──
     function openEditor(projectId) {
@@ -224,39 +205,6 @@
       }
     }
 
-    async function loadAll() {
-      const res = await fetch('/api/projects?all=true')
-      if (!res.ok) return
-      const data = await res.json()
-      allProjects = data.projects
-      applySearch()
-    }
-
-    // ── 실시간 검색 ──
-    function applySearch() {
-      const q = document.getElementById('searchInput').value.trim().toLowerCase()
-      const filtered = q ? allProjects.filter(p => p.name.toLowerCase().includes(q)) : allProjects
-      renderList(document.getElementById('allList'), filtered)
-    }
-
-    document.getElementById('searchInput').addEventListener('input', applySearch)
-
-    // ── 뷰 전환 ──
-    let currentView = 'home'
-
-    function switchView(key) {
-      currentView = key
-      document.getElementById('viewHome').style.display = key === 'home' ? '' : 'none'
-      document.getElementById('viewProjects').style.display = key === 'projects' ? '' : 'none'
-      if (key === 'projects' && currentUser) loadAll()
-      if (key === 'home' && currentUser) loadRecent()
-      history.replaceState(null, '', '#' + key)
-    }
-
-    // ── 액티비티바 뷰 전환 수신 ──
-    document.addEventListener('activityBarSwitch', (e) => {
-      switchView(e.detail)
-    })
 
     // ── 모달 ──
     function openNewProjectModal() {
@@ -275,7 +223,6 @@
     }
 
     document.getElementById('btnNewProject').addEventListener('click', openNewProjectModal)
-    document.getElementById('btnNewProject2').addEventListener('click', openNewProjectModal)
     document.getElementById('btnCancel').addEventListener('click', closeModal)
     document.getElementById('modalOverlay').addEventListener('click', (e) => {
       if (e.target === document.getElementById('modalOverlay')) closeModal()
@@ -318,26 +265,12 @@
     }
 
     ;(async () => {
-      const user = await initHeader('Dashboard')
+      const user = await initHeader(i18n.get('#nav-home#'))
       if (user) {
         currentUser = user
-        const initialView = window.location.hash.replace('#', '')
-        if (initialView === 'projects') {
-          document.querySelector('.activity-bar-item[data-key="projects"]')?.classList.add('active')
-          document.querySelector('.activity-bar-item[data-key="home"]')?.classList.remove('active')
-          switchView('projects')
-        } else {
-          loadRecent()
-          history.replaceState(null, '', '#home')
-        }
+        loadRecent()
       } else {
         renderLoginRequired(document.getElementById('recentList'))
-        const initialView = window.location.hash.replace('#', '')
-        if (initialView === 'projects') {
-          document.querySelector('.activity-bar-item[data-key="projects"]')?.classList.add('active')
-          document.querySelector('.activity-bar-item[data-key="home"]')?.classList.remove('active')
-          switchView('projects')
-        }
       }
     })()
   </script>

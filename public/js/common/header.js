@@ -17,7 +17,7 @@ async function initHeader(title) {
 
   header.innerHTML = `
     <img class="gearsIcon" src="/codebridgeai_favicon.png" alt="logo">
-    <div class="appName">${title}</div>
+    <div class="appName">BridgeBot${title ? `<span>${title}</span>` : ''}</div>
     <div class="headerRight">
       <a href="/auth/login" class="authBtn" id="loginBtn" style="display:none;">
         <span class="material-symbols-rounded">login</span>

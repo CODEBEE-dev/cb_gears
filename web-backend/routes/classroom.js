@@ -146,12 +146,13 @@ router.get('/student-projects', requireRole(...ADMIN_ROLES), async (req, res) =>
     const { group } = req.session.user
     if (!group) return res.json({ students: [] })
 
+    const { id: teacherId } = req.session.user
     const result = await query(
       `SELECT user_id, user_name, id AS project_id, name AS project_name, updated_at
        FROM projects
-       WHERE group_name = $1
+       WHERE group_name = $1 AND user_id != $2
        ORDER BY user_name ASC NULLS LAST, updated_at DESC`,
-      [group]
+      [group, teacherId]
     )
 
     // user_id별로 그룹핑

@@ -681,7 +681,7 @@
 
     // ── 초기화 ──
     ;(async () => {
-      const user = await initHeader('Classroom')
+      const user = await initHeader(i18n.get('#nav-classroom#'))
       if (!user) return
 
       currentUser = user

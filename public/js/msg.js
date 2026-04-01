@@ -4637,6 +4637,10 @@ let MSGS = {
     en: 'Loading...',
     ko: '불러오는 중...',
   },
+  '#admin-load_error#': {
+    en: 'An error occurred.',
+    ko: '오류가 발생했습니다.',
+  },
 };
 let MSGS_KEYS = Object.keys(MSGS);
 

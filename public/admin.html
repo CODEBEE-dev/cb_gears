@@ -297,7 +297,7 @@
       if (search) params.set('search', search)
       const res = await fetch(`/api/admin/users?${params}`)
       if (!res.ok) {
-        tbody.innerHTML = `<tr><td colspan="6" class="table-empty">오류가 발생했습니다.</td></tr>`
+        tbody.innerHTML = `<tr><td colspan="6" class="table-empty">${i18n.get('#admin-load_error#')}</td></tr>`
         return
       }
       const data = await res.json()
@@ -616,7 +616,7 @@
       const treeEl = document.getElementById('groupTree')
       treeEl.innerHTML = `<div class="empty-msg">${i18n.get('#admin-loading#')}</div>`
       const res = await fetch('/api/admin/groups')
-      if (!res.ok) { treeEl.innerHTML = `<div class="empty-msg">오류가 발생했습니다.</div>`; return }
+      if (!res.ok) { treeEl.innerHTML = `<div class="empty-msg">${i18n.get('#admin-load_error#')}</div>`; return }
       const data = await res.json()
       groupTreeData = data.groups || []
       // 그룹 추가 모달의 상위 그룹 select도 업데이트 (flat)

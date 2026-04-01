@@ -90,14 +90,29 @@ router.get('/users', requireRole(...ADMIN_ROLES), async (req, res) => {
       return res.json({ users: usersWithRoles.filter(u => u.id !== req.session.user.id) })
     }
 
-    // school_admin: 전체 조회
-    const params = new URLSearchParams({ first, max })
-    if (search) params.set('search', search)
-    const r = await keycloakFetch(`/users?${params}`)
-    if (!r.ok) return res.status(r.status).json({ error: 'Keycloak 사용자 목록 조회 실패' })
-    const users = await r.json()
+    // school_admin: 자기 root group 하위 멤버만 조회
+    if (!sessionGroup) return res.json({ users: [] })
+    const rootGroup = await getRootGroup(sessionGroup)
+    if (!rootGroup) return res.json({ users: [] })
 
-    const usersWithRoles = await Promise.all(users.map(async u => {
+    // root group 전체 멤버 수집 (search, pagination 적용)
+    const params = new URLSearchParams({ first, max: 500 })  // 전체 수집 후 필터링
+    const membersR = await keycloakFetch(`/groups/${rootGroup.id}/members?${params}&briefRepresentation=false`)
+    if (!membersR.ok) return res.status(500).json({ error: '그룹 멤버 조회 실패' })
+    let members = await membersR.json()
+
+    // search 필터 (username, email, firstName, lastName)
+    if (search) {
+      const q = search.toLowerCase()
+      members = members.filter(u =>
+        (u.username || '').toLowerCase().includes(q) ||
+        (u.email || '').toLowerCase().includes(q) ||
+        (u.firstName || '').toLowerCase().includes(q) ||
+        (u.lastName || '').toLowerCase().includes(q)
+      )
+    }
+
+    const usersWithRoles = await Promise.all(members.map(async u => {
       const [rolesR, groupsR] = await Promise.all([
         keycloakFetch(`/users/${u.id}/role-mappings/realm`),
         keycloakFetch(`/users/${u.id}/groups`),

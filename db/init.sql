@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS announcements (
 CREATE TABLE IF NOT EXISTS projects (
   id             SERIAL PRIMARY KEY,
   user_id        VARCHAR(36) NOT NULL,
+  user_name      VARCHAR(255),
   group_name     VARCHAR(255),
   name           VARCHAR(255) NOT NULL,
   block_xml      TEXT,

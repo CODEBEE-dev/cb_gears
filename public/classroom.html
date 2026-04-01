@@ -147,6 +147,102 @@
       text-align: right;
     }
 
+    /* ── 학생 프로젝트 ── */
+    .student-search-wrap {
+      margin-bottom: 1rem;
+      position: relative;
+    }
+    .student-search-wrap .material-symbols-rounded {
+      position: absolute;
+      left: 0.7rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.1rem;
+      color: var(--color-text-muted);
+      pointer-events: none;
+    }
+    .student-search {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 0.55rem 0.75rem 0.55rem 2.2rem;
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      font-family: inherit;
+      font-size: 0.9rem;
+      background: var(--color-surface);
+      color: var(--color-text);
+    }
+    .student-search:focus { outline: none; border-color: var(--color-primary); }
+    .student-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .student-section {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+      overflow: hidden;
+    }
+    .student-section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1.2rem;
+      background: #f0f2fa;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--color-text);
+      cursor: pointer;
+      user-select: none;
+    }
+    .student-section-header:hover { background: #e8eaff; }
+    .student-section-header .material-symbols-rounded { color: var(--color-text-muted); }
+    .student-section-header .material-symbols-rounded {
+      font-size: 1.1rem;
+      color: var(--color-text-muted);
+      transition: transform 0.2s;
+    }
+    .student-section.open .student-section-header .material-symbols-rounded {
+      transform: rotate(180deg);
+    }
+    .student-section-body {
+      display: none;
+      border-top: 1px solid var(--color-border);
+    }
+    .student-section.open .student-section-body { display: block; }
+    .student-project-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.65rem 1.2rem;
+      border-bottom: 1px solid var(--color-border);
+      font-size: 0.88rem;
+    }
+    .student-project-row:last-child { border-bottom: none; }
+    .student-project-name {
+      color: var(--color-text);
+      flex: 1;
+    }
+    .student-project-date {
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+      margin-right: 1rem;
+    }
+    .btn-view {
+      padding: 0.3rem 0.75rem;
+      border: 1px solid var(--color-primary);
+      border-radius: 0.4rem;
+      background: none;
+      color: var(--color-primary);
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      white-space: nowrap;
+    }
+    .btn-view:hover { background: var(--color-primary); color: #fff; }
+
     /* ── 공지 작성 모달 ── */
     .modal textarea {
       width: 100%;
@@ -205,11 +301,6 @@
 
         <div class="content-header">
           <h2 class="section-title" id="pageTitle"></h2>
-          <!-- 선생님만 표시 -->
-          <button class="btn-new" id="btnNewAnnouncement" style="display:none;">
-            <span class="material-symbols-rounded">add</span>
-            <span id="labelNewAnnouncement"></span>
-          </button>
         </div>
 
         <!-- 탭 -->
@@ -222,11 +313,31 @@
             <span class="material-symbols-rounded">leaderboard</span>
             <span id="tabLabelLeaderboard"></span>
           </button>
+          <!-- teacher 전용 -->
+          <button class="tab-btn" id="tabStudentProjects" style="display:none;">
+            <span class="material-symbols-rounded">folder_shared</span>
+            <span id="tabLabelStudentProjects"></span>
+          </button>
         </div>
 
         <!-- 공지사항 탭 -->
         <div id="viewAnnouncements">
+          <div style="display:flex; justify-content:flex-end; margin-bottom:0.75rem;">
+            <button class="btn-new" id="btnNewAnnouncement" style="display:none;">
+              <span class="material-symbols-rounded">add</span>
+              <span id="labelNewAnnouncement"></span>
+            </button>
+          </div>
           <div class="announcement-list" id="announcementList"></div>
+        </div>
+
+        <!-- 학생 프로젝트 탭 (teacher 전용) -->
+        <div id="viewStudentProjects" style="display:none;">
+          <div class="student-search-wrap">
+            <span class="material-symbols-rounded">search</span>
+            <input type="text" class="student-search" id="studentSearch" placeholder="">
+          </div>
+          <div class="student-list" id="studentProjectList"></div>
         </div>
 
         <!-- 리더보드 탭 -->
@@ -283,7 +394,9 @@
     document.getElementById('pageTitle').textContent           = i18n.get('#nav-classroom#')
     document.getElementById('labelNewAnnouncement').textContent = i18n.get('#classroom-new_announcement#')
     document.getElementById('tabLabelAnnouncements').textContent = i18n.get('#classroom-announcements#')
-    document.getElementById('tabLabelLeaderboard').textContent  = i18n.get('#classroom-leaderboard#')
+    document.getElementById('tabLabelLeaderboard').textContent      = i18n.get('#classroom-leaderboard#')
+    document.getElementById('tabLabelStudentProjects').textContent  = i18n.get('#classroom-student_projects#')
+    document.getElementById('studentSearch').placeholder           = i18n.get('#classroom-search_student#')
     document.getElementById('thRank').textContent      = i18n.get('#classroom-rank#')
     document.getElementById('thStudent').textContent   = i18n.get('#classroom-student#')
     document.getElementById('thCompleted').textContent = i18n.get('#classroom-completed#')
@@ -304,17 +417,21 @@
     let editingId = null
 
     // ── 탭 전환 ──
+    const TABS = ['announcements', 'leaderboard', 'student-projects']
     function switchTab(tab) {
-      const isAnn = tab === 'announcements'
-      document.getElementById('viewAnnouncements').style.display = isAnn ? '' : 'none'
-      document.getElementById('viewLeaderboard').style.display   = isAnn ? 'none' : ''
-      document.getElementById('tabAnnouncements').classList.toggle('active', isAnn)
-      document.getElementById('tabLeaderboard').classList.toggle('active', !isAnn)
-      if (!isAnn) loadLeaderboard()
+      document.getElementById('viewAnnouncements').style.display    = tab === 'announcements'     ? '' : 'none'
+      document.getElementById('viewLeaderboard').style.display      = tab === 'leaderboard'       ? '' : 'none'
+      document.getElementById('viewStudentProjects').style.display  = tab === 'student-projects'  ? '' : 'none'
+      document.getElementById('tabAnnouncements').classList.toggle('active',    tab === 'announcements')
+      document.getElementById('tabLeaderboard').classList.toggle('active',      tab === 'leaderboard')
+      document.getElementById('tabStudentProjects').classList.toggle('active',  tab === 'student-projects')
+      if (tab === 'leaderboard')      loadLeaderboard()
+      if (tab === 'student-projects') loadStudentProjects()
     }
 
-    document.getElementById('tabAnnouncements').addEventListener('click', () => switchTab('announcements'))
-    document.getElementById('tabLeaderboard').addEventListener('click', () => switchTab('leaderboard'))
+    document.getElementById('tabAnnouncements').addEventListener('click',   () => switchTab('announcements'))
+    document.getElementById('tabLeaderboard').addEventListener('click',     () => switchTab('leaderboard'))
+    document.getElementById('tabStudentProjects').addEventListener('click', () => switchTab('student-projects'))
 
     // ── 공지사항 ──
     function formatDate(iso) {
@@ -414,6 +531,79 @@
       }
     }
 
+    // ── 학생 프로젝트 ──
+    let allStudents = []
+    const MAX_PROJECTS = 5
+
+    function renderStudentList(students) {
+      const listEl = document.getElementById('studentProjectList')
+      listEl.innerHTML = ''
+      if (students.length === 0) {
+        listEl.innerHTML = `<div class="empty-msg">${i18n.get('#classroom-no_projects#')}</div>`
+        return
+      }
+      students.forEach(student => {
+        const section = document.createElement('div')
+        section.className = 'student-section'
+
+        const header = document.createElement('div')
+        header.className = 'student-section-header'
+        header.innerHTML = `
+          <span>${escapeHtml(student.user_name || student.user_id)}</span>
+          <span class="material-symbols-rounded">expand_more</span>
+        `
+        header.addEventListener('click', () => section.classList.toggle('open'))
+        section.appendChild(header)
+
+        const body = document.createElement('div')
+        body.className = 'student-section-body'
+
+        const recentProjects = student.projects.slice(0, MAX_PROJECTS)
+        if (recentProjects.length === 0) {
+          body.innerHTML = `<div class="student-project-row"><span class="student-project-name" style="color:var(--color-text-muted)">${i18n.get('#classroom-no_projects#')}</span></div>`
+        } else {
+          recentProjects.forEach(proj => {
+            const row = document.createElement('div')
+            row.className = 'student-project-row'
+            row.innerHTML = `
+              <span class="student-project-name">${escapeHtml(proj.name)}</span>
+              <span class="student-project-date">${formatDate(proj.updated_at)}</span>
+              <button class="btn-view">${i18n.get('#classroom-open_project#')}</button>
+            `
+            row.querySelector('.btn-view').addEventListener('click', () => {
+              window.open(`/editor?projectId=${proj.id}&readonly=true`, '_blank')
+            })
+            body.appendChild(row)
+          })
+        }
+
+        section.appendChild(body)
+        listEl.appendChild(section)
+      })
+    }
+
+    async function loadStudentProjects() {
+      const listEl = document.getElementById('studentProjectList')
+      listEl.innerHTML = ''
+      try {
+        const res = await fetch('/api/classroom/student-projects')
+        if (!res.ok) throw new Error(res.status)
+        const { students } = await res.json()
+        allStudents = students
+        renderStudentList(allStudents)
+      } catch {
+        listEl.innerHTML = `<div class="empty-msg">${i18n.get('#ch-load_error#')}</div>`
+      }
+    }
+
+    document.getElementById('studentSearch').addEventListener('input', (e) => {
+      const q = e.target.value.trim().toLowerCase()
+      const filtered = q
+        ? allStudents.filter(s => (s.user_name || s.user_id).toLowerCase().includes(q))
+        : allStudents
+      renderStudentList(filtered)
+    })
+
     // ── 공지사항 모달 ──
     function openAnnouncementModal(existing = null) {
       editingId = existing ? existing.id : null
@@ -499,6 +689,7 @@
 
       if (isTeacher) {
         document.getElementById('btnNewAnnouncement').style.display = ''
+        document.getElementById('tabStudentProjects').style.display = ''
       }
 
       loadAnnouncements()

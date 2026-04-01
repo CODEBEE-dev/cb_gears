@@ -4239,6 +4239,22 @@ let MSGS = {
     en: 'Enter announcement content',
     ko: '공지 내용을 입력하세요',
   },
+  '#classroom-student_projects#': {
+    en: 'Student Projects',
+    ko: '학생 프로젝트',
+  },
+  '#classroom-no_projects#': {
+    en: 'No projects yet.',
+    ko: '아직 프로젝트가 없습니다.',
+  },
+  '#classroom-open_project#': {
+    en: 'View',
+    ko: '열기',
+  },
+  '#classroom-search_student#': {
+    en: 'Search by student name',
+    ko: '학생 이름 검색',
+  },
 
   // ── 챌린지 다이얼로그 ──
   '#ch-completed#': {

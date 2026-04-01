@@ -41,6 +41,12 @@ var main = new function() {
     $('#simSplitToggle').addClass('active');
 
     self.showWhatsNew();
+
+    if (self.isReadOnly) {
+      self.$projectName.prop('readonly', true);
+      self.$fileMenu.hide();
+      document.getElementById('savingIndicator')?.style && (document.getElementById('savingIndicator').style.display = 'none');
+    }
   };
 
   // Update text already in html
@@ -131,6 +137,9 @@ var main = new function() {
   // DB 로드 완료 전까지 autoSave 차단
   this.projectLoaded = false;
 
+  // 읽기 전용 모드 (URL에 readonly=true 인 경우)
+  this.isReadOnly = new URLSearchParams(window.location.search).get('readonly') === 'true';
+
   // Load project data from DB and apply to editor
   this.loadProjectFromDb = async function() {
     const urlParams = new URLSearchParams(window.location.search);
@@ -141,7 +150,8 @@ var main = new function() {
     }
     window.currentProjectId = projectId;
     try {
-      const res = await fetch('/api/projects/' + projectId);
+      const apiPath = self.isReadOnly ? '/api/projects/student/' : '/api/projects/';
+      const res = await fetch(apiPath + projectId);
       if (!res.ok) return;
       const data = await res.json();
       const p = data.project;
@@ -159,6 +169,7 @@ var main = new function() {
 
   // Save robot/world options to DB
   this.saveRobotToDb = function(robotOptionsJson) {
+    if (self.isReadOnly) return;
     const projectId = window.currentProjectId;
     if (!projectId) return;
     fetch('/api/projects/' + projectId, {
@@ -169,6 +180,7 @@ var main = new function() {
   };
 
   this.saveWorldToDb = function(worldJson) {
+    if (self.isReadOnly) return;
     const projectId = window.currentProjectId;
     if (!projectId) return;
     const world = JSON.parse(worldJson);
@@ -994,6 +1006,7 @@ var main = new function() {
 
   // 수동 저장 — unsaved 조건 무시하고 강제 저장
   this.saveNow = function() {
+    if (self.isReadOnly) return;
     const projectId = window.currentProjectId;
     if (!projectId) return;
 
@@ -1023,6 +1036,7 @@ var main = new function() {
 
   // 통합 자동저장 — block_xml + python 한 번에 저장
   this.autoSave = function() {
+    if (self.isReadOnly) return;
     if (!self.projectLoaded) return;
     const projectId = window.currentProjectId;
     if (!projectId) return;

@@ -140,4 +140,38 @@ router.get('/leaderboard', requireAuth, async (req, res) => {
   }
 })
 
+// ── 학생 프로젝트 목록 조회 (teacher/school_admin만, 같은 group)
+router.get('/student-projects', requireRole(...ADMIN_ROLES), async (req, res) => {
+  try {
+    const { group } = req.session.user
+    if (!group) return res.json({ students: [] })
+
+    const result = await query(
+      `SELECT user_id, user_name, id AS project_id, name AS project_name, updated_at
+       FROM projects
+       WHERE group_name = $1
+       ORDER BY user_name ASC NULLS LAST, updated_at DESC`,
+      [group]
+    )
+
+    // user_id별로 그룹핑
+    const map = new Map()
+    for (const row of result.rows) {
+      if (!map.has(row.user_id)) {
+        map.set(row.user_id, { user_id: row.user_id, user_name: row.user_name, projects: [] })
+      }
+      map.get(row.user_id).projects.push({
+        id: row.project_id,
+        name: row.project_name,
+        updated_at: row.updated_at,
+      })
+    }
+
+    res.json({ students: Array.from(map.values()) })
+  } catch (err) {
+    console.error('[DB] 학생 프로젝트 목록 조회 실패:', err)
+    res.status(500).json({ error: 'Internal server error' })
+  }
+})
+
 module.exports = router

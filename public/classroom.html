@@ -16,6 +16,7 @@
   <script src="js/challengeData.js"></script>
   <script src="js/common/activityBar.js"></script>
   <script src="js/common/header.js"></script>
+  <script src="js/common/ui.js"></script>
 
   <style>
     /* ── 탭 ── */
@@ -649,25 +650,10 @@
 
     // ── 삭제 모달 ──
     function openDeleteModal(id, cardEl) {
-      const overlay = document.getElementById('deleteModalOverlay')
-      overlay.classList.add('open')
-
-      function onConfirm() {
+      openConfirmModal('deleteModalOverlay', 'btnDeleteConfirm', 'btnDeleteCancel', () => {
         fetch(`/api/classroom/announcements/${id}`, { method: 'DELETE' })
           .then(r => { if (r.ok) cardEl.remove() })
-        cleanup()
-      }
-      function cleanup() {
-        overlay.classList.remove('open')
-        document.getElementById('btnDeleteConfirm').removeEventListener('click', onConfirm)
-        document.getElementById('btnDeleteCancel').removeEventListener('click', cleanup)
-        overlay.removeEventListener('click', onOverlayClick)
-      }
-      function onOverlayClick(e) { if (e.target === overlay) cleanup() }
-
-      document.getElementById('btnDeleteConfirm').addEventListener('click', onConfirm)
-      document.getElementById('btnDeleteCancel').addEventListener('click', cleanup)
-      overlay.addEventListener('click', onOverlayClick)
+      })
     }
 
     // ── HTML 이스케이프 ──

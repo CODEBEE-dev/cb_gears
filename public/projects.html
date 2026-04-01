@@ -17,6 +17,7 @@
   <script src="js/msg.js"></script>
   <script src="js/common/activityBar.js"></script>
   <script src="js/common/header.js"></script>
+  <script src="js/common/ui.js"></script>
 
   <title>Projects</title>
 </head>
@@ -130,29 +131,13 @@
     document.getElementById('searchInput').addEventListener('input', applySearch)
 
     function confirmDelete(projectId, item) {
-      const overlay = document.getElementById('deleteModalOverlay')
-      overlay.classList.add('open')
-
-      function onConfirm() {
-        fetch(`/api/projects/${projectId}`, { method: 'DELETE' })
-          .then(() => {
-            allProjects = allProjects.filter(p => p.id !== projectId)
-            item.remove()
-            applySearch()
-          })
-        cleanup()
-      }
-      function cleanup() {
-        overlay.classList.remove('open')
-        document.getElementById('btnDeleteConfirm').removeEventListener('click', onConfirm)
-        document.getElementById('btnDeleteCancel').removeEventListener('click', cleanup)
-        overlay.removeEventListener('click', onOverlayClick)
-      }
-      function onOverlayClick(e) { if (e.target === overlay) cleanup() }
-
-      document.getElementById('btnDeleteConfirm').addEventListener('click', onConfirm)
-      document.getElementById('btnDeleteCancel').addEventListener('click', cleanup)
-      overlay.addEventListener('click', onOverlayClick)
+      openConfirmModal('deleteModalOverlay', 'btnDeleteConfirm', 'btnDeleteCancel', () => {
+        fetch(`/api/projects/${projectId}`, { method: 'DELETE' }).then(() => {
+          allProjects = allProjects.filter(p => p.id !== projectId)
+          item.remove()
+          applySearch()
+        })
+      })
     }
 
     function openNewProjectModal() {
@@ -205,6 +190,10 @@
       listEl.innerHTML = `<div class="empty-msg">${i18n.get('#admin-loading#')}</div>`
       try {
         const res = await fetch('/api/projects?all=true')
+        if (res.status === 401) {
+          listEl.innerHTML = `<div class="empty-msg">${i18n.get('#dash-login_required#')}</div>`
+          return
+        }
         if (!res.ok) throw new Error(res.status)
         const data = await res.json()
         allProjects = data.projects

@@ -19,6 +19,7 @@
   <script src="js/msg.js"></script>
   <script src="js/common/activityBar.js"></script>
   <script src="js/common/header.js"></script>
+  <script src="js/common/ui.js"></script>
 
   <title>Dashboard</title>
 </head>
@@ -36,22 +37,22 @@
             <div class="shortcut-card-icon">
               <span class="material-symbols-rounded">smart_toy</span>
             </div>
-            <div class="shortcut-card-title">로봇 구성 도구</div>
-            <div class="shortcut-card-desc">로봇의 형태와 센서를 설정하세요</div>
+            <div class="shortcut-card-title" id="scRobotTitle"></div>
+            <div class="shortcut-card-desc" id="scRobotDesc"></div>
           </a>
           <a href="/builder" class="shortcut-card shortcut-card-world">
             <div class="shortcut-card-icon">
               <span class="material-symbols-rounded">map</span>
             </div>
-            <div class="shortcut-card-title">월드 빌더</div>
-            <div class="shortcut-card-desc">시뮬레이션 환경을 직접 만들어보세요</div>
+            <div class="shortcut-card-title" id="scWorldTitle"></div>
+            <div class="shortcut-card-desc" id="scWorldDesc"></div>
           </a>
           <a href="/challenges" class="shortcut-card shortcut-card-challenge">
             <div class="shortcut-card-icon">
               <span class="material-symbols-rounded">emoji_events</span>
             </div>
-            <div class="shortcut-card-title">도전 과제</div>
-            <div class="shortcut-card-desc">단계별 챌린지를 풀어보세요</div>
+            <div class="shortcut-card-title" id="scChallengeTitle"></div>
+            <div class="shortcut-card-desc" id="scChallengeDesc"></div>
           </a>
         </div>
         <div class="content-header">
@@ -107,7 +108,13 @@
 
   <script>
     // ── i18n ──
-    document.getElementById('recentTitle').textContent = i18n.get('#dash-recent_projects#')
+    document.getElementById('scRobotTitle').textContent     = i18n.get('#dash-shortcut_robot_title#')
+    document.getElementById('scRobotDesc').textContent      = i18n.get('#dash-shortcut_robot_desc#')
+    document.getElementById('scWorldTitle').textContent     = i18n.get('#dash-shortcut_world_title#')
+    document.getElementById('scWorldDesc').textContent      = i18n.get('#dash-shortcut_world_desc#')
+    document.getElementById('scChallengeTitle').textContent = i18n.get('#nav-challenges#')
+    document.getElementById('scChallengeDesc').textContent  = i18n.get('#dash-shortcut_challenge_desc#')
+    document.getElementById('recentTitle').textContent      = i18n.get('#dash-recent_projects#')
     document.getElementById('labelNewProject').textContent = i18n.get('#dash-new_project#')
     document.getElementById('modalTitle').textContent = i18n.get('#dash-modal_title#')
     document.getElementById('labelName').textContent = i18n.get('#dash-project_name#')
@@ -132,27 +139,9 @@
     }
 
     function deleteProject(projectId, item) {
-      const overlay = document.getElementById('deleteModalOverlay')
-      overlay.classList.add('open')
-
-      function onConfirm() {
-        fetch(`/api/projects/${projectId}`, { method: 'DELETE' })
-          .then(() => item.remove())
-        cleanup()
-      }
-      function cleanup() {
-        overlay.classList.remove('open')
-        document.getElementById('btnDeleteConfirm').removeEventListener('click', onConfirm)
-        document.getElementById('btnDeleteCancel').removeEventListener('click', cleanup)
-        overlay.removeEventListener('click', onOverlayClick)
-      }
-      function onOverlayClick(e) {
-        if (e.target === overlay) cleanup()
-      }
-
-      document.getElementById('btnDeleteConfirm').addEventListener('click', onConfirm)
-      document.getElementById('btnDeleteCancel').addEventListener('click', cleanup)
-      overlay.addEventListener('click', onOverlayClick)
+      openConfirmModal('deleteModalOverlay', 'btnDeleteConfirm', 'btnDeleteCancel', () => {
+        fetch(`/api/projects/${projectId}`, { method: 'DELETE' }).then(() => item.remove())
+      })
     }
 
     function makeProjectItem(p) {

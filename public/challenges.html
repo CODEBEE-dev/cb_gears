@@ -215,7 +215,7 @@
   <div class="challenges-content">
     <div class="challenges-inner">
       <div class="progress-bar-area">
-        <span class="progress-bar-label">전체 진행률</span>
+        <span class="progress-bar-label" id="progressBarLabel"></span>
         <div id="progressBarTrack"><div id="progressBarFill"></div></div>
         <span id="progressText">0 / 0</span>
       </div>
@@ -243,6 +243,7 @@
   let currentChallenge = null;
 
   document.getElementById('loadingMsg').textContent = i18n.get('#ch-loading#')
+  document.getElementById('progressBarLabel').textContent = i18n.get('#ch-progress_label#')
   document.getElementById('modalCancel').textContent = i18n.get('#ch-cancel#')
   document.getElementById('modalStart').textContent = i18n.get('#ch-start#')
 
@@ -261,7 +262,7 @@
       data.progress.forEach(row => { progress[row.challenge_id] = true; });
       render(progress);
     } catch (e) {
-      document.getElementById('loadingMsg').textContent = '진행도를 불러오지 못했습니다.';
+      document.getElementById('loadingMsg').textContent = i18n.get('#ch-progress_error#');
     }
   }
 

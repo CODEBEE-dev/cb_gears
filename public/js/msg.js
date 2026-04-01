@@ -4155,6 +4155,42 @@ let MSGS = {
     en: 'New World',
     ko: '월드 만들기',
   },
+  '#robots-load_error#': {
+    en: 'Failed to load robots.',
+    ko: '로봇 목록을 불러오는 데 실패했습니다.',
+  },
+  '#worlds-load_error#': {
+    en: 'Failed to load worlds.',
+    ko: '월드 목록을 불러오는 데 실패했습니다.',
+  },
+  '#ch-progress_label#': {
+    en: 'Overall Progress',
+    ko: '전체 진행률',
+  },
+  '#ch-progress_error#': {
+    en: 'Failed to load progress.',
+    ko: '진행도를 불러오지 못했습니다.',
+  },
+  '#dash-shortcut_robot_title#': {
+    en: 'Robot Configurator',
+    ko: '로봇 구성 도구',
+  },
+  '#dash-shortcut_robot_desc#': {
+    en: 'Configure your robot\'s shape and sensors',
+    ko: '로봇의 형태와 센서를 설정하세요',
+  },
+  '#dash-shortcut_world_title#': {
+    en: 'World Builder',
+    ko: '월드 빌더',
+  },
+  '#dash-shortcut_world_desc#': {
+    en: 'Build your own simulation environment',
+    ko: '시뮬레이션 환경을 직접 만들어보세요',
+  },
+  '#dash-shortcut_challenge_desc#': {
+    en: 'Solve step-by-step challenges',
+    ko: '단계별 챌린지를 풀어보세요',
+  },
   '#robots-new_robot#': {
     en: 'New Robot',
     ko: '로봇 만들기',

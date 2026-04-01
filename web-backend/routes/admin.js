@@ -90,16 +90,27 @@ router.get('/users', requireRole(...ADMIN_ROLES), async (req, res) => {
       return res.json({ users: usersWithRoles.filter(u => u.id !== req.session.user.id) })
     }
 
-    // school_admin: 자기 root group 하위 멤버만 조회
+    // school_admin: 자기 root group 하위 전체 멤버 조회
     if (!sessionGroup) return res.json({ users: [] })
     const rootGroup = await getRootGroup(sessionGroup)
     if (!rootGroup) return res.json({ users: [] })
 
-    // root group 전체 멤버 수집 (search, pagination 적용)
-    const params = new URLSearchParams({ first, max: 500 })  // 전체 수집 후 필터링
-    const membersR = await keycloakFetch(`/groups/${rootGroup.id}/members?${params}&briefRepresentation=false`)
-    if (!membersR.ok) return res.status(500).json({ error: '그룹 멤버 조회 실패' })
-    let members = await membersR.json()
+    // root group + 모든 하위 그룹 id 수집
+    const subGroups = await collectSubGroupsFlat(rootGroup.id)
+    const allGroupIds = [rootGroup.id, ...subGroups.map(g => g.id)]
+
+    // 각 그룹 멤버 병렬 조회 후 중복 제거 (userId 기준)
+    const memberArrays = await Promise.all(
+      allGroupIds.map(gid =>
+        keycloakFetch(`/groups/${gid}/members?max=500`).then(r => r.ok ? r.json() : [])
+      )
+    )
+    const seenIds = new Set()
+    let members = memberArrays.flat().filter(u => {
+      if (seenIds.has(u.id)) return false
+      seenIds.add(u.id)
+      return true
+    })
 
     // search 필터 (username, email, firstName, lastName)
     if (search) {

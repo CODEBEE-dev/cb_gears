@@ -4151,6 +4151,14 @@ let MSGS = {
     en: 'Search worlds...',
     ko: '월드 검색...',
   },
+  '#worlds-new_world#': {
+    en: 'New World',
+    ko: '월드 만들기',
+  },
+  '#robots-new_robot#': {
+    en: 'New Robot',
+    ko: '로봇 만들기',
+  },
   '#nav-settings#': {
     en: 'Settings',
     ko: '설정',

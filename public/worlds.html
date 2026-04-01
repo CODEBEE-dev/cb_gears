@@ -100,6 +100,10 @@
       <div class="content">
         <div class="content-header">
           <h2 class="section-title" id="pageTitle"></h2>
+          <button class="btn-new" id="btnNewWorld">
+            <span class="material-symbols-rounded">add</span>
+            <span id="labelNewWorld"></span>
+          </button>
         </div>
         <div class="search-bar">
           <span class="material-symbols-rounded">search</span>
@@ -123,6 +127,10 @@
 
   <script>
     document.getElementById('pageTitle').textContent = i18n.get('#nav-worlds#')
+    document.getElementById('labelNewWorld').textContent = i18n.get('#worlds-new_world#')
+    document.getElementById('btnNewWorld').addEventListener('click', () => {
+      window.location.href = '/builder'
+    })
     document.getElementById('searchInput').placeholder = i18n.get('#worlds-search_placeholder#')
     document.getElementById('deleteModalTitle').textContent = i18n.get('#admin-delete_confirm#')
     document.getElementById('btnDeleteCancel').textContent = i18n.get('#admin-cancel#')

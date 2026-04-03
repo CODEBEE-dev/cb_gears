@@ -40,7 +40,6 @@ var main = new function() {
     $('#simPanel').addClass('splitActive');
     $('#simSplitToggle').addClass('active');
 
-    self.showWhatsNew();
 
     if (self.isReadOnly) {
       self.$projectName.prop('readonly', true);
@@ -1207,6 +1206,7 @@ var main = new function() {
 
   // Display what's new if not seen before
   this.showWhatsNew = function(forceShow=false) {
+    return;
     let current = 20260203;
     let lastShown = localStorage.getItem('whatsNew');
     if (lastShown == null || parseInt(lastShown) < current || forceShow) {

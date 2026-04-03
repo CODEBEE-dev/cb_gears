@@ -4,5 +4,6 @@ COPY package*.json ./
 RUN npm install
 COPY . .
 ENV NODE_ENV=production
-EXPOSE 45531
+ARG WEB_BACKEND_PORT
+EXPOSE ${WEB_BACKEND_PORT}
 CMD ["node", "index.js"]

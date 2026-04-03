@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-require('dotenv').config()
+require('dotenv').config({ path: require('path').join(__dirname, '../.env') })
 const path = require('path')
 const cookieParser = require('cookie-parser')
 const { router: authRouter, initKeycloak, requireAuth } = require('./auth')

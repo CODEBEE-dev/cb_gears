@@ -4299,6 +4299,38 @@ let MSGS = {
     en: 'Search by student name',
     ko: '학생 이름 검색',
   },
+  '#classroom-materials#': {
+    en: 'Materials',
+    ko: '자료실',
+  },
+  '#classroom-new_material#': {
+    en: 'New Material',
+    ko: '자료 등록',
+  },
+  '#classroom-no_materials#': {
+    en: 'No materials yet.',
+    ko: '아직 등록된 자료가 없습니다.',
+  },
+  '#classroom-material_title_placeholder#': {
+    en: 'Enter material title',
+    ko: '자료 제목을 입력하세요',
+  },
+  '#classroom-material_content_placeholder#': {
+    en: 'Enter description (optional)',
+    ko: '설명을 입력하세요 (선택)',
+  },
+  '#classroom-attach_files#': {
+    en: 'Attach Files',
+    ko: '파일 첨부',
+  },
+  '#classroom-download#': {
+    en: 'Download',
+    ko: '다운로드',
+  },
+  '#classroom-material_delete_confirm#': {
+    en: 'Delete this material?',
+    ko: '이 자료를 삭제하시겠습니까?',
+  },
 
   // ── 챌린지 다이얼로그 ──
   '#ch-completed#': {

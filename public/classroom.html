@@ -289,6 +289,134 @@
       padding: 2.5rem 0;
       font-size: 0.9rem;
     }
+
+    /* ── 자료실 ── */
+    .material-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .material-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+      padding: 1rem 1.2rem;
+    }
+    .material-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+    .material-card-title {
+      font-size: 0.97rem;
+      font-weight: 700;
+      color: var(--color-text);
+      flex: 1;
+    }
+    .material-card-actions {
+      display: flex;
+      gap: 0.3rem;
+      flex-shrink: 0;
+    }
+    .material-card-meta {
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+      margin-top: 0.25rem;
+    }
+    .material-card-body {
+      margin-top: 0.5rem;
+      font-size: 0.88rem;
+      color: var(--color-text);
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+    .material-files {
+      margin-top: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+    .material-file-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.45rem 0.75rem;
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      font-size: 0.85rem;
+      text-decoration: none;
+      color: var(--color-text);
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .material-file-item:hover {
+      border-color: var(--color-primary);
+      background: var(--color-surface);
+    }
+    .material-file-item .material-symbols-rounded {
+      font-size: 1.1rem;
+      color: var(--color-primary);
+      flex-shrink: 0;
+    }
+    .material-file-name {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .material-file-size {
+      font-size: 0.75rem;
+      color: var(--color-text-muted);
+      flex-shrink: 0;
+    }
+
+    /* 자료 등록 모달 - 파일 첨부 영역 */
+    .file-input-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.45rem 0.9rem;
+      border: 1px dashed var(--color-border);
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-size: 0.85rem;
+      color: var(--color-text-muted);
+      transition: border-color 0.15s, color 0.15s;
+      margin-top: 0.25rem;
+    }
+    .file-input-label:hover { border-color: var(--color-primary); color: var(--color-primary); }
+    .file-input-label .material-symbols-rounded { font-size: 1.1rem; }
+    .selected-files {
+      margin-top: 0.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .selected-file-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.83rem;
+      color: var(--color-text);
+    }
+    .selected-file-item .material-symbols-rounded {
+      font-size: 1rem;
+      color: var(--color-text-muted);
+    }
+    .btn-remove-file {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      color: var(--color-text-muted);
+      display: flex;
+      align-items: center;
+      margin-left: auto;
+      flex-shrink: 0;
+    }
+    .btn-remove-file:hover { color: #c62828; }
+    .btn-remove-file .material-symbols-rounded { font-size: 1rem; }
   </style>
 </head>
 
@@ -314,6 +442,10 @@
             <span class="material-symbols-rounded">leaderboard</span>
             <span id="tabLabelLeaderboard"></span>
           </button>
+          <button class="tab-btn" id="tabMaterials">
+            <span class="material-symbols-rounded">folder_open</span>
+            <span id="tabLabelMaterials"></span>
+          </button>
           <!-- teacher 전용 -->
           <button class="tab-btn" id="tabStudentProjects" style="display:none;">
             <span class="material-symbols-rounded">folder_shared</span>
@@ -330,6 +462,17 @@
             </button>
           </div>
           <div class="announcement-list" id="announcementList"></div>
+        </div>
+
+        <!-- 자료실 탭 -->
+        <div id="viewMaterials" style="display:none;">
+          <div style="display:flex; justify-content:flex-end; margin-bottom:0.75rem;">
+            <button class="btn-new" id="btnNewMaterial" style="display:none;">
+              <span class="material-symbols-rounded">add</span>
+              <span id="labelNewMaterial"></span>
+            </button>
+          </div>
+          <div class="material-list" id="materialList"></div>
         </div>
 
         <!-- 학생 프로젝트 탭 (teacher 전용) -->
@@ -379,6 +522,34 @@
     </div>
   </div>
 
+  <!-- 자료 등록 모달 -->
+  <div class="modal-overlay" id="materialModalOverlay">
+    <div class="modal">
+      <h2 id="materialModalTitle"></h2>
+      <label>
+        <span id="labelMaterialTitle"></span>
+        <input type="text" id="inputMaterialTitle" maxlength="200">
+      </label>
+      <label>
+        <span id="labelMaterialContent"></span>
+        <textarea id="inputMaterialContent" maxlength="2000"></textarea>
+      </label>
+      <label>
+        <span id="labelAttachFiles"></span>
+        <label class="file-input-label" for="inputMaterialFiles">
+          <span class="material-symbols-rounded">attach_file</span>
+          <span id="labelAttachFilesBtn"></span>
+        </label>
+        <input type="file" id="inputMaterialFiles" multiple style="display:none;">
+        <div class="selected-files" id="selectedFileList"></div>
+      </label>
+      <div class="modal-actions">
+        <button class="btn-cancel" id="btnMaterialCancel"></button>
+        <button class="btn-create" id="btnMaterialSubmit"></button>
+      </div>
+    </div>
+  </div>
+
   <!-- 삭제 확인 모달 -->
   <div class="modal-overlay" id="deleteModalOverlay">
     <div class="modal">
@@ -396,8 +567,19 @@
     document.getElementById('labelNewAnnouncement').textContent = i18n.get('#classroom-new_announcement#')
     document.getElementById('tabLabelAnnouncements').textContent = i18n.get('#classroom-announcements#')
     document.getElementById('tabLabelLeaderboard').textContent      = i18n.get('#classroom-leaderboard#')
+    document.getElementById('tabLabelMaterials').textContent        = i18n.get('#classroom-materials#')
     document.getElementById('tabLabelStudentProjects').textContent  = i18n.get('#classroom-student_projects#')
     document.getElementById('studentSearch').placeholder           = i18n.get('#classroom-search_student#')
+    document.getElementById('labelNewMaterial').textContent        = i18n.get('#classroom-new_material#')
+    document.getElementById('materialModalTitle').textContent      = i18n.get('#classroom-new_material#')
+    document.getElementById('labelMaterialTitle').textContent      = i18n.get('#classroom-title#')
+    document.getElementById('labelMaterialContent').textContent    = i18n.get('#classroom-content#')
+    document.getElementById('labelAttachFiles').textContent        = i18n.get('#classroom-attach_files#')
+    document.getElementById('labelAttachFilesBtn').textContent     = i18n.get('#classroom-attach_files#')
+    document.getElementById('btnMaterialCancel').textContent       = i18n.get('#classroom-cancel#')
+    document.getElementById('btnMaterialSubmit').textContent       = i18n.get('#classroom-post#')
+    document.getElementById('inputMaterialTitle').placeholder      = i18n.get('#classroom-material_title_placeholder#')
+    document.getElementById('inputMaterialContent').placeholder    = i18n.get('#classroom-material_content_placeholder#')
     document.getElementById('thRank').textContent      = i18n.get('#classroom-rank#')
     document.getElementById('thStudent').textContent   = i18n.get('#classroom-student#')
     document.getElementById('thCompleted').textContent = i18n.get('#classroom-completed#')
@@ -418,20 +600,23 @@
     let editingId = null
 
     // ── 탭 전환 ──
-    const TABS = ['announcements', 'leaderboard', 'student-projects']
     function switchTab(tab) {
       document.getElementById('viewAnnouncements').style.display    = tab === 'announcements'     ? '' : 'none'
       document.getElementById('viewLeaderboard').style.display      = tab === 'leaderboard'       ? '' : 'none'
+      document.getElementById('viewMaterials').style.display        = tab === 'materials'         ? '' : 'none'
       document.getElementById('viewStudentProjects').style.display  = tab === 'student-projects'  ? '' : 'none'
       document.getElementById('tabAnnouncements').classList.toggle('active',    tab === 'announcements')
       document.getElementById('tabLeaderboard').classList.toggle('active',      tab === 'leaderboard')
+      document.getElementById('tabMaterials').classList.toggle('active',        tab === 'materials')
       document.getElementById('tabStudentProjects').classList.toggle('active',  tab === 'student-projects')
       if (tab === 'leaderboard')      loadLeaderboard()
+      if (tab === 'materials')        loadMaterials()
       if (tab === 'student-projects') loadStudentProjects()
     }
 
     document.getElementById('tabAnnouncements').addEventListener('click',   () => switchTab('announcements'))
     document.getElementById('tabLeaderboard').addEventListener('click',     () => switchTab('leaderboard'))
+    document.getElementById('tabMaterials').addEventListener('click',       () => switchTab('materials'))
     document.getElementById('tabStudentProjects').addEventListener('click', () => switchTab('student-projects'))
 
     // ── 공지사항 ──
@@ -648,8 +833,163 @@
       }
     })
 
+    // ── 자료실 ──
+    function formatFileSize(bytes) {
+      if (!bytes) return ''
+      if (bytes < 1024) return `${bytes} B`
+      if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`
+      return `${(bytes / (1024 * 1024)).toFixed(1)} MB`
+    }
+
+    function makeMaterialCard(m) {
+      const card = document.createElement('div')
+      card.className = 'material-card'
+      card.dataset.id = m.id
+
+      const actionsHtml = isTeacher && currentUser.id === m.author_id
+        ? `<div class="material-card-actions">
+            <button class="btn-icon danger" data-action="delete" title="${i18n.get('#classroom-delete#')}">
+              <span class="material-symbols-rounded">delete</span>
+            </button>
+          </div>`
+        : ''
+
+      const filesHtml = m.files && m.files.length > 0
+        ? `<div class="material-files">
+            ${m.files.map(f => `
+              <a class="material-file-item" href="/api/classroom/materials/files/${f.id}/download">
+                <span class="material-symbols-rounded">description</span>
+                <span class="material-file-name">${escapeHtml(f.original_name)}</span>
+                <span class="material-file-size">${formatFileSize(f.file_size)}</span>
+                <span class="material-symbols-rounded" style="font-size:1rem;color:var(--color-text-muted);flex-shrink:0">download</span>
+              </a>
+            `).join('')}
+          </div>`
+        : ''
+
+      const bodyHtml = m.content
+        ? `<div class="material-card-body">${escapeHtml(m.content)}</div>`
+        : ''
+
+      card.innerHTML = `
+        <div class="material-card-header">
+          <div class="material-card-title">${escapeHtml(m.title)}</div>
+          ${actionsHtml}
+        </div>
+        <div class="material-card-meta">${escapeHtml(m.author_name)} · ${formatDate(m.created_at)}</div>
+        ${bodyHtml}
+        ${filesHtml}
+      `
+
+      // 삭제 버튼
+      card.querySelector('[data-action="delete"]')?.addEventListener('click', () => {
+        openMaterialDeleteModal(m.id, card)
+      })
+
+      return card
+    }
+
+    async function loadMaterials() {
+      const listEl = document.getElementById('materialList')
+      listEl.innerHTML = ''
+      try {
+        const res = await fetch('/api/classroom/materials')
+        if (!res.ok) throw new Error(res.status)
+        const { materials } = await res.json()
+        if (materials.length === 0) {
+          listEl.innerHTML = `<div class="empty-msg">${i18n.get('#classroom-no_materials#')}</div>`
+          return
+        }
+        materials.forEach(m => listEl.appendChild(makeMaterialCard(m)))
+      } catch {
+        listEl.innerHTML = `<div class="empty-msg">${i18n.get('#ch-load_error#')}</div>`
+      }
+    }
+
+    // ── 자료 등록 모달 ──
+    let selectedFiles = []
+
+    function openMaterialModal() {
+      selectedFiles = []
+      document.getElementById('inputMaterialTitle').value = ''
+      document.getElementById('inputMaterialContent').value = ''
+      document.getElementById('inputMaterialFiles').value = ''
+      document.getElementById('selectedFileList').innerHTML = ''
+      document.getElementById('materialModalOverlay').classList.add('open')
+      document.getElementById('inputMaterialTitle').focus()
+    }
+
+    function closeMaterialModal() {
+      document.getElementById('materialModalOverlay').classList.remove('open')
+      selectedFiles = []
+    }
+
+    function renderSelectedFiles() {
+      const listEl = document.getElementById('selectedFileList')
+      listEl.innerHTML = ''
+      selectedFiles.forEach((file, idx) => {
+        const item = document.createElement('div')
+        item.className = 'selected-file-item'
+        item.innerHTML = `
+          <span class="material-symbols-rounded">description</span>
+          <span>${escapeHtml(file.name)}</span>
+          <span style="font-size:0.75rem;color:var(--color-text-muted);margin-left:0.3rem">${formatFileSize(file.size)}</span>
+          <button class="btn-remove-file" data-idx="${idx}">
+            <span class="material-symbols-rounded">close</span>
+          </button>
+        `
+        item.querySelector('.btn-remove-file').addEventListener('click', () => {
+          selectedFiles.splice(idx, 1)
+          renderSelectedFiles()
+        })
+        listEl.appendChild(item)
+      })
+    }
+
+    document.getElementById('inputMaterialFiles').addEventListener('change', (e) => {
+      for (const file of e.target.files) selectedFiles.push(file)
+      e.target.value = ''
+      renderSelectedFiles()
+    })
+
+    document.getElementById('btnNewMaterial').addEventListener('click', openMaterialModal)
+    document.getElementById('btnMaterialCancel').addEventListener('click', closeMaterialModal)
+    document.getElementById('materialModalOverlay').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('materialModalOverlay')) closeMaterialModal()
+    })
+
+    document.getElementById('btnMaterialSubmit').addEventListener('click', async () => {
+      const title   = document.getElementById('inputMaterialTitle').value.trim()
+      const content = document.getElementById('inputMaterialContent').value.trim()
+      if (!title) return
+
+      const formData = new FormData()
+      formData.append('title', title)
+      formData.append('content', content)
+      for (const file of selectedFiles) formData.append('files', file)
+
+      const res = await fetch('/api/classroom/materials', { method: 'POST', body: formData })
+      if (res.ok) {
+        closeMaterialModal()
+        loadMaterials()
+      } else {
+        const { error } = await res.json().catch(() => ({}))
+        alert(error || 'Upload failed')
+      }
+    })
+
+    // ── 자료 삭제 모달 ──
+    function openMaterialDeleteModal(id, cardEl) {
+      document.getElementById('deleteModalTitle').textContent = i18n.get('#classroom-material_delete_confirm#')
+      openConfirmModal('deleteModalOverlay', 'btnDeleteConfirm', 'btnDeleteCancel', () => {
+        fetch(`/api/classroom/materials/${id}`, { method: 'DELETE' })
+          .then(r => { if (r.ok) cardEl.remove() })
+      })
+    }
+
     // ── 삭제 모달 ──
     function openDeleteModal(id, cardEl) {
+      document.getElementById('deleteModalTitle').textContent = i18n.get('#classroom-delete_confirm#')
       openConfirmModal('deleteModalOverlay', 'btnDeleteConfirm', 'btnDeleteCancel', () => {
         fetch(`/api/classroom/announcements/${id}`, { method: 'DELETE' })
           .then(r => { if (r.ok) cardEl.remove() })
@@ -675,6 +1015,7 @@
 
       if (isTeacher) {
         document.getElementById('btnNewAnnouncement').style.display = ''
+        document.getElementById('btnNewMaterial').style.display = ''
         document.getElementById('tabStudentProjects').style.display = ''
       }
 

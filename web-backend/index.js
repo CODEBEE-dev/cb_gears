@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 require('dotenv').config({ path: require('path').join(__dirname, '../.env') })
 const path = require('path')
+const fs = require('fs')
 const cookieParser = require('cookie-parser')
 const { router: authRouter, initKeycloak, requireAuth } = require('./auth')
 const projectsRouter = require('./routes/projects')
@@ -96,8 +97,16 @@ app.get('/admin', requireAuth, (req, res) => {
 
 app.use(express.static(path.join(__dirname, '..', 'public')))
 
+async function runMigrations() {
+  const sql = fs.readFileSync(path.join(__dirname, '../db/init.sql'), 'utf8')
+  const { pool } = require('./db')
+  await pool.query(sql)
+  console.log('[DB] migrations applied')
+}
+
 const start = async () => {
   await initKeycloak()
+  await runMigrations()
   app.listen(port, () => {
     console.log(`[INFO] web-backend running at ${port}`)
     console.log(`[INFO] http://localhost:${port}`)

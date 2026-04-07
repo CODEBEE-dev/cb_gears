@@ -40,6 +40,26 @@ CREATE TABLE IF NOT EXISTS announcements (
   updated_at  TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
+CREATE TABLE IF NOT EXISTS materials (
+  id          SERIAL PRIMARY KEY,
+  author_id   VARCHAR(36) NOT NULL,
+  author_name VARCHAR(255) NOT NULL,
+  group_name  VARCHAR(255) NOT NULL,
+  title       VARCHAR(255) NOT NULL,
+  content     TEXT NOT NULL DEFAULT '',
+  created_at  TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS material_files (
+  id            SERIAL PRIMARY KEY,
+  material_id   INTEGER NOT NULL REFERENCES materials(id) ON DELETE CASCADE,
+  original_name VARCHAR(255) NOT NULL,
+  stored_name   VARCHAR(255) NOT NULL,
+  mime_type     VARCHAR(100),
+  file_size     INTEGER,
+  created_at    TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
 CREATE TABLE IF NOT EXISTS projects (
   id             SERIAL PRIMARY KEY,
   user_id        VARCHAR(36) NOT NULL,

@@ -19,6 +19,24 @@
   <script src="js/common/ui.js"></script>
 
   <style>
+    /* ── 그룹 배지 ── */
+    .group-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.3rem 0.75rem;
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: 2rem;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--color-text-muted);
+    }
+    .group-badge .material-symbols-rounded {
+      font-size: 1rem;
+      color: var(--color-primary);
+    }
+
     /* ── 탭 ── */
 
     /* ── 공지사항 ── */
@@ -430,6 +448,10 @@
 
         <div class="content-header">
           <h2 class="section-title" id="pageTitle"></h2>
+          <span class="group-badge" id="groupBadge" style="display:none;">
+            <span class="material-symbols-rounded">group</span>
+            <span id="groupBadgeLabel"></span>
+          </span>
         </div>
 
         <!-- 탭 -->
@@ -1012,6 +1034,14 @@
 
       currentUser = user
       isTeacher = user.role === 'teacher' || user.role === 'school_admin'
+
+      // 그룹 배지 표시 (/학교명/3학년/2반 → "3학년 2반")
+      if (user.group) {
+        const parts = user.group.split('/').filter(Boolean)
+        const label = parts.slice(1).join(' ') || parts[0]
+        document.getElementById('groupBadgeLabel').textContent = label
+        document.getElementById('groupBadge').style.display = ''
+      }
 
       if (isTeacher) {
         document.getElementById('btnNewAnnouncement').style.display = ''

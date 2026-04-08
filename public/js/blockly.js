@@ -92,6 +92,7 @@ var blockly = new function() {
     const script = document.createElement('script');
     script.src = 'blockly-12.3.0/msg/' + LANG + '.js';
     script.addEventListener('load', function() {
+      self.patchBuiltinBlockLabels();
       self.loadCustomBlocks()
         .then(self.loadToolBox)
         .then(self.generator.load());
@@ -305,6 +306,76 @@ var blockly = new function() {
         let json = JSON.parse(i18n.replace(response));
         Blockly.defineBlocksWithJsonArray(json);
       });
+  };
+
+  // Add index labels to built-in Blockly blocks
+  this.patchBuiltinBlockLabels = function() {
+    const INDEX_MAP = {
+      // H: 판단문 (#blk-logic#)
+      'controls_if':              'H1',
+      'logic_compare':            'H3',
+      'logic_operation':          'H5',
+      'logic_negate':             'H6',
+      'logic_boolean':            'H7',
+      'logic_null':               'H8',
+      'logic_ternary':            'H9',
+      // I: 반복문 (#blk-loops#)
+      'controls_repeat_ext':      'I1',
+      'controls_whileUntil':      'I2',
+      'controls_for':             'I3',
+      'controls_forEach':         'I4',
+      'controls_flow_statements': 'I5',
+      // J: 수학 (#blk-math#)
+      'math_number':              'J1',
+      'math_arithmetic':          'J2',
+      'math_single':              'J3',
+      'math_trig':                'J4',
+      'math_constant':            'J5',
+      'math_number_property':     'J6',
+      'math_round':               'J7',
+      'math_on_list':             'J8',
+      'math_modulo':              'J9',
+      'math_constrain':           'J10',
+      'math_random_int':          'J11',
+      'math_random_float':        'J12',
+      // K: 문자 (#blk-text#)
+      'text':                     'K1',
+      'text_join':                'K2',
+      'text_append':              'K3',
+      'text_length':              'K4',
+      'text_isEmpty':             'K5',
+      'text_indexOf':             'K6',
+      'text_charAt':              'K7',
+      'text_getSubstring':        'K8',
+      'text_changeCase':          'K9',
+      'text_trim':                'K10',
+      'text_print':               'K11',
+      'text_prompt_ext':          'K12',
+      // L: 리스트 (#blk-lists#)
+      'lists_create_with':        'L1',
+      'lists_repeat':             'L3',
+      'lists_length':             'L4',
+      'lists_isEmpty':            'L5',
+      'lists_indexOf':            'L6',
+      'lists_getIndex':           'L7',
+      'lists_setIndex':           'L8',
+      'lists_getSublist':         'L9',
+      'lists_split':              'L10',
+      'lists_sort':               'L11',
+    };
+
+    for (const [type, label] of Object.entries(INDEX_MAP)) {
+      if (!Blockly.Blocks[type]) continue;
+      const orig = Blockly.Blocks[type].init;
+      Blockly.Blocks[type].init = (function(origFn, lbl) {
+        return function() {
+          origFn.call(this);
+          if (this.inputList && this.inputList.length > 0) {
+            this.inputList[0].insertFieldAt(0, new Blockly.FieldLabel(lbl, 'blockLabel'));
+          }
+        };
+      })(orig, label);
+    }
   };
 
   // Mark workspace as unsaved

@@ -605,7 +605,7 @@
     "args0": [
       {
         "type": "field_label",
-        "text": "C1",
+        "text": "C2",
         "class": "blockLabel"
       },
       {
@@ -705,7 +705,7 @@
     "args0": [
       {
         "type": "field_label",
-        "text": "C3",
+        "text": "C4",
         "class": "blockLabel"
       },
       {
@@ -785,7 +785,7 @@
     "args0": [
       {
         "type": "field_label",
-        "text": "C4",
+        "text": "C5",
         "class": "blockLabel"
       },
       {
@@ -865,7 +865,7 @@
     "args0": [
       {
         "type": "field_label",
-        "text": "C16",
+        "text": "C17",
         "class": "blockLabel"
       },
       {
@@ -931,7 +931,7 @@
     "args0": [
       {
         "type": "field_label",
-        "text": "C5",
+        "text": "C6",
         "class": "blockLabel"
       },
       {
@@ -1031,7 +1031,7 @@
     "args0": [
       {
         "type": "field_label",
-        "text": "C6",
+        "text": "C7",
         "class": "blockLabel"
       },
       {
@@ -1538,7 +1538,7 @@
     "args0": [
       {
         "type": "field_label",
-        "text": "C7",
+        "text": "C8",
         "class": "blockLabel"
       },
       {
@@ -1911,7 +1911,7 @@
     "args0": [
       {
         "type": "field_label",
-        "text": "C8",
+        "text": "C9",
         "class": "blockLabel"
       },
       {
@@ -1990,7 +1990,7 @@
     "args0": [
       {
         "type": "field_label",
-        "text": "C9",
+        "text": "C10",
         "class": "blockLabel"
       },
       {
@@ -2413,7 +2413,7 @@
     "args0": [
       {
         "type": "field_label",
-        "text": "C11",
+        "text": "C12",
         "class": "blockLabel"
       },
       {
@@ -2469,7 +2469,7 @@
     "args0": [
       {
         "type": "field_label",
-        "text": "C10",
+        "text": "C11",
         "class": "blockLabel"
       },
       {
@@ -2524,7 +2524,7 @@
     "args0": [
       {
         "type": "field_label",
-        "text": "C2",
+        "text": "C3",
         "class": "blockLabel"
       },
       {
@@ -2648,8 +2648,13 @@
   },
   {
     "type": "tw_color",
-    "message0": "#blk-color_sensor_sees# %1",
+    "message0": "%1 #blk-color_sensor_sees# %2",
     "args0": [
+      {
+        "type": "field_label",
+        "text": "C1",
+        "class": "blockLabel"
+      },
       {
         "type": "field_dropdown",
         "name": "color",
@@ -2718,7 +2723,7 @@
     "args0": [
       {
         "type": "field_label",
-        "text": "C12",
+        "text": "C13",
         "class": "blockLabel"
       },
       {
@@ -2784,7 +2789,7 @@
     "args0": [
       {
         "type": "field_label",
-        "text": "C13",
+        "text": "C14",
         "class": "blockLabel"
       },
       {
@@ -2849,7 +2854,7 @@
     "args0": [
       {
         "type": "field_label",
-        "text": "C14",
+        "text": "C15",
         "class": "blockLabel"
       },
       {
@@ -2914,7 +2919,7 @@
     "args0": [
       {
         "type": "field_label",
-        "text": "C15",
+        "text": "C16",
         "class": "blockLabel"
       },
       {

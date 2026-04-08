@@ -357,7 +357,15 @@ var challenges_basic = new function() {
     self.panel.showWorldInfoPanel();
     self.drawMissionButton();
 
-    return this.parent.load(scene);
+    return this.parent.load(scene).then(function(result) {
+      const challengeId = new URLSearchParams(window.location.search).get('challenge');
+      const seenKey = 'missionSeen_' + challengeId;
+      if (challengeId && !sessionStorage.getItem(seenKey)) {
+        sessionStorage.setItem(seenKey, '1');
+        self.displayMission();
+      }
+      return result;
+    });
   };
 
   this.drawMissionButton = function() {

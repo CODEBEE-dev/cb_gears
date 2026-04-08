@@ -368,7 +368,7 @@ var challenges_basic = new function() {
     self.panel.clearWorldInfoPanel();
     let $info = $(
       '<div class="mono row">' +
-        '<div class="center mission" style="cursor: pointer; user-select: none;">Mission</div>' +
+        '<div class="center mission" style="cursor: pointer; user-select: none;">' + i18n.get('#ch-mission#') + '</div>' +
       '</div>'
     );
     $info.find('.mission').click(this.displayMission);

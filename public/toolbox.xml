@@ -1,11 +1,11 @@
 <xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
-  <category name="Movement" colour="#4A6FE3" hidden="true">
+  <category name="#blk-movement#" colour="#4A6FE3" hidden="true">
     <block type="tw_fwd"></block>
     <block type="tw_rev"></block>
     <block type="tw_left"></block>
     <block type="tw_right"></block>
   </category>
-  <category name="Conditions" colour="#4C97FF" hidden="true">
+  <category name="#blk-conditions#" colour="#4C97FF" hidden="true">
     <block type="controls_if"></block>
   </category>
   <category name="#blk-motion#" colour="#4A6FE3">

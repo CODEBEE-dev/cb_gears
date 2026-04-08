@@ -199,6 +199,14 @@ let MSGS = {
     it: 'funzioni',
     ko: '사용자함수',
   },
+  '#blk-movement#': {
+    en: 'Movement',
+    ko: '이동',
+  },
+  '#blk-conditions#': {
+    en: 'Conditions',
+    ko: '조건',
+  },
   '#blk-when_started#': {
     en: 'When Started',
     es: 'Al comenzar',

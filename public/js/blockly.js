@@ -174,7 +174,9 @@ var blockly = new function() {
     if (typeof filter.show != 'undefined') {
       if (typeof filter.show.categories != 'undefined') {
         for (let show of filter.show.categories) {
-          filteredXml.querySelector('[name="' + show + '"]').setAttribute('hidden', false);
+          let translatedName = i18n.get('#blk-' + show.toLowerCase() + '#') || show;
+          let el = filteredXml.querySelector('[name="' + translatedName + '"]');
+          if (el) el.setAttribute('hidden', false);
         }
       }
     }

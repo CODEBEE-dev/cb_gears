@@ -2261,3 +2261,11 @@ nav .menuBar .menuItem.blocksOnly.visible {
 .dbWorldDeleteBtn .material-symbols-rounded {
   font-size: 1.1em;
 }
+
+/* 블록 인덱스 레이블 */
+.blockLabel {
+  font-size: 9px !important;
+  font-weight: bold !important;
+  fill: rgba(255, 255, 255, 0.65) !important;
+  font-family: monospace !important;
+}

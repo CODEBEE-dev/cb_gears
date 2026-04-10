@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="icon" href="codebridgeai_favicon.png">
+
+  <script src="js/common/config.js"></script>
+
+  <!-- Google Font & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20,400,1,0" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/dashboard.css">
+  <style>
+    /* ── Curriculum List View ── */
+    .curr-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .curr-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 1rem;
+      overflow: hidden;
+      cursor: pointer;
+      transition: box-shadow 0.15s, border-color 0.15s, transform 0.15s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .curr-card:hover {
+      border-color: #c5cbdf;
+      box-shadow: 0 4px 16px rgba(38, 52, 163, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .curr-card-thumb {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      background: #eef0fb;
+      display: block;
+    }
+
+    .curr-card-thumb-placeholder {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #eef0fb;
+      color: #a0aadd;
+    }
+
+    .curr-card-thumb-placeholder .material-symbols-rounded {
+      font-size: 3rem;
+    }
+
+    .curr-card-body {
+      padding: 1rem 1.1rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      flex: 1;
+    }
+
+    .curr-card-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--color-text);
+    }
+
+    .curr-card-desc {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      font-weight: 600;
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .curr-card-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      margin-top: 0.2rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.2rem 0.55rem;
+      border-radius: 0.4rem;
+      width: fit-content;
+    }
+
+    .curr-card-badge.elementary { background: #e6f4ea; color: #388e3c; }
+    .curr-card-badge.middle     { background: #e8eaff; color: #5b6abf; }
+    .curr-card-badge.high       { background: #fff8e1; color: #f59e0b; }
+    .curr-card-badge.lesson-count { background: #f0f4f8; color: #8a93a8; }
+
+    .curr-card-badges {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.2rem;
+    }
+
+    /* ── Detail View ── */
+    .curr-detail-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1.8rem;
+    }
+
+    .curr-back-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: none;
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      padding: 0.45rem 0.9rem;
+      font-size: 0.85rem;
+      font-family: "Nunito", sans-serif;
+      font-weight: 700;
+      cursor: pointer;
+      color: #888;
+      flex-shrink: 0;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .curr-back-btn:hover {
+      background: var(--color-bg);
+      color: var(--color-primary);
+    }
+
+    .curr-back-btn .material-symbols-rounded { font-size: 18px; }
+
+    .curr-detail-thumb {
+      width: 280px;
+      min-width: 280px;
+      aspect-ratio: 16 / 9;
+      border-radius: 0.75rem;
+      object-fit: cover;
+      border: 1px solid var(--color-border);
+      background: #eef0fb;
+    }
+
+    .curr-detail-thumb-placeholder {
+      width: 280px;
+      min-width: 280px;
+      aspect-ratio: 16 / 9;
+      border-radius: 0.75rem;
+      border: 1px solid var(--color-border);
+      background: #eef0fb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #a0aadd;
+    }
+
+    .curr-detail-thumb-placeholder .material-symbols-rounded { font-size: 2.5rem; }
+
+    .curr-detail-meta {
+      flex: 1;
+    }
+
+    .curr-detail-title {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--color-text);
+      margin: 0 0 0.4rem;
+    }
+
+    .curr-detail-desc {
+      font-size: 0.9rem;
+      color: var(--color-text-muted);
+      font-weight: 600;
+      margin: 0 0 0.6rem;
+      line-height: 1.5;
+    }
+
+    /* ── Lesson List ── */
+    .lesson-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .lesson-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 0.7rem;
+      padding: 1rem 1.1rem;
+    }
+
+    .lesson-order {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      background: #eef0fb;
+      color: var(--color-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.82rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .lesson-info {
+      flex: 1;
+    }
+
+    .lesson-title {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: 0.2rem;
+    }
+
+    .lesson-desc {
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+      font-weight: 600;
+    }
+
+    .lesson-pdf-link {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      color: var(--color-primary);
+      text-decoration: none;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 0.3rem 0.6rem;
+      border-radius: 0.4rem;
+      transition: background 0.15s;
+      flex-shrink: 0;
+    }
+
+    .lesson-pdf-link:hover { background: #eef0fb; }
+    .lesson-pdf-link .material-symbols-rounded { font-size: 16px; }
+
+    /* ── Search & Filter Bar ── */
+    .curr-toolbar {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 1.2rem;
+      flex-wrap: wrap;
+    }
+
+    .curr-search {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 0.6rem;
+      padding: 0.45rem 0.8rem;
+      flex: 1;
+      min-width: 180px;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .curr-search:focus-within {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(38, 52, 163, 0.08);
+    }
+
+    .curr-search .material-symbols-rounded {
+      font-size: 18px;
+      color: var(--color-text-muted);
+      flex-shrink: 0;
+    }
+
+    .curr-search input {
+      border: none;
+      outline: none;
+      background: transparent;
+      font-size: 0.9rem;
+      font-family: "Nunito", sans-serif;
+      color: var(--color-text);
+      width: 100%;
+    }
+
+    .curr-search input::placeholder { color: var(--color-text-muted); }
+
+    .curr-filter-group {
+      display: flex;
+      gap: 0.35rem;
+    }
+
+    .curr-filter-btn {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      padding: 0.42rem 0.85rem;
+      font-size: 0.82rem;
+      font-family: "Nunito", sans-serif;
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--color-text-muted);
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+      white-space: nowrap;
+    }
+
+    .curr-filter-btn:hover { background: var(--color-bg); }
+
+    .curr-filter-btn.active {
+      border-color: transparent;
+      color: #fff;
+    }
+
+    .curr-filter-btn[data-level="all"].active    { background: var(--color-primary); }
+    .curr-filter-btn[data-level="elementary"].active { background: #388e3c; }
+    .curr-filter-btn[data-level="middle"].active     { background: #5b6abf; }
+    .curr-filter-btn[data-level="high"].active       { background: #f59e0b; }
+  </style>
+
+  <script src="js/msg.js"></script>
+  <script src="js/common/activityBar.js"></script>
+  <script src="js/common/header.js"></script>
+  <script src="js/common/ui.js"></script>
+
+  <title>Curriculum</title>
+</head>
+
+<body>
+  <header id="appHeader"></header>
+
+  <main>
+    <nav class="activity-bar expanded" id="activityBar"></nav>
+    <div class="container">
+      <!-- 목록 뷰 -->
+      <div class="content" id="viewList">
+        <div class="content-header">
+          <h2 class="section-title" id="listTitle"></h2>
+        </div>
+        <div class="curr-toolbar">
+          <div class="curr-search">
+            <span class="material-symbols-rounded">search</span>
+            <input type="text" id="currSearch" placeholder="">
+          </div>
+          <div class="curr-filter-group">
+            <button class="curr-filter-btn active" data-level="all" id="filterAll"></button>
+            <button class="curr-filter-btn" data-level="elementary" id="filterElem"></button>
+            <button class="curr-filter-btn" data-level="middle" id="filterMid"></button>
+            <button class="curr-filter-btn" data-level="high" id="filterHigh"></button>
+          </div>
+        </div>
+        <div class="curr-grid" id="currGrid"></div>
+      </div>
+
+      <!-- 상세 뷰 -->
+      <div class="content" id="viewDetail" style="display:none;">
+        <button class="curr-back-btn" id="btnBack" style="margin-bottom:1.2rem;">
+          <span class="material-symbols-rounded">arrow_back</span>
+          <span id="labelBack"></span>
+        </button>
+        <div class="curr-detail-header">
+          <div id="detailThumbWrap"></div>
+          <div class="curr-detail-meta">
+            <h1 class="curr-detail-title" id="detailTitle"></h1>
+            <p class="curr-detail-desc" id="detailDesc"></p>
+            <div class="curr-card-badges">
+              <span class="curr-card-badge" id="detailBadge"></span>
+              <span class="curr-card-badge lesson-count" id="detailLessonCount"></span>
+            </div>
+          </div>
+        </div>
+        <div class="content-header" style="margin-top:1.8rem;">
+          <h2 class="section-title" id="lessonsTitle"></h2>
+          <button class="btn-new" id="btnNewLesson">
+            <span class="material-symbols-rounded">add</span>
+            <span id="labelNewLesson"></span>
+          </button>
+        </div>
+        <div class="lesson-list" id="lessonList"></div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // ── i18n ──
+    document.getElementById('listTitle').textContent    = i18n.get('#curr-title#')
+    document.getElementById('labelBack').textContent    = i18n.get('#curr-back#')
+    document.getElementById('lessonsTitle').textContent = i18n.get('#curr-lessons#')
+    document.getElementById('labelNewLesson').textContent = i18n.get('#curr-new_lesson#')
+    document.getElementById('currSearch').placeholder   = i18n.get('#curr-search_placeholder#')
+    document.getElementById('filterAll').textContent    = i18n.get('#curr-filter_all#')
+    document.getElementById('filterElem').textContent   = i18n.get('#curr-level_elementary#')
+    document.getElementById('filterMid').textContent    = i18n.get('#curr-level_middle#')
+    document.getElementById('filterHigh').textContent   = i18n.get('#curr-level_high#')
+
+    const CMS_BASE = 'http://localhost:45512'
+
+    const LEVEL_LABELS = {
+      elementary: i18n.get('#curr-level_elementary#'),
+      middle:     i18n.get('#curr-level_middle#'),
+      high:       i18n.get('#curr-level_high#'),
+    }
+
+    // ── 상태 ──
+    let allCurriculums = []
+    let activeLevel = 'all'
+
+    // ── 뷰 전환 ──
+    function showListView() {
+      document.getElementById('viewList').style.display = ''
+      document.getElementById('viewDetail').style.display = 'none'
+    }
+
+    function showDetailView() {
+      document.getElementById('viewList').style.display = 'none'
+      document.getElementById('viewDetail').style.display = ''
+    }
+
+    // ── 검색 + 필터 적용 ──
+    function applyFilter() {
+      const query = document.getElementById('currSearch').value.trim().toLowerCase()
+      const filtered = allCurriculums.filter(curr => {
+        const matchLevel = activeLevel === 'all' || curr.schoolLevel === activeLevel
+        const matchQuery = !query ||
+          curr.title.toLowerCase().includes(query) ||
+          (curr.desc || '').toLowerCase().includes(query)
+        return matchLevel && matchQuery
+      })
+      renderCurriculums(filtered)
+    }
+
+    // ── 필터 버튼 이벤트 ──
+    document.querySelectorAll('.curr-filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.curr-filter-btn').forEach(b => b.classList.remove('active'))
+        btn.classList.add('active')
+        activeLevel = btn.dataset.level
+        applyFilter()
+      })
+    })
+
+    // ── 검색 이벤트 ──
+    document.getElementById('currSearch').addEventListener('input', applyFilter)
+
+    // ── 커리큘럼 목록 렌더 ──
+    function renderCurriculums(list) {
+      const grid = document.getElementById('currGrid')
+      grid.innerHTML = ''
+
+      if (!list || list.length === 0) {
+        grid.innerHTML = `<div class="empty-msg">${i18n.get('#curr-no_data#')}</div>`
+        return
+      }
+
+      list.forEach(curr => {
+        const card = document.createElement('div')
+        card.className = 'curr-card'
+
+        const thumb = curr.thumbnailUrl
+          ? `<img class="curr-card-thumb" src="${curr.thumbnailUrl}" alt="" loading="lazy">`
+          : `<div class="curr-card-thumb-placeholder"><span class="material-symbols-rounded">menu_book</span></div>`
+
+        const levelClass = curr.schoolLevel || 'elementary'
+        const levelLabel = LEVEL_LABELS[curr.schoolLevel] || curr.schoolLevel
+
+        card.innerHTML = `
+          ${thumb}
+          <div class="curr-card-body">
+            <div class="curr-card-title">${escapeHtml(curr.title)}</div>
+            <div class="curr-card-desc">${escapeHtml(curr.desc || '')}</div>
+            <div class="curr-card-badges">
+              <span class="curr-card-badge ${levelClass}">${levelLabel}</span>
+              <span class="curr-card-badge lesson-count">
+                <span class="material-symbols-rounded" style="font-size:12px;">menu_book</span>
+                ${curr.lessonCount ?? 0}
+              </span>
+            </div>
+          </div>
+        `
+        card.addEventListener('click', () => loadDetail(curr.id))
+        grid.appendChild(card)
+      })
+    }
+
+    // ── 커리큘럼 상세 렌더 ──
+    function renderDetail(curr) {
+      document.getElementById('detailTitle').textContent = curr.title || ''
+      document.getElementById('detailDesc').textContent  = curr.desc  || ''
+
+      const badge = document.getElementById('detailBadge')
+      const levelClass = curr.schoolLevel || 'elementary'
+      const levelLabel = LEVEL_LABELS[curr.schoolLevel] || curr.schoolLevel
+      badge.textContent  = levelLabel
+      badge.className    = `curr-card-badge ${levelClass}`
+
+      const lessonCount = curr.lessons ? curr.lessons.length : (curr.lessonCount ?? 0)
+      const countEl = document.getElementById('detailLessonCount')
+      countEl.innerHTML = `<span class="material-symbols-rounded" style="font-size:12px;">menu_book</span> ${lessonCount}`
+
+      const thumbWrap = document.getElementById('detailThumbWrap')
+      if (curr.thumbnailUrl) {
+        thumbWrap.innerHTML = `<img class="curr-detail-thumb" src="${curr.thumbnailUrl}" alt="">`
+      } else {
+        thumbWrap.innerHTML = `<div class="curr-detail-thumb-placeholder"><span class="material-symbols-rounded">menu_book</span></div>`
+      }
+
+      renderLessons(curr.lessons || [])
+      showDetailView()
+    }
+
+    // ── 레슨 렌더 ──
+    function renderLessons(lessons) {
+      const list = document.getElementById('lessonList')
+      list.innerHTML = ''
+
+      if (!lessons || lessons.length === 0) {
+        list.innerHTML = `<div class="empty-msg">${i18n.get('#curr-no_lessons#')}</div>`
+        return
+      }
+
+      const sorted = [...lessons].sort((a, b) => (a.orderNumber || 0) - (b.orderNumber || 0))
+      sorted.forEach(lesson => {
+        const item = document.createElement('div')
+        item.className = 'lesson-item'
+
+        const pdfLink = lesson.pdfUrl
+          ? `<a class="lesson-pdf-link" href="${lesson.pdfUrl}" target="_blank" rel="noopener">
+               <span class="material-symbols-rounded">picture_as_pdf</span> PDF
+             </a>`
+          : ''
+
+        item.innerHTML = `
+          <div class="lesson-order">${lesson.orderNumber || '-'}</div>
+          <div class="lesson-info">
+            <div class="lesson-title">${escapeHtml(lesson.title)}</div>
+            <div class="lesson-desc">${escapeHtml(lesson.desc || '')}</div>
+          </div>
+          ${pdfLink}
+        `
+        list.appendChild(item)
+      })
+    }
+
+    // ── XSS 방어 ──
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+    }
+
+    // ── 데이터 로드 ──
+    async function loadList() {
+      const grid = document.getElementById('currGrid')
+      grid.innerHTML = `<div class="empty-msg">${i18n.get('#admin-loading#')}</div>`
+      try {
+        const res = await fetch(`${CMS_BASE}/api/curriculums`)
+        if (!res.ok) throw new Error(res.status)
+        const data = await res.json()
+        allCurriculums = Array.isArray(data) ? data : (data.data || data.curriculums || [])
+        applyFilter()
+      } catch (e) {
+        grid.innerHTML = `<div class="empty-msg" style="cursor:pointer;" id="listRetry">${i18n.get('#curr-load_error#')}</div>`
+        document.getElementById('listRetry')?.addEventListener('click', loadList)
+      }
+    }
+
+    async function loadDetail(id) {
+      showDetailView()
+      document.getElementById('lessonList').innerHTML = `<div class="empty-msg">${i18n.get('#admin-loading#')}</div>`
+      document.getElementById('detailTitle').textContent = ''
+      document.getElementById('detailDesc').textContent  = ''
+      try {
+        const res = await fetch(`${CMS_BASE}/api/curriculums/${id}`)
+        if (!res.ok) throw new Error(res.status)
+        const data = await res.json()
+        renderDetail(data.data || data)
+      } catch (e) {
+        document.getElementById('lessonList').innerHTML =
+          `<div class="empty-msg">${i18n.get('#curr-lesson_load_error#')}</div>`
+      }
+    }
+
+    // ── 뒤로가기 ──
+    document.getElementById('btnBack').addEventListener('click', () => {
+      showListView()
+    })
+
+    // ── 초기화 ──
+    ;(async () => {
+      const user = await initHeader(i18n.get('#curr-title#'))
+      if (!user || (user.role !== 'school_admin' && user.role !== 'teacher')) {
+        document.getElementById('currGrid').innerHTML =
+          `<div class="empty-msg">${i18n.get('#curr-access_denied#')}</div>`
+        return
+      }
+      loadList()
+    })()
+  </script>
+</body>
+</html>

@@ -95,6 +95,16 @@ app.get('/admin', requireAuth, (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'public', 'admin.html'))
 })
 
+app.get('/curriculum', requireAuth, (req, res) => {
+  const role = req.session.user?.role
+  if (role !== 'school_admin' && role !== 'teacher') {
+    return res.status(403).sendFile(path.join(__dirname, '..', 'public', '403.html'), err => {
+      if (err) res.status(403).send('Forbidden')
+    })
+  }
+  res.sendFile(path.join(__dirname, '..', 'public', 'curriculum.html'))
+})
+
 app.use(express.static(path.join(__dirname, '..', 'public')))
 
 async function runMigrations() {

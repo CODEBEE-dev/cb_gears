@@ -4681,6 +4681,74 @@ let MSGS = {
     en: 'An error occurred.',
     ko: '오류가 발생했습니다.',
   },
+  '#nav-curriculum#': {
+    en: 'Curriculum',
+    ko: '커리큘럼',
+  },
+  '#curr-title#': {
+    en: 'Curriculum',
+    ko: '커리큘럼',
+  },
+  '#curr-no_data#': {
+    en: 'No curriculums found.',
+    ko: '커리큘럼이 없습니다.',
+  },
+  '#curr-load_error#': {
+    en: 'Failed to load curriculums.',
+    ko: '커리큘럼 목록을 불러오는 데 실패했습니다.',
+  },
+  '#curr-back#': {
+    en: 'Back to list',
+    ko: '목록으로',
+  },
+  '#curr-lessons#': {
+    en: 'Lessons',
+    ko: '레슨 목록',
+  },
+  '#curr-no_lessons#': {
+    en: 'No lessons in this curriculum.',
+    ko: '이 커리큘럼에 레슨이 없습니다.',
+  },
+  '#curr-lesson_load_error#': {
+    en: 'Failed to load lessons.',
+    ko: '레슨 목록을 불러오는 데 실패했습니다.',
+  },
+  '#curr-school_level#': {
+    en: 'School Level',
+    ko: '학교급',
+  },
+  '#curr-level_elementary#': {
+    en: 'Elementary',
+    ko: '초등',
+  },
+  '#curr-level_middle#': {
+    en: 'Middle School',
+    ko: '중등',
+  },
+  '#curr-level_high#': {
+    en: 'High School',
+    ko: '고등',
+  },
+  '#curr-lesson_order#': {
+    en: 'Order',
+    ko: '순서',
+  },
+  '#curr-access_denied#': {
+    en: 'Access denied. This page is only available to school administrators and teachers.',
+    ko: '접근 권한이 없습니다. 학교 관리자 또는 선생님만 접근할 수 있습니다.',
+  },
+  '#curr-search_placeholder#': {
+    en: 'Search curriculums...',
+    ko: '커리큘럼 검색...',
+  },
+  '#curr-filter_all#': {
+    en: 'All',
+    ko: '전체',
+  },
+  '#curr-new_lesson#': {
+    en: 'New Lesson',
+    ko: '수업 만들기',
+  },
 };
 let MSGS_KEYS = Object.keys(MSGS);
 

@@ -17,6 +17,7 @@ const ACTIVITY_BAR_ITEMS = [
   { key: 'worlds',     icon: 'map',             label: '#nav-worlds#',   href: '/worlds' },
   { key: 'challenges', icon: 'emoji_events',    label: '#nav-challenges#', href: '/challenges' },
   { key: 'classroom',  icon: 'school',          label: '#nav-classroom#',  href: '/classroom', adminHidden: true },
+  { key: 'curriculum', icon: 'menu_book',       label: '#nav-curriculum#', href: '/curriculum', adminOnly: true },
   { key: 'settings',   icon: 'settings',        label: '#nav-settings#', href: '/settings' },
   { key: 'admin',      icon: 'manage_accounts', label: '#nav-admin#',    href: '/admin', adminOnly: true },
 ];
@@ -28,6 +29,7 @@ function _getActiveKey() {
   if (path === '/classroom')  return 'classroom';
   if (path === '/settings')   return 'settings';
   if (path === '/admin')      return 'admin';
+  if (path === '/curriculum') return 'curriculum';
   if (path === '/robots')     return 'robots';
   if (path === '/worlds')     return 'worlds';
   if (path === '/projects')    return 'projects';

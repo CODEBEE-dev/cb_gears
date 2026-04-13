@@ -1839,16 +1839,19 @@
         lessons.forEach((lesson, idx) => {
           const prog = progressMap[lesson.id]
           const status = prog ? prog.status : 'NOT_STARTED'
-          lessonEl.appendChild(makeLessonItem(lesson, idx + 1, status, prog?.project_id, cls.id, cls.status))
+          lessonEl.appendChild(makeLessonItem(lesson, idx + 1, status, prog?.project_id, cls.id, cls.status, currData.title))
         })
       } catch {
         lessonEl.innerHTML = '<div class="empty-msg">불러오기 실패</div>'
       }
     }
 
-    function makeLessonItem(lesson, order, status, projectId, classId, classStatus) {
+    function makeLessonItem(lesson, order, status, projectId, classId, classStatus, curriculumTitle) {
       const item = document.createElement('div')
       item.className = 'lesson-item'
+
+      const defaultProjectName = [curriculumTitle, lesson.title].filter(Boolean).join('_')
+      const encodedDefault = encodeURIComponent(defaultProjectName)
 
       let chipHtml = ''
       let actionsHtml = ''
@@ -1862,7 +1865,7 @@
         chipHtml = `<span class="lesson-status-chip chip-prog"><span class="material-symbols-rounded" style="font-size:0.9rem">pending</span>진행중</span>`
         if (!projectId && classStatus === 'ACTIVE') {
           // 프로젝트가 삭제된 경우 재생성
-          actionsHtml = `<button class="btn-start" onclick="openLessonStartModal('${classId}','${lesson.id}')">다시 시작</button>`
+          actionsHtml = `<button class="btn-start" onclick="openLessonStartModal('${classId}','${lesson.id}',decodeURIComponent('${encodedDefault}'))">다시 시작</button>`
         } else {
           actionsHtml = `
             ${projectId ? `<button class="btn-continue" onclick="openEditor(${projectId})">이어하기</button>` : ''}
@@ -1872,7 +1875,7 @@
       } else {
         chipHtml = `<span class="lesson-status-chip chip-none">미시작</span>`
         actionsHtml = classStatus === 'ACTIVE'
-          ? `<button class="btn-start" onclick="openLessonStartModal('${classId}','${lesson.id}')">시작하기</button>`
+          ? `<button class="btn-start" onclick="openLessonStartModal('${classId}','${lesson.id}',decodeURIComponent('${encodedDefault}'))">시작하기</button>`
           : ''
       }
 
@@ -1926,12 +1929,14 @@
     }
 
     // 차시 시작 모달
-    function openLessonStartModal(classId, lessonId) {
+    function openLessonStartModal(classId, lessonId, defaultName = '') {
       pendingStartClassId = classId
       pendingStartLessonId = lessonId
-      document.getElementById('inputLessonProjectName').value = ''
+      const input = document.getElementById('inputLessonProjectName')
+      input.value = defaultName
       document.getElementById('lessonStartModalOverlay').classList.add('open')
-      document.getElementById('inputLessonProjectName').focus()
+      input.focus()
+      input.select()
     }
 
     function closeLessonStartModal() {

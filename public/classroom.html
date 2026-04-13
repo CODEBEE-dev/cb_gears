@@ -883,6 +883,14 @@
               <div class="detail-title" id="myClassTitle"></div>
               <span class="status-badge" id="myClassStatusBadge"></span>
             </div>
+            <div id="myCurriculumInfo" style="display:none; background:var(--color-surface); border:1px solid var(--color-border); border-radius:0.75rem; padding:0.9rem 1rem; margin-bottom:1.2rem; align-items:center; gap:1rem;">
+              <div id="myCurriculumThumb"></div>
+              <div>
+                <div style="font-size:0.75rem; color:var(--color-text-muted); margin-bottom:0.2rem;">커리큘럼</div>
+                <div id="myCurriculumTitle" style="font-size:1rem; font-weight:700; color:var(--color-text);"></div>
+                <div id="myCurriculumMeta" style="font-size:0.8rem; color:var(--color-text-muted); margin-top:0.2rem;"></div>
+              </div>
+            </div>
             <div class="lesson-list" id="lessonListEl"></div>
           </div>
         </div>
@@ -1711,6 +1719,14 @@
           return
         }
 
+        // 수업이 1개면 바로 상세로 진입, 뒤로가기 버튼 숨김
+        if (classes.length === 1) {
+          document.getElementById('btnBackToMyClassList').style.display = 'none'
+          showMyLessons(classes[0])
+          return
+        }
+        document.getElementById('btnBackToMyClassList').style.display = ''
+
         // 커리큘럼별 정보 맵 구성
         const curriculumMap = {}
         const uniqueCurriculumIds = [...new Set(classes.map(c => c.api_curriculum_id).filter(Boolean))]
@@ -1785,6 +1801,15 @@
 
         const lessons = currData.lessons || []
         currentMyClassLessons = lessons
+
+        // 커리큘럼 정보 표시
+        const myThumbEl = document.getElementById('myCurriculumThumb')
+        myThumbEl.innerHTML = currData.thumbnailUrl
+          ? `<img src="${currData.thumbnailUrl}" alt="" style="width:120px;height:72px;object-fit:cover;border-radius:0.5rem;display:block;">`
+          : `<div style="width:120px;height:72px;border-radius:0.5rem;background:#eef0fb;display:flex;align-items:center;justify-content:center;color:#a0aadd;"><span class="material-symbols-rounded" style="font-size:2rem;">menu_book</span></div>`
+        document.getElementById('myCurriculumTitle').textContent = currData.title || ''
+        document.getElementById('myCurriculumMeta').textContent = `${lessons.length}차시`
+        document.getElementById('myCurriculumInfo').style.display = 'flex'
 
         // 내 진도 맵: api_lesson_id → { status, project_id }
         const progressMap = {}

@@ -320,8 +320,8 @@
   <script src="js/challengeData.js"></script>
 
   <script>
-    // Init classes
-    blockly.init();
+    // Init classes — Promise를 저장해 loadWhenReady에서 완료를 기다림
+    const blocklyReady = blockly.init();
 
     function loadChallengeToolbox() {
       let challengeId = readGET('challenge');
@@ -391,6 +391,7 @@
     // Load world if specified
     async function loadWhenReady() {
       if (typeof babylon.scene != 'undefined' && babylon.scene.isReady()) {
+        await blocklyReady;
         await loadWorldScriptFromGET();
         loadWorldFromGET();
         loadRobotFromGET();

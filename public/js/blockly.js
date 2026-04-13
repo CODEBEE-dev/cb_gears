@@ -89,15 +89,18 @@ var blockly = new function() {
 
   // Run on page load
   this.init = function() {
-    const script = document.createElement('script');
-    script.src = 'blockly-12.3.0/msg/' + LANG + '.js';
-    script.addEventListener('load', function() {
-      self.patchBuiltinBlockLabels();
-      self.loadCustomBlocks()
-        .then(self.loadToolBox)
-        .then(self.generator.load());
+    return new Promise(function(resolve) {
+      const script = document.createElement('script');
+      script.src = 'blockly-12.3.0/msg/' + LANG + '.js';
+      script.addEventListener('load', function() {
+        self.patchBuiltinBlockLabels();
+        self.loadCustomBlocks()
+          .then(self.loadToolBox)
+          .then(self.generator.load())
+          .then(resolve);
+      });
+      document.head.appendChild(script);
     });
-    document.head.appendChild(script);
   };
 
   // Load toolbox

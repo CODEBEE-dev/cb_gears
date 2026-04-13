@@ -60,6 +60,24 @@ CREATE TABLE IF NOT EXISTS material_files (
   created_at    TIMESTAMP NOT NULL DEFAULT NOW()
 );
 
+CREATE TABLE IF NOT EXISTS class_instances (
+  id                VARCHAR(50) PRIMARY KEY,
+  api_curriculum_id VARCHAR(50) NOT NULL,
+  teacher_id        VARCHAR(36) NOT NULL,
+  title             VARCHAR(255) NOT NULL,
+  status            VARCHAR(20) NOT NULL DEFAULT 'ACTIVE',
+  created_at        TIMESTAMP NOT NULL DEFAULT NOW(),
+  updated_at        TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS class_rosters (
+  id         VARCHAR(50) PRIMARY KEY,
+  class_id   VARCHAR(50) NOT NULL REFERENCES class_instances(id) ON DELETE CASCADE,
+  student_id VARCHAR(36) NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+  UNIQUE (class_id, student_id)
+);
+
 CREATE TABLE IF NOT EXISTS projects (
   id             SERIAL PRIMARY KEY,
   user_id        VARCHAR(36) NOT NULL,
@@ -72,4 +90,16 @@ CREATE TABLE IF NOT EXISTS projects (
   robot_options  JSONB NOT NULL DEFAULT '{"name":"singleFollower","bodyHeight":4,"bodyWidth":14,"bodyLength":16,"wheels":true,"wheelDiameter":5.6,"wheelWidth":0.8,"wheelToBodyOffset":0.2,"bodyEdgeToWheelCenterY":1,"bodyEdgeToWheelCenterZ":2,"bodyMass":1000,"wheelMass":200,"casterMass":0,"caster":true,"wheelFriction":10,"bodyFriction":0,"casterFriction":0,"color":"#F09C0D","imageType":"all","imageURL":"","components":[{"type":"ColorSensor","position":[0,-1,9],"rotation":[1.5707963267948966,0,0],"options":null},{"type":"UltrasonicSensor","position":[0,2.5,8],"rotation":[0,0,0],"options":null},{"type":"GyroSensor","position":[0,2.5,2.5],"options":null},{"type":"GPSSensor","position":[0,2.5,5],"options":null},{"type":"MagnetActuator","position":[0,-1,3],"rotation":[0,0,0],"options":null},{"type":"Pen","position":[0,0,6],"rotation":[0,0,0],"options":null}]}',
   created_at     TIMESTAMP NOT NULL DEFAULT NOW(),
   updated_at     TIMESTAMP NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS student_lesson_instances (
+  id                VARCHAR(50) PRIMARY KEY,
+  api_curriculum_id VARCHAR(50) NOT NULL,
+  class_id          VARCHAR(50) NOT NULL REFERENCES class_instances(id) ON DELETE CASCADE,
+  api_lesson_id     VARCHAR(50) NOT NULL,
+  student_id        VARCHAR(36) NOT NULL,
+  project_id        INTEGER REFERENCES projects(id) ON DELETE SET NULL,
+  status            VARCHAR(20) NOT NULL DEFAULT 'NOT_STARTED',
+  completed_at      TIMESTAMP,
+  UNIQUE (class_id, api_lesson_id, student_id)
 );

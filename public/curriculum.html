@@ -382,9 +382,9 @@
         </div>
         <div class="content-header" style="margin-top:1.8rem;">
           <h2 class="section-title" id="lessonsTitle"></h2>
-          <button class="btn-new" id="btnNewLesson">
+          <button class="btn-new" id="btnCreateClass" style="display:none;">
             <span class="material-symbols-rounded">add</span>
-            <span id="labelNewLesson"></span>
+            <span>수업 만들기</span>
           </button>
         </div>
         <div class="lesson-list" id="lessonList"></div>
@@ -392,12 +392,34 @@
     </div>
   </main>
 
+  <!-- 수업 개설 모달 -->
+  <div class="modal-overlay" id="classCreateModalOverlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.35); z-index:100; align-items:center; justify-content:center;">
+    <div class="modal" style="background:#fff; border-radius:1rem; padding:1.5rem; width:min(420px,95vw); display:flex; flex-direction:column; gap:0.8rem;">
+      <h2 style="margin:0; font-size:1.05rem; font-weight:800; color:var(--color-text);">수업 만들기</h2>
+      <div style="font-size:0.85rem; color:var(--color-text-muted);" id="classCreateCurrTitle"></div>
+      <label style="display:flex; flex-direction:column; gap:0.25rem; font-size:0.85rem; font-weight:700; color:var(--color-text-muted);">
+        수업 제목
+        <input type="text" id="inputClassName" maxlength="200" placeholder="수업 제목을 입력하세요"
+          style="padding:0.5rem 0.7rem; border:1px solid var(--color-border); border-radius:0.5rem; font-family:inherit; font-size:0.9rem; outline:none;">
+      </label>
+      <div style="display:flex; justify-content:flex-end; gap:0.5rem; margin-top:0.3rem;">
+        <button id="btnClassCreateCancel"
+          style="padding:0.45rem 1rem; border:1px solid var(--color-border); border-radius:0.5rem; background:none; font-family:inherit; font-size:0.88rem; font-weight:700; cursor:pointer; color:var(--color-text-muted);">
+          취소
+        </button>
+        <button id="btnClassCreateSubmit"
+          style="padding:0.45rem 1rem; border:none; border-radius:0.5rem; background:var(--color-primary); color:#fff; font-family:inherit; font-size:0.88rem; font-weight:700; cursor:pointer;">
+          개설
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script>
     // ── i18n ──
     document.getElementById('listTitle').textContent    = i18n.get('#curr-title#')
     document.getElementById('labelBack').textContent    = i18n.get('#curr-back#')
     document.getElementById('lessonsTitle').textContent = i18n.get('#curr-lessons#')
-    document.getElementById('labelNewLesson').textContent = i18n.get('#curr-new_lesson#')
     document.getElementById('currSearch').placeholder   = i18n.get('#curr-search_placeholder#')
     document.getElementById('filterAll').textContent    = i18n.get('#curr-filter_all#')
     document.getElementById('filterElem').textContent   = i18n.get('#curr-level_elementary#')
@@ -415,6 +437,8 @@
     // ── 상태 ──
     let allCurriculums = []
     let activeLevel = 'all'
+    let currentCurriculumId = null
+    let currentUser = null
 
     // ── 뷰 전환 ──
     function showListView() {
@@ -578,15 +602,21 @@
     }
 
     async function loadDetail(id) {
+      currentCurriculumId = id
       showDetailView()
       document.getElementById('lessonList').innerHTML = `<div class="empty-msg">${i18n.get('#admin-loading#')}</div>`
       document.getElementById('detailTitle').textContent = ''
       document.getElementById('detailDesc').textContent  = ''
+      document.getElementById('btnCreateClass').style.display = 'none'
       try {
         const res = await fetch(`${CMS_BASE}/api/curriculums/${id}`)
         if (!res.ok) throw new Error(res.status)
         const data = await res.json()
         renderDetail(data.data || data)
+        // 교사/school_admin만 버튼 표시
+        if (currentUser && (currentUser.role === 'teacher' || currentUser.role === 'school_admin')) {
+          document.getElementById('btnCreateClass').style.display = ''
+        }
       } catch (e) {
         document.getElementById('lessonList').innerHTML =
           `<div class="empty-msg">${i18n.get('#curr-lesson_load_error#')}</div>`
@@ -598,6 +628,56 @@
       showListView()
     })
 
+    // ── 수업 만들기 모달 ──
+    function openClassCreateModal() {
+      const title = document.getElementById('detailTitle').textContent
+      document.getElementById('classCreateCurrTitle').textContent = `커리큘럼: ${title}`
+      document.getElementById('inputClassName').value = ''
+      const overlay = document.getElementById('classCreateModalOverlay')
+      overlay.style.display = 'flex'
+      document.getElementById('inputClassName').focus()
+    }
+
+    function closeClassCreateModal() {
+      document.getElementById('classCreateModalOverlay').style.display = 'none'
+    }
+
+    document.getElementById('btnCreateClass').addEventListener('click', openClassCreateModal)
+    document.getElementById('btnClassCreateCancel').addEventListener('click', closeClassCreateModal)
+    document.getElementById('classCreateModalOverlay').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('classCreateModalOverlay')) closeClassCreateModal()
+    })
+    document.getElementById('inputClassName').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') document.getElementById('btnClassCreateSubmit').click()
+    })
+
+    document.getElementById('btnClassCreateSubmit').addEventListener('click', async () => {
+      const title = document.getElementById('inputClassName').value.trim()
+      if (!title || !currentCurriculumId) return
+
+      const btn = document.getElementById('btnClassCreateSubmit')
+      btn.disabled = true
+      btn.textContent = '개설 중...'
+
+      try {
+        const res = await fetch('/api/class', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ api_curriculum_id: currentCurriculumId, title }),
+        })
+        if (res.ok) {
+          closeClassCreateModal()
+          alert('수업이 개설됐습니다. 클래스룸 > 수업 관리에서 확인하세요.')
+        } else {
+          const { error } = await res.json().catch(() => ({}))
+          alert(error || '수업 개설 실패')
+        }
+      } finally {
+        btn.disabled = false
+        btn.textContent = '개설'
+      }
+    })
+
     // ── 초기화 ──
     ;(async () => {
       const user = await initHeader(i18n.get('#curr-title#'))
@@ -606,6 +686,7 @@
           `<div class="empty-msg">${i18n.get('#curr-access_denied#')}</div>`
         return
       }
+      currentUser = user
       loadList()
     })()
   </script>

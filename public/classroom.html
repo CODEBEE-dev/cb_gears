@@ -435,6 +435,258 @@
     }
     .btn-remove-file:hover { color: #c62828; }
     .btn-remove-file .material-symbols-rounded { font-size: 1rem; }
+
+    /* ── 수업 관리 / 내 수업 ── */
+    .class-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .class-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+      padding: 1rem 1.2rem;
+      cursor: pointer;
+      transition: box-shadow 0.15s;
+    }
+    .class-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .class-card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.4rem;
+    }
+    .class-card-title {
+      font-size: 0.97rem;
+      font-weight: 700;
+      color: var(--color-text);
+      flex: 1;
+    }
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.2rem 0.6rem;
+      border-radius: 2rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .status-badge.active  { background: #e8f5e9; color: #2e7d32; }
+    .status-badge.closed  { background: #f5f5f5; color: #9e9e9e; }
+    .class-card-meta {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      margin-bottom: 0.6rem;
+    }
+    .class-card-progress {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--color-text-muted);
+      padding: 0;
+      margin-bottom: 1rem;
+    }
+    .back-btn:hover { color: var(--color-primary); }
+    .back-btn .material-symbols-rounded { font-size: 1.1rem; }
+    .detail-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.2rem;
+      flex-wrap: wrap;
+    }
+    .detail-title {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--color-text);
+      flex: 1;
+    }
+    .section-subtitle {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: var(--color-text-muted);
+      margin: 1.2rem 0 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .roster-list {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+      overflow: hidden;
+    }
+    .roster-row {
+      display: flex;
+      align-items: center;
+      padding: 0.65rem 1.2rem;
+      border-bottom: 1px solid var(--color-border);
+      font-size: 0.88rem;
+      gap: 0.5rem;
+    }
+    .roster-row:last-child { border-bottom: none; }
+    .roster-name { flex: 1; font-weight: 600; }
+    .roster-date { font-size: 0.78rem; color: var(--color-text-muted); }
+    /* 차시 진도 매트릭스 */
+    .lesson-matrix-wrap { overflow-x: auto; }
+    .lesson-matrix {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--color-surface);
+      border-radius: 0.75rem;
+      overflow: hidden;
+      border: 1px solid var(--color-border);
+      font-size: 0.83rem;
+    }
+    .lesson-matrix th {
+      background: var(--color-bg);
+      padding: 0.6rem 0.75rem;
+      font-weight: 700;
+      color: var(--color-text-muted);
+      text-align: center;
+      border-bottom: 1px solid var(--color-border);
+      white-space: nowrap;
+    }
+    .lesson-matrix th:first-child { text-align: left; }
+    .lesson-matrix td {
+      padding: 0.6rem 0.75rem;
+      border-bottom: 1px solid var(--color-border);
+      text-align: center;
+    }
+    .lesson-matrix td:first-child { text-align: left; font-weight: 600; }
+    .lesson-matrix tr:last-child td { border-bottom: none; }
+    .lesson-matrix tr:hover td { background: var(--color-bg); }
+    .ls-icon { font-size: 1.1rem; }
+    .ls-done  { color: #2e7d32; }
+    .ls-prog  { color: #1565c0; }
+    .ls-none  { color: #bdbdbd; }
+    /* 학생 차시 카드 */
+    .lesson-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+    .lesson-item {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+      padding: 0.85rem 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .lesson-order {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: var(--color-text-muted);
+      flex-shrink: 0;
+    }
+    .lesson-info { flex: 1; min-width: 0; }
+    .lesson-title {
+      font-size: 0.93rem;
+      font-weight: 700;
+      color: var(--color-text);
+    }
+    .lesson-desc {
+      font-size: 0.8rem;
+      color: var(--color-text-muted);
+      margin-top: 0.1rem;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .lesson-actions { display: flex; gap: 0.4rem; flex-shrink: 0; }
+    .btn-start {
+      padding: 0.35rem 0.9rem;
+      background: var(--color-primary);
+      color: #fff;
+      border: none;
+      border-radius: 0.4rem;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .btn-start:hover { opacity: 0.85; }
+    .btn-continue {
+      padding: 0.35rem 0.9rem;
+      background: none;
+      border: 1px solid var(--color-primary);
+      color: var(--color-primary);
+      border-radius: 0.4rem;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+    }
+    .btn-continue:hover { background: var(--color-primary); color: #fff; }
+    .btn-complete {
+      padding: 0.35rem 0.9rem;
+      background: #e8f5e9;
+      border: 1px solid #a5d6a7;
+      color: #2e7d32;
+      border-radius: 0.4rem;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .btn-complete:hover { background: #c8e6c9; }
+    .lesson-status-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 2rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .chip-done { background: #e8f5e9; color: #2e7d32; }
+    .chip-prog { background: #e3f2fd; color: #1565c0; }
+    .chip-none { background: #f5f5f5; color: #9e9e9e; }
+    /* 수업 개설 모달 */
+    .modal select {
+      width: 100%;
+      padding: 0.5rem 0.7rem;
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      font-family: inherit;
+      font-size: 0.9rem;
+      background: var(--color-surface);
+      color: var(--color-text);
+      margin-top: 0.25rem;
+      box-sizing: border-box;
+    }
+    .modal select:focus { outline: none; border-color: var(--color-primary); }
+    .btn-toggle-status {
+      padding: 0.3rem 0.8rem;
+      border-radius: 0.4rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid var(--color-border);
+      background: var(--color-bg);
+      color: var(--color-text-muted);
+      transition: background 0.15s, color 0.15s;
+    }
+    .btn-toggle-status:hover { background: var(--color-border); }
   </style>
 </head>
 
@@ -472,6 +724,16 @@
           <button class="tab-btn" id="tabStudentProjects" style="display:none;">
             <span class="material-symbols-rounded">folder_shared</span>
             <span id="tabLabelStudentProjects"></span>
+          </button>
+          <!-- teacher 전용: 수업 관리 -->
+          <button class="tab-btn" id="tabClassManage" style="display:none;">
+            <span class="material-symbols-rounded">school</span>
+            <span>수업 관리</span>
+          </button>
+          <!-- student 전용: 내 수업 -->
+          <button class="tab-btn" id="tabMyClass" style="display:none;">
+            <span class="material-symbols-rounded">school</span>
+            <span>내 수업</span>
           </button>
         </div>
 
@@ -521,6 +783,71 @@
           </table>
         </div>
 
+        <!-- 수업 관리 탭 (teacher 전용) -->
+        <div id="viewClassManage" style="display:none;">
+          <!-- 수업 목록 상태 -->
+          <div id="classListView">
+            <div style="display:flex; justify-content:flex-end; margin-bottom:0.75rem;">
+              <button class="btn-new" id="btnNewClass">
+                <span class="material-symbols-rounded">add</span>
+                <span>새 수업 개설</span>
+              </button>
+            </div>
+            <div class="class-list" id="classListEl"></div>
+          </div>
+          <!-- 수업 상세 상태 -->
+          <div id="classDetailView" style="display:none;">
+            <button class="back-btn" id="btnBackToClassList">
+              <span class="material-symbols-rounded">arrow_back</span>
+              <span>수업 목록</span>
+            </button>
+            <div class="detail-header">
+              <div class="detail-title" id="detailClassTitle"></div>
+              <span class="status-badge" id="detailStatusBadge"></span>
+              <button class="btn-toggle-status" id="btnToggleStatus"></button>
+            </div>
+            <div id="classProgressSummary" style="display:none; background:var(--color-surface); border:1px solid var(--color-border); border-radius:0.75rem; padding:0.9rem 1.2rem; margin-bottom:1.2rem;">
+              <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:0.5rem;">
+                <span style="font-size:0.85rem; font-weight:700; color:var(--color-text-muted);">반 전체 진행도</span>
+                <span id="classProgressLabel" style="font-size:0.95rem; font-weight:800; color:var(--color-primary);"></span>
+              </div>
+              <div class="progress-track" style="height:10px;">
+                <div class="progress-fill" id="classProgressFill" style="width:0%;"></div>
+              </div>
+              <div id="classProgressDetail" style="font-size:0.78rem; color:var(--color-text-muted); margin-top:0.4rem;"></div>
+            </div>
+            <div class="section-subtitle">학생 명단</div>
+            <div class="roster-list" id="rosterListEl"></div>
+            <div class="section-subtitle" style="margin-top:1.5rem;">차시 진도 현황</div>
+            <div class="lesson-matrix-wrap">
+              <table class="lesson-matrix" id="lessonMatrixTable">
+                <thead id="lessonMatrixHead"></thead>
+                <tbody id="lessonMatrixBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- 내 수업 탭 (student 전용) -->
+        <div id="viewMyClass" style="display:none;">
+          <!-- 수업 목록 상태 -->
+          <div id="myClassListView">
+            <div class="class-list" id="myClassListEl"></div>
+          </div>
+          <!-- 차시 목록 상태 -->
+          <div id="myLessonListView" style="display:none;">
+            <button class="back-btn" id="btnBackToMyClassList">
+              <span class="material-symbols-rounded">arrow_back</span>
+              <span>내 수업</span>
+            </button>
+            <div class="detail-header">
+              <div class="detail-title" id="myClassTitle"></div>
+              <span class="status-badge" id="myClassStatusBadge"></span>
+            </div>
+            <div class="lesson-list" id="lessonListEl"></div>
+          </div>
+        </div>
+
       </div>
     </div>
   </main>
@@ -568,6 +895,42 @@
       <div class="modal-actions">
         <button class="btn-cancel" id="btnMaterialCancel"></button>
         <button class="btn-create" id="btnMaterialSubmit"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 수업 개설 모달 -->
+  <div class="modal-overlay" id="classCreateModalOverlay">
+    <div class="modal">
+      <h2>새 수업 개설</h2>
+      <label>
+        <span>커리큘럼</span>
+        <select id="selectCurriculum">
+          <option value="">불러오는 중...</option>
+        </select>
+      </label>
+      <label>
+        <span>수업 제목</span>
+        <input type="text" id="inputClassName" maxlength="200" placeholder="수업 제목을 입력하세요">
+      </label>
+      <div class="modal-actions">
+        <button class="btn-cancel" id="btnClassCreateCancel">취소</button>
+        <button class="btn-create" id="btnClassCreateSubmit">개설</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 차시 시작 (프로젝트명 입력) 모달 -->
+  <div class="modal-overlay" id="lessonStartModalOverlay">
+    <div class="modal">
+      <h2>차시 시작</h2>
+      <label>
+        <span>프로젝트 이름</span>
+        <input type="text" id="inputLessonProjectName" maxlength="200" placeholder="프로젝트 이름을 입력하세요">
+      </label>
+      <div class="modal-actions">
+        <button class="btn-cancel" id="btnLessonStartCancel">취소</button>
+        <button class="btn-create" id="btnLessonStartSubmit">시작</button>
       </div>
     </div>
   </div>
@@ -622,24 +985,42 @@
     let editingId = null
 
     // ── 탭 전환 ──
+    const TAB_IDS = ['announcements', 'leaderboard', 'materials', 'student-projects', 'class-manage', 'my-class']
+    const TAB_VIEW = {
+      'announcements':    'viewAnnouncements',
+      'leaderboard':      'viewLeaderboard',
+      'materials':        'viewMaterials',
+      'student-projects': 'viewStudentProjects',
+      'class-manage':     'viewClassManage',
+      'my-class':         'viewMyClass',
+    }
+    const TAB_BTN = {
+      'announcements':    'tabAnnouncements',
+      'leaderboard':      'tabLeaderboard',
+      'materials':        'tabMaterials',
+      'student-projects': 'tabStudentProjects',
+      'class-manage':     'tabClassManage',
+      'my-class':         'tabMyClass',
+    }
+
     function switchTab(tab) {
-      document.getElementById('viewAnnouncements').style.display    = tab === 'announcements'     ? '' : 'none'
-      document.getElementById('viewLeaderboard').style.display      = tab === 'leaderboard'       ? '' : 'none'
-      document.getElementById('viewMaterials').style.display        = tab === 'materials'         ? '' : 'none'
-      document.getElementById('viewStudentProjects').style.display  = tab === 'student-projects'  ? '' : 'none'
-      document.getElementById('tabAnnouncements').classList.toggle('active',    tab === 'announcements')
-      document.getElementById('tabLeaderboard').classList.toggle('active',      tab === 'leaderboard')
-      document.getElementById('tabMaterials').classList.toggle('active',        tab === 'materials')
-      document.getElementById('tabStudentProjects').classList.toggle('active',  tab === 'student-projects')
+      TAB_IDS.forEach(t => {
+        document.getElementById(TAB_VIEW[t]).style.display = t === tab ? '' : 'none'
+        document.getElementById(TAB_BTN[t]).classList.toggle('active', t === tab)
+      })
       if (tab === 'leaderboard')      loadLeaderboard()
       if (tab === 'materials')        loadMaterials()
       if (tab === 'student-projects') loadStudentProjects()
+      if (tab === 'class-manage')     loadClassManage()
+      if (tab === 'my-class')         loadMyClasses()
     }
 
     document.getElementById('tabAnnouncements').addEventListener('click',   () => switchTab('announcements'))
     document.getElementById('tabLeaderboard').addEventListener('click',     () => switchTab('leaderboard'))
     document.getElementById('tabMaterials').addEventListener('click',       () => switchTab('materials'))
     document.getElementById('tabStudentProjects').addEventListener('click', () => switchTab('student-projects'))
+    document.getElementById('tabClassManage').addEventListener('click',     () => switchTab('class-manage'))
+    document.getElementById('tabMyClass').addEventListener('click',         () => switchTab('my-class'))
 
     // ── 공지사항 ──
     function formatDate(iso) {
@@ -1018,6 +1399,425 @@
       })
     }
 
+    // ── 수업 관리 (교사) ──
+    const CMS_BASE = 'http://localhost:45512'
+    let currentClassId = null
+    let pendingStartClassId = null
+    let pendingStartLessonId = null
+
+    async function loadClassManage() {
+      const listEl = document.getElementById('classListEl')
+      listEl.innerHTML = ''
+      document.getElementById('classListView').style.display = ''
+      document.getElementById('classDetailView').style.display = 'none'
+      try {
+        const res = await fetch('/api/class')
+        if (!res.ok) throw new Error(res.status)
+        const { classes } = await res.json()
+        if (classes.length === 0) {
+          listEl.innerHTML = `<div class="empty-msg">개설된 수업이 없습니다.</div>`
+          return
+        }
+        classes.forEach(cls => listEl.appendChild(makeClassCard(cls)))
+      } catch {
+        listEl.innerHTML = `<div class="empty-msg">불러오기 실패</div>`
+      }
+    }
+
+    function makeClassCard(cls) {
+      const card = document.createElement('div')
+      card.className = 'class-card'
+      const pct = Number(cls.progress) || 0
+      const statusLabel = cls.status === 'ACTIVE' ? '진행중' : '종료'
+      const statusCls   = cls.status === 'ACTIVE' ? 'active' : 'closed'
+      card.innerHTML = `
+        <div class="class-card-header">
+          <div class="class-card-title">${escapeHtml(cls.title)}</div>
+          <span class="status-badge ${statusCls}">${statusLabel}</span>
+        </div>
+        <div class="class-card-meta">학생 ${cls.student_count}명</div>
+        <div class="class-card-progress">
+          <div class="progress-track" style="flex:1;">
+            <div class="progress-fill" style="width:${pct}%"></div>
+          </div>
+          <span class="progress-label">${pct}%</span>
+        </div>
+      `
+      card.addEventListener('click', () => showClassDetail(cls.id))
+      return card
+    }
+
+    async function showClassDetail(classId) {
+      currentClassId = classId
+      document.getElementById('classListView').style.display = 'none'
+      document.getElementById('classDetailView').style.display = ''
+
+      const rosterEl = document.getElementById('rosterListEl')
+      const matHead  = document.getElementById('lessonMatrixHead')
+      const matBody  = document.getElementById('lessonMatrixBody')
+      rosterEl.innerHTML = '<div class="empty-msg">불러오는 중...</div>'
+      matHead.innerHTML = ''
+      matBody.innerHTML = ''
+
+      try {
+        const [detailRes, cmsRes] = await Promise.all([
+          fetch(`/api/class/${classId}`),
+          fetch(`${CMS_BASE}/api/curriculums`),
+        ])
+        if (!detailRes.ok) throw new Error('detail')
+        const { class: cls, roster, lessonProgress } = await detailRes.json()
+
+        // 헤더
+        document.getElementById('detailClassTitle').textContent = cls.title
+        const badge = document.getElementById('detailStatusBadge')
+        badge.textContent = cls.status === 'ACTIVE' ? '진행중' : '종료'
+        badge.className = `status-badge ${cls.status === 'ACTIVE' ? 'active' : 'closed'}`
+        const toggleBtn = document.getElementById('btnToggleStatus')
+        toggleBtn.textContent = cls.status === 'ACTIVE' ? '수업 종료' : '수업 재개'
+        toggleBtn.onclick = () => toggleClassStatus(cls.id, cls.status)
+
+        // 명단
+        rosterEl.innerHTML = ''
+        if (roster.length === 0) {
+          rosterEl.innerHTML = '<div class="empty-msg">등록된 학생이 없습니다.</div>'
+        } else {
+          roster.forEach(r => {
+            const row = document.createElement('div')
+            row.className = 'roster-row'
+            row.innerHTML = `
+              <span class="roster-name">${escapeHtml(r.student_name || r.student_id)}</span>
+              <span class="roster-date">${formatDate(r.created_at)}</span>
+              <button class="btn-icon danger" title="제거" data-sid="${escapeHtml(r.student_id)}">
+                <span class="material-symbols-rounded">person_remove</span>
+              </button>
+            `
+            row.querySelector('.btn-icon').addEventListener('click', () => removeStudent(classId, r.student_id))
+            rosterEl.appendChild(row)
+          })
+        }
+
+        // 차시 매트릭스: CMS에서 레슨 목록 조회
+        const curriculum = await fetch(`${CMS_BASE}/api/curriculums/${cls.api_curriculum_id}`)
+        if (!curriculum.ok) throw new Error('cms')
+        const { data: currData } = await curriculum.json()
+        const lessons = currData.lessons || []
+
+        // 진도 맵: student_id → { lesson_id → status }
+        const progressMap = {}
+        lessonProgress.forEach(p => {
+          if (!progressMap[p.student_id]) progressMap[p.student_id] = {}
+          progressMap[p.student_id][p.api_lesson_id] = p.status
+        })
+
+        // 전체 진행도 계산
+        const totalCells = roster.length * lessons.length
+        const completedCells = lessonProgress.filter(p => p.status === 'COMPLETED').length
+        const pct = totalCells > 0 ? Math.round(completedCells / totalCells * 100) : 0
+        const summaryEl = document.getElementById('classProgressSummary')
+        if (totalCells > 0) {
+          document.getElementById('classProgressLabel').textContent = `${pct}%`
+          document.getElementById('classProgressFill').style.width = `${pct}%`
+          document.getElementById('classProgressDetail').textContent =
+            `${roster.length}명 · ${lessons.length}차시 · 완료 ${completedCells} / 전체 ${totalCells}`
+          summaryEl.style.display = ''
+        } else {
+          summaryEl.style.display = 'none'
+        }
+
+        // 헤더 행
+        const headTr = document.createElement('tr')
+        headTr.innerHTML = `<th>학생</th>` + lessons.map(l =>
+          `<th title="${escapeHtml(l.desc || '')}">${escapeHtml(l.title)}</th>`
+        ).join('')
+        matHead.appendChild(headTr)
+
+        // 데이터 행
+        roster.forEach(r => {
+          const tr = document.createElement('tr')
+          const studentProgress = progressMap[r.student_id] || {}
+          tr.innerHTML = `<td>${escapeHtml(r.student_name || r.student_id)}</td>` + lessons.map(l => {
+            const st = studentProgress[l.id] || 'NOT_STARTED'
+            if (st === 'COMPLETED')  return `<td><span class="material-symbols-rounded ls-icon ls-done" title="완료">check_circle</span></td>`
+            if (st === 'IN_PROGRESS') return `<td><span class="material-symbols-rounded ls-icon ls-prog" title="진행중">pending</span></td>`
+            return `<td><span class="material-symbols-rounded ls-icon ls-none" title="미시작">radio_button_unchecked</span></td>`
+          }).join('')
+          matBody.appendChild(tr)
+        })
+
+      } catch (e) {
+        rosterEl.innerHTML = '<div class="empty-msg">불러오기 실패</div>'
+      }
+    }
+
+    async function toggleClassStatus(classId, currentStatus) {
+      const newStatus = currentStatus === 'ACTIVE' ? 'CLOSED' : 'ACTIVE'
+      const res = await fetch(`/api/class/${classId}/status`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus }),
+      })
+      if (res.ok) showClassDetail(classId)
+    }
+
+    async function removeStudent(classId, studentId) {
+      if (!confirm('명단에서 제거할까요?')) return
+      const res = await fetch(`/api/class/${classId}/roster/${studentId}`, { method: 'DELETE' })
+      if (res.ok) showClassDetail(classId)
+    }
+
+    document.getElementById('btnBackToClassList').addEventListener('click', loadClassManage)
+
+    // 수업 개설 모달
+    async function openClassCreateModal() {
+      document.getElementById('inputClassName').value = ''
+      const sel = document.getElementById('selectCurriculum')
+      sel.innerHTML = '<option value="">불러오는 중...</option>'
+      document.getElementById('classCreateModalOverlay').classList.add('open')
+      try {
+        const res = await fetch(`${CMS_BASE}/api/curriculums`)
+        if (!res.ok) throw new Error()
+        const { data } = await res.json()
+        sel.innerHTML = data.map(c =>
+          `<option value="${escapeHtml(c.id)}">${escapeHtml(c.title)}</option>`
+        ).join('')
+      } catch {
+        sel.innerHTML = '<option value="">커리큘럼 불러오기 실패</option>'
+      }
+      document.getElementById('inputClassName').focus()
+    }
+
+    function closeClassCreateModal() {
+      document.getElementById('classCreateModalOverlay').classList.remove('open')
+    }
+
+    document.getElementById('btnNewClass').addEventListener('click', openClassCreateModal)
+    document.getElementById('btnClassCreateCancel').addEventListener('click', closeClassCreateModal)
+    document.getElementById('classCreateModalOverlay').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('classCreateModalOverlay')) closeClassCreateModal()
+    })
+
+    document.getElementById('btnClassCreateSubmit').addEventListener('click', async () => {
+      const api_curriculum_id = document.getElementById('selectCurriculum').value
+      const title = document.getElementById('inputClassName').value.trim()
+      if (!api_curriculum_id || !title) return
+      const res = await fetch('/api/class', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ api_curriculum_id, title }),
+      })
+      if (res.ok) {
+        closeClassCreateModal()
+        loadClassManage()
+      } else {
+        const { error } = await res.json().catch(() => ({}))
+        alert(error || '수업 개설 실패')
+      }
+    })
+
+    // ── 내 수업 (학생) ──
+    let currentMyClassId = null
+    let currentMyClassLessons = []
+
+    async function loadMyClasses() {
+      const listEl = document.getElementById('myClassListEl')
+      listEl.innerHTML = ''
+      document.getElementById('myClassListView').style.display = ''
+      document.getElementById('myLessonListView').style.display = 'none'
+      try {
+        const res = await fetch('/api/class/my')
+        if (!res.ok) throw new Error(res.status)
+        const { classes } = await res.json()
+        if (classes.length === 0) {
+          listEl.innerHTML = '<div class="empty-msg">소속된 수업이 없습니다.</div>'
+          return
+        }
+        classes.forEach(cls => listEl.appendChild(makeMyClassCard(cls)))
+      } catch {
+        listEl.innerHTML = '<div class="empty-msg">불러오기 실패</div>'
+      }
+    }
+
+    function makeMyClassCard(cls) {
+      const card = document.createElement('div')
+      card.className = 'class-card'
+      const completed = Number(cls.completed_lessons) || 0
+      const started   = Number(cls.started_lessons) || 0
+      const statusCls = cls.status === 'ACTIVE' ? 'active' : 'closed'
+      const statusLabel = cls.status === 'ACTIVE' ? '진행중' : '종료'
+      card.innerHTML = `
+        <div class="class-card-header">
+          <div class="class-card-title">${escapeHtml(cls.title)}</div>
+          <span class="status-badge ${statusCls}">${statusLabel}</span>
+        </div>
+        <div class="class-card-meta">완료 ${completed}차시 · 진행중 ${started - completed}차시</div>
+      `
+      card.addEventListener('click', () => showMyLessons(cls))
+      return card
+    }
+
+    async function showMyLessons(cls) {
+      currentMyClassId = cls.id
+      document.getElementById('myClassListView').style.display = 'none'
+      document.getElementById('myLessonListView').style.display = ''
+      document.getElementById('myClassTitle').textContent = cls.title
+      const badge = document.getElementById('myClassStatusBadge')
+      badge.textContent = cls.status === 'ACTIVE' ? '진행중' : '종료'
+      badge.className = `status-badge ${cls.status === 'ACTIVE' ? 'active' : 'closed'}`
+
+      const lessonEl = document.getElementById('lessonListEl')
+      lessonEl.innerHTML = '<div class="empty-msg">불러오는 중...</div>'
+
+      try {
+        const [cmsRes, progressRes] = await Promise.all([
+          fetch(`${CMS_BASE}/api/curriculums/${cls.api_curriculum_id}`),
+          fetch(`/api/class/${cls.id}/lessons`),
+        ])
+        if (!cmsRes.ok || !progressRes.ok) throw new Error()
+        const { data: currData } = await cmsRes.json()
+        const { lessons: myProgress } = await progressRes.json()
+
+        const lessons = currData.lessons || []
+        currentMyClassLessons = lessons
+
+        // 내 진도 맵: api_lesson_id → { status, project_id }
+        const progressMap = {}
+        myProgress.forEach(p => { progressMap[p.api_lesson_id] = p })
+
+        lessonEl.innerHTML = ''
+        if (lessons.length === 0) {
+          lessonEl.innerHTML = '<div class="empty-msg">차시가 없습니다.</div>'
+          return
+        }
+        lessons.forEach((lesson, idx) => {
+          const prog = progressMap[lesson.id]
+          const status = prog ? prog.status : 'NOT_STARTED'
+          lessonEl.appendChild(makeLessonItem(lesson, idx + 1, status, prog?.project_id, cls.id, cls.status))
+        })
+      } catch {
+        lessonEl.innerHTML = '<div class="empty-msg">불러오기 실패</div>'
+      }
+    }
+
+    function makeLessonItem(lesson, order, status, projectId, classId, classStatus) {
+      const item = document.createElement('div')
+      item.className = 'lesson-item'
+
+      let chipHtml = ''
+      let actionsHtml = ''
+
+      if (status === 'COMPLETED') {
+        chipHtml = `<span class="lesson-status-chip chip-done"><span class="material-symbols-rounded" style="font-size:0.9rem">check_circle</span>완료</span>`
+        actionsHtml = projectId
+          ? `<button class="btn-continue" onclick="openEditor(${projectId})">다시 열기</button>`
+          : ''
+      } else if (status === 'IN_PROGRESS') {
+        chipHtml = `<span class="lesson-status-chip chip-prog"><span class="material-symbols-rounded" style="font-size:0.9rem">pending</span>진행중</span>`
+        if (!projectId && classStatus === 'ACTIVE') {
+          // 프로젝트가 삭제된 경우 재생성
+          actionsHtml = `<button class="btn-start" onclick="openLessonStartModal('${classId}','${lesson.id}')">다시 시작</button>`
+        } else {
+          actionsHtml = `
+            ${projectId ? `<button class="btn-continue" onclick="openEditor(${projectId})">이어하기</button>` : ''}
+            ${classStatus === 'ACTIVE' ? `<button class="btn-complete" onclick="completeLesson('${classId}','${lesson.id}')">완료 제출</button>` : ''}
+          `
+        }
+      } else {
+        chipHtml = `<span class="lesson-status-chip chip-none">미시작</span>`
+        actionsHtml = classStatus === 'ACTIVE'
+          ? `<button class="btn-start" onclick="openLessonStartModal('${classId}','${lesson.id}')">시작하기</button>`
+          : ''
+      }
+
+      const pdfHtml = lesson.pdfUrl
+        ? `<a href="${lesson.pdfUrl}" target="_blank" rel="noopener"
+             style="display:inline-flex;align-items:center;gap:0.25rem;color:var(--color-primary);font-size:0.78rem;font-weight:700;padding:0.3rem 0.6rem;border-radius:0.4rem;text-decoration:none;flex-shrink:0;transition:background 0.15s;"
+             onmouseover="this.style.background='#eef0fb'" onmouseout="this.style.background=''"
+           ><span class="material-symbols-rounded" style="font-size:16px;">picture_as_pdf</span>PDF</a>`
+        : ''
+
+      item.innerHTML = `
+        <div class="lesson-order">${order}</div>
+        <div class="lesson-info">
+          <div class="lesson-title">${escapeHtml(lesson.title)}</div>
+          ${lesson.desc ? `<div class="lesson-desc">${escapeHtml(lesson.desc)}</div>` : ''}
+        </div>
+        ${pdfHtml}
+        <div class="lesson-actions">
+          ${chipHtml}
+          ${actionsHtml}
+        </div>
+      `
+      return item
+    }
+
+    document.getElementById('btnBackToMyClassList').addEventListener('click', loadMyClasses)
+
+    function openEditor(projectId) {
+      window.open(`/editor?projectId=${projectId}`, '_blank')
+    }
+
+    async function completeLesson(classId, lessonId) {
+      if (!confirm('이 차시를 완료로 제출할까요?')) return
+      const res = await fetch(`/api/class/${classId}/lessons/${lessonId}/complete`, { method: 'POST' })
+      if (res.ok) {
+        // 현재 수업 차시 목록 새로고침
+        const cls = { id: classId, api_curriculum_id: null, title: document.getElementById('myClassTitle').textContent, status: 'ACTIVE' }
+        // api_curriculum_id 는 다시 fetch로 받아와야 하므로 loadMyClasses 후 재진입
+        showMyLessonsById(classId)
+      } else {
+        alert('제출 실패')
+      }
+    }
+
+    async function showMyLessonsById(classId) {
+      const res = await fetch('/api/class/my')
+      if (!res.ok) return
+      const { classes } = await res.json()
+      const cls = classes.find(c => c.id === classId)
+      if (cls) showMyLessons(cls)
+    }
+
+    // 차시 시작 모달
+    function openLessonStartModal(classId, lessonId) {
+      pendingStartClassId = classId
+      pendingStartLessonId = lessonId
+      document.getElementById('inputLessonProjectName').value = ''
+      document.getElementById('lessonStartModalOverlay').classList.add('open')
+      document.getElementById('inputLessonProjectName').focus()
+    }
+
+    function closeLessonStartModal() {
+      document.getElementById('lessonStartModalOverlay').classList.remove('open')
+      pendingStartClassId = null
+      pendingStartLessonId = null
+    }
+
+    document.getElementById('btnLessonStartCancel').addEventListener('click', closeLessonStartModal)
+    document.getElementById('lessonStartModalOverlay').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('lessonStartModalOverlay')) closeLessonStartModal()
+    })
+
+    document.getElementById('btnLessonStartSubmit').addEventListener('click', async () => {
+      const project_name = document.getElementById('inputLessonProjectName').value.trim()
+      if (!project_name) return
+      const res = await fetch(`/api/class/${pendingStartClassId}/lessons/${pendingStartLessonId}/start`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ project_name }),
+      })
+      if (res.ok) {
+        const { lesson } = await res.json()
+        closeLessonStartModal()
+        if (lesson.project_id) {
+          window.open(`/editor?projectId=${lesson.project_id}`, '_blank')
+        }
+        showMyLessonsById(currentMyClassId)
+      } else {
+        const { error } = await res.json().catch(() => ({}))
+        alert(error || '시작 실패')
+      }
+    })
+
     // ── HTML 이스케이프 ──
     function escapeHtml(str) {
       return String(str)
@@ -1047,6 +1847,9 @@
         document.getElementById('btnNewAnnouncement').style.display = ''
         document.getElementById('btnNewMaterial').style.display = ''
         document.getElementById('tabStudentProjects').style.display = ''
+        document.getElementById('tabClassManage').style.display = ''
+      } else {
+        document.getElementById('tabMyClass').style.display = ''
       }
 
       loadAnnouncements()

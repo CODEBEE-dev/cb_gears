@@ -150,21 +150,10 @@ router.get('/', requireRole(...ADMIN_ROLES), async (req, res) => {
     const result = await query(
       `SELECT
          ci.id, ci.api_curriculum_id, ci.title, ci.status, ci.created_at,
-         COUNT(DISTINCT cr.student_id) AS student_count,
-         COALESCE(
-           ROUND(
-             COUNT(sli.id) FILTER (WHERE sli.status = 'COMPLETED')::numeric
-             / NULLIF(
-                 (SELECT COUNT(DISTINCT api_lesson_id) FROM student_lesson_instances WHERE class_id = ci.id) *
-                 NULLIF(COUNT(DISTINCT cr.student_id), 0)
-               , 0) * 100
-           ), 0
-         ) AS progress
+         (SELECT COUNT(*) FROM class_rosters WHERE class_id = ci.id) AS student_count,
+         (SELECT COUNT(*) FROM student_lesson_instances WHERE class_id = ci.id AND status = 'COMPLETED') AS completed_lessons
        FROM class_instances ci
-       LEFT JOIN class_rosters cr ON cr.class_id = ci.id
-       LEFT JOIN student_lesson_instances sli ON sli.class_id = ci.id
        WHERE ci.teacher_id = $1
-       GROUP BY ci.id
        ORDER BY ci.created_at DESC`,
       [teacherId]
     )

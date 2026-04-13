@@ -708,7 +708,17 @@
 
         <!-- 탭 -->
         <div class="tab-bar">
-          <button class="tab-btn active" id="tabAnnouncements">
+          <!-- teacher 전용: 수업 관리 -->
+          <button class="tab-btn" id="tabClassManage" style="display:none;">
+            <span class="material-symbols-rounded">school</span>
+            <span>수업 관리</span>
+          </button>
+          <!-- student 전용: 내 수업 -->
+          <button class="tab-btn" id="tabMyClass" style="display:none;">
+            <span class="material-symbols-rounded">school</span>
+            <span>내 수업</span>
+          </button>
+          <button class="tab-btn" id="tabAnnouncements">
             <span class="material-symbols-rounded">campaign</span>
             <span id="tabLabelAnnouncements"></span>
           </button>
@@ -724,16 +734,6 @@
           <button class="tab-btn" id="tabStudentProjects" style="display:none;">
             <span class="material-symbols-rounded">folder_shared</span>
             <span id="tabLabelStudentProjects"></span>
-          </button>
-          <!-- teacher 전용: 수업 관리 -->
-          <button class="tab-btn" id="tabClassManage" style="display:none;">
-            <span class="material-symbols-rounded">school</span>
-            <span>수업 관리</span>
-          </button>
-          <!-- student 전용: 내 수업 -->
-          <button class="tab-btn" id="tabMyClass" style="display:none;">
-            <span class="material-symbols-rounded">school</span>
-            <span>내 수업</span>
           </button>
         </div>
 
@@ -1008,6 +1008,7 @@
         document.getElementById(TAB_VIEW[t]).style.display = t === tab ? '' : 'none'
         document.getElementById(TAB_BTN[t]).classList.toggle('active', t === tab)
       })
+      if (tab === 'announcements')    loadAnnouncements()
       if (tab === 'leaderboard')      loadLeaderboard()
       if (tab === 'materials')        loadMaterials()
       if (tab === 'student-projects') loadStudentProjects()
@@ -1411,23 +1412,40 @@
       document.getElementById('classListView').style.display = ''
       document.getElementById('classDetailView').style.display = 'none'
       try {
-        const res = await fetch('/api/class')
-        if (!res.ok) throw new Error(res.status)
-        const { classes } = await res.json()
+        const classRes = await fetch('/api/class')
+        if (!classRes.ok) throw new Error(classRes.status)
+        const { classes } = await classRes.json()
         if (classes.length === 0) {
           listEl.innerHTML = `<div class="empty-msg">개설된 수업이 없습니다.</div>`
           return
         }
-        classes.forEach(cls => listEl.appendChild(makeClassCard(cls)))
+
+        // 커리큘럼별 총 차시 수 맵 구성 (중복 요청 방지를 위해 unique id만 조회)
+        const lessonCountMap = {}
+        const uniqueCurriculumIds = [...new Set(classes.map(c => c.api_curriculum_id).filter(Boolean))]
+        await Promise.all(uniqueCurriculumIds.map(async id => {
+          try {
+            const r = await fetch(`${CMS_BASE}/api/curriculums/${id}`)
+            if (!r.ok) return
+            const { data } = await r.json()
+            lessonCountMap[id] = (data?.lessons || []).length
+          } catch { /* CMS 조회 실패 시 해당 반 진행도는 0으로 표시 */ }
+        }))
+
+        classes.forEach(cls => listEl.appendChild(makeClassCard(cls, lessonCountMap)))
       } catch {
         listEl.innerHTML = `<div class="empty-msg">불러오기 실패</div>`
       }
     }
 
-    function makeClassCard(cls) {
+    function makeClassCard(cls, lessonCountMap = {}) {
       const card = document.createElement('div')
       card.className = 'class-card'
-      const pct = Number(cls.progress) || 0
+      const totalLessons = lessonCountMap[cls.api_curriculum_id] || 0
+      const totalCells = totalLessons * Number(cls.student_count || 0)
+      const pct = totalCells > 0
+        ? Math.min(100, Math.round(Number(cls.completed_lessons || 0) / totalCells * 100))
+        : 0
       const statusLabel = cls.status === 'ACTIVE' ? '진행중' : '종료'
       const statusCls   = cls.status === 'ACTIVE' ? 'active' : 'closed'
       card.innerHTML = `
@@ -1848,11 +1866,11 @@
         document.getElementById('btnNewMaterial').style.display = ''
         document.getElementById('tabStudentProjects').style.display = ''
         document.getElementById('tabClassManage').style.display = ''
+        switchTab('class-manage')
       } else {
         document.getElementById('tabMyClass').style.display = ''
+        loadAnnouncements()
       }
-
-      loadAnnouncements()
     })()
   </script>
 </body>

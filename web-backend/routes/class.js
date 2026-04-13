@@ -407,20 +407,23 @@ router.post('/:classId/lessons/:lessonId/start', requireAuth, async (req, res) =
     const lesson = await fetchLesson(lessonId)
     const template = lesson?.projectTemplate || null
 
-    // project 생성
+    // project 생성 (템플릿이 없는 컬럼은 DB DEFAULT 사용)
+    const insertColumns = ['user_id', 'user_name', 'group_name', 'name', 'block_xml']
+    const insertValues = [studentId, userName || null, groupName || null, project_name.trim(), template?.blockXml ?? null]
+
+    if (template?.worldOptions) {
+      insertColumns.push('world_options')
+      insertValues.push(JSON.stringify(template.worldOptions.options ?? template.worldOptions))
+    }
+    if (template?.robotOptions) {
+      insertColumns.push('robot_options')
+      insertValues.push(JSON.stringify(template.robotOptions))
+    }
+
+    const placeholders = insertValues.map((_, i) => `$${i + 1}`).join(', ')
     const projectResult = await query(
-      `INSERT INTO projects (user_id, user_name, group_name, name, block_xml, world_options, robot_options)
-       VALUES ($1, $2, $3, $4, $5, $6, $7)
-       RETURNING id`,
-      [
-        studentId,
-        userName || null,
-        groupName || null,
-        project_name.trim(),
-        template?.blockXml ?? null,
-        template?.worldOptions ? JSON.stringify(template.worldOptions.options ?? template.worldOptions) : null,
-        template?.robotOptions ? JSON.stringify(template.robotOptions) : null,
-      ]
+      `INSERT INTO projects (${insertColumns.join(', ')}) VALUES (${placeholders}) RETURNING id`,
+      insertValues
     )
     const projectId = projectResult.rows[0].id
 

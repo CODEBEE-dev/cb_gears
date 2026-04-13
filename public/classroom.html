@@ -885,10 +885,19 @@
             </div>
             <div id="myCurriculumInfo" style="display:none; background:var(--color-surface); border:1px solid var(--color-border); border-radius:0.75rem; padding:0.9rem 1rem; margin-bottom:1.2rem; align-items:center; gap:1rem;">
               <div id="myCurriculumThumb"></div>
-              <div>
+              <div style="flex:1; min-width:0;">
                 <div style="font-size:0.75rem; color:var(--color-text-muted); margin-bottom:0.2rem;">커리큘럼</div>
                 <div id="myCurriculumTitle" style="font-size:1rem; font-weight:700; color:var(--color-text);"></div>
                 <div id="myCurriculumMeta" style="font-size:0.8rem; color:var(--color-text-muted); margin-top:0.2rem;"></div>
+                <div style="margin-top:0.6rem;">
+                  <div style="font-size:0.75rem; color:var(--color-text-muted); margin-bottom:0.3rem;">나의 진도율</div>
+                  <div style="display:flex; align-items:center; gap:0.5rem;">
+                    <div class="progress-track" style="flex:1; height:8px;">
+                      <div class="progress-fill" id="myProgressFill" style="width:0%;"></div>
+                    </div>
+                    <span class="progress-label" id="myProgressLabel">0%</span>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="lesson-list" id="lessonListEl"></div>
@@ -1814,6 +1823,13 @@
         // 내 진도 맵: api_lesson_id → { status, project_id }
         const progressMap = {}
         myProgress.forEach(p => { progressMap[p.api_lesson_id] = p })
+
+        // 나의 진도율 계산
+        const totalLessons = lessons.length
+        const completedCount = myProgress.filter(p => p.status === 'COMPLETED').length
+        const myPct = totalLessons > 0 ? Math.min(100, Math.round(completedCount / totalLessons * 100)) : 0
+        document.getElementById('myProgressFill').style.width = `${myPct}%`
+        document.getElementById('myProgressLabel').textContent = `${myPct}%`
 
         lessonEl.innerHTML = ''
         if (lessons.length === 0) {

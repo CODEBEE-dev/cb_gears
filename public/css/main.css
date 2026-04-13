@@ -409,22 +409,9 @@ nav .panelControlsArea .panelControls.active {
 .panels .panel.active {
   z-index: 0;
 }
-/* simPanel split: slide in from right as overlay, 40% wide */
-#simPanel.splitActive {
-  position: absolute !important;
-  right: 0;
-  top: 0;
-  width: 40% !important;
-  height: 100% !important;
-  z-index: 1 !important;
-  border-left: 1px solid #ddd;
-}
-/* blockly panel shrinks to make room */
+/* blockly panel */
 .blocklyEditor.panel {
-  transition: width 0.15s ease;
-}
-.panels.splitSim .blocklyEditor.panel {
-  width: 60% !important;
+  transition: none;
 }
 .simSplitToggle {
   position: absolute;
@@ -456,6 +443,25 @@ nav .panelControlsArea .panelControls.active {
   color: var(--color-primary);
 }
 
+/* ── Split handle ─────────────────────────────────────────────────────────── */
+.split-handle {
+  width: 5px;
+  height: 100%;
+  cursor: col-resize;
+  background: transparent;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+  transition: background 0.15s;
+}
+.split-handle:hover,
+.split-handle.dragging {
+  background: var(--color-primary);
+}
+#simSplitHandle {
+  height: 100%;
+}
+
 /* Python split layout: code(60%) + AI Tutor(40%) */
 .pythonSplitContainer {
   display: flex;
@@ -464,7 +470,7 @@ nav .panelControlsArea .panelControls.active {
 }
 .pythonSplitContainer .python {
   flex: 6;
-  min-width: 0;
+  min-width: 100px;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -472,7 +478,7 @@ nav .panelControlsArea .panelControls.active {
 /* ── AI Tutor Panel ──────────────────────────────────────────────────────── */
 .aiTutorPanel {
   flex: 4;
-  min-width: 0;
+  min-width: 100px;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -480,27 +486,14 @@ nav .panelControlsArea .panelControls.active {
   border-left: 1px solid var(--color-border);
   color: #2c2c2c;
   font-family: sans-serif;
-  transition: flex 0.2s ease;
 }
 .aiTutorPanel.hide {
   display: none;
 }
-/* When showing sim in python tab, simPanel overlays right 40% */
-.panels.pythonSplitSim #simPanel.pythonSplitActive {
-  position: absolute !important;
-  right: 0;
-  top: 0;
-  width: 40% !important;
-  height: 100% !important;
-  z-index: 1 !important;
-  border-left: 1px solid #ddd;
-}
-.panels.pythonSplitSim .panel[aria-labelledby="navPython"] {
-  width: 100%;
-}
+/* When showing sim in python tab: python panel fills remaining width */
 .panels.pythonSplitSim .panel[aria-labelledby="navPython"] .pythonSplitContainer .python {
-  width: 60%;
-  flex: none;
+  flex: 1;
+  width: auto;
 }
 /* 헤더 — 기존 UI header와 동일한 primary 색상 */
 .aiTutorHeader {

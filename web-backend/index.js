@@ -12,6 +12,7 @@ const adminRouter = require('./routes/admin')
 const challengesRouter = require('./routes/challenges')
 const classroomRouter = require('./routes/classroom')
 const classRouter = require('./routes/class')
+const cmsRouter = require('./routes/cms')
 const session = require('express-session')
 const port = process.env.WEB_BACKEND_PORT
 
@@ -35,6 +36,7 @@ app.use('/api/admin', adminRouter)
 app.use('/api/challenges', challengesRouter)
 app.use('/api/classroom', classroomRouter)
 app.use('/api/class', classRouter)
+app.use('/api/cms', cmsRouter)
 
 /**
  * 다른 페이지들 로그인 체크

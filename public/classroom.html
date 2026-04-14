@@ -1474,7 +1474,7 @@
     }
 
     // ── 수업 관리 (교사) ──
-    const CMS_BASE = 'http://localhost:45512'
+    const CMS_BASE = '/api/cms'
     let currentClassId = null
     let pendingStartClassId = null
     let pendingStartLessonId = null
@@ -1498,7 +1498,7 @@
         const uniqueCurriculumIds = [...new Set(classes.map(c => c.api_curriculum_id).filter(Boolean))]
         await Promise.all(uniqueCurriculumIds.map(async id => {
           try {
-            const r = await fetch(`${CMS_BASE}/api/curriculums/${id}`)
+            const r = await fetch(`${CMS_BASE}/curriculums/${id}`)
             if (!r.ok) return
             const { data } = await r.json()
             curriculumMap[id] = { title: data?.title || '', lessonCount: (data?.lessons || []).length, thumbnailUrl: data?.thumbnailUrl || '' }
@@ -1566,7 +1566,7 @@
       try {
         const [detailRes, cmsRes] = await Promise.all([
           fetch(`/api/class/${classId}`),
-          fetch(`${CMS_BASE}/api/curriculums`),
+          fetch(`${CMS_BASE}/curriculums`),
         ])
         if (!detailRes.ok) throw new Error('detail')
         const { class: cls, roster, lessonProgress } = await detailRes.json()
@@ -1601,7 +1601,7 @@
         }
 
         // 차시 매트릭스: CMS에서 레슨 목록 조회
-        const curriculum = await fetch(`${CMS_BASE}/api/curriculums/${cls.api_curriculum_id}`)
+        const curriculum = await fetch(`${CMS_BASE}/curriculums/${cls.api_curriculum_id}`)
         if (!curriculum.ok) throw new Error('cms')
         const { data: currData } = await curriculum.json()
         const lessons = currData.lessons || []
@@ -1699,7 +1699,7 @@
       sel.innerHTML = '<option value="">불러오는 중...</option>'
       document.getElementById('classCreateModalOverlay').classList.add('open')
       try {
-        const res = await fetch(`${CMS_BASE}/api/curriculums`)
+        const res = await fetch(`${CMS_BASE}/curriculums`)
         if (!res.ok) throw new Error()
         const { data } = await res.json()
         sel.innerHTML = data.map(c =>
@@ -1770,7 +1770,7 @@
         const uniqueCurriculumIds = [...new Set(classes.map(c => c.api_curriculum_id).filter(Boolean))]
         await Promise.all(uniqueCurriculumIds.map(async id => {
           try {
-            const r = await fetch(`${CMS_BASE}/api/curriculums/${id}`)
+            const r = await fetch(`${CMS_BASE}/curriculums/${id}`)
             if (!r.ok) return
             const { data } = await r.json()
             curriculumMap[id] = { title: data?.title || '', lessonCount: (data?.lessons || []).length }
@@ -1830,7 +1830,7 @@
 
       try {
         const [cmsRes, progressRes] = await Promise.all([
-          fetch(`${CMS_BASE}/api/curriculums/${cls.api_curriculum_id}`),
+          fetch(`${CMS_BASE}/curriculums/${cls.api_curriculum_id}`),
           fetch(`/api/class/${cls.id}/lessons`),
         ])
         if (!cmsRes.ok || !progressRes.ok) throw new Error()

@@ -426,7 +426,7 @@
     document.getElementById('filterMid').textContent    = i18n.get('#curr-level_middle#')
     document.getElementById('filterHigh').textContent   = i18n.get('#curr-level_high#')
 
-    const CMS_BASE = 'http://localhost:45512'
+    const CMS_BASE = '/api/cms'
 
     const LEVEL_LABELS = {
       elementary: i18n.get('#curr-level_elementary#'),
@@ -590,7 +590,7 @@
       const grid = document.getElementById('currGrid')
       grid.innerHTML = `<div class="empty-msg">${i18n.get('#admin-loading#')}</div>`
       try {
-        const res = await fetch(`${CMS_BASE}/api/curriculums`)
+        const res = await fetch(`${CMS_BASE}/curriculums`)
         if (!res.ok) throw new Error(res.status)
         const data = await res.json()
         allCurriculums = Array.isArray(data) ? data : (data.data || data.curriculums || [])
@@ -609,7 +609,7 @@
       document.getElementById('detailDesc').textContent  = ''
       document.getElementById('btnCreateClass').style.display = 'none'
       try {
-        const res = await fetch(`${CMS_BASE}/api/curriculums/${id}`)
+        const res = await fetch(`${CMS_BASE}/curriculums/${id}`)
         if (!res.ok) throw new Error(res.status)
         const data = await res.json()
         renderDetail(data.data || data)

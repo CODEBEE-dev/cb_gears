@@ -455,6 +455,57 @@ router.post('/:classId/lessons/:lessonId/start', requireAuth, async (req, res) =
   }
 })
 
+// ── [교사] 차시 직접 시작 (프리뷰/수업 진행용)
+// POST /api/class/:classId/lessons/:lessonId/teacher-start
+// body: { project_name }
+router.post('/:classId/lessons/:lessonId/teacher-start', requireRole(...ADMIN_ROLES), async (req, res) => {
+  try {
+    const { id: teacherId, name: userName, group: groupName } = req.session.user
+    const { classId, lessonId } = req.params
+    const { project_name } = req.body
+
+    if (!project_name?.trim()) {
+      return res.status(400).json({ error: 'project_name is required' })
+    }
+
+    // 수업 소유권 확인
+    const classResult = await query(
+      `SELECT id, api_curriculum_id FROM class_instances WHERE id = $1 AND teacher_id = $2`,
+      [classId, teacherId]
+    )
+    if (classResult.rows.length === 0) {
+      return res.status(403).json({ error: 'Forbidden' })
+    }
+
+    // CMS에서 레슨 템플릿 조회
+    const lesson = await fetchLesson(lessonId)
+    const template = lesson?.projectTemplate || null
+
+    // 프로젝트 생성 (교사 자신의 user_id로)
+    const insertColumns = ['user_id', 'user_name', 'group_name', 'name', 'block_xml']
+    const insertValues = [teacherId, userName || null, groupName || null, project_name.trim(), template?.blockXml ?? null]
+
+    if (template?.worldOptions) {
+      insertColumns.push('world_options')
+      insertValues.push(JSON.stringify(template.worldOptions.options ?? template.worldOptions))
+    }
+    if (template?.robotOptions) {
+      insertColumns.push('robot_options')
+      insertValues.push(JSON.stringify(template.robotOptions))
+    }
+
+    const placeholders = insertValues.map((_, i) => `$${i + 1}`).join(', ')
+    const projectResult = await query(
+      `INSERT INTO projects (${insertColumns.join(', ')}) VALUES (${placeholders}) RETURNING id`,
+      insertValues
+    )
+    res.status(201).json({ project_id: projectResult.rows[0].id })
+  } catch (err) {
+    console.error('[Class] 교사 차시 시작 실패:', err)
+    res.status(500).json({ error: 'Internal server error' })
+  }
+})
+
 // ── [학생] 차시 완료 제출
 // POST /api/class/:classId/lessons/:lessonId/complete
 router.post('/:classId/lessons/:lessonId/complete', requireAuth, async (req, res) => {

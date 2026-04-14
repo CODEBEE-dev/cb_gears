@@ -864,6 +864,8 @@
                 <tbody id="lessonMatrixBody"></tbody>
               </table>
             </div>
+            <div class="section-subtitle" style="margin-top:1.5rem;">차시 목록</div>
+            <div class="lesson-list" id="teacherLessonListEl"></div>
           </div>
         </div>
 
@@ -987,6 +989,21 @@
       <div class="modal-actions">
         <button class="btn-cancel" id="btnLessonStartCancel">취소</button>
         <button class="btn-create" id="btnLessonStartSubmit">시작</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 교사 차시 시작 모달 -->
+  <div class="modal-overlay" id="teacherLessonStartModalOverlay">
+    <div class="modal">
+      <h2>차시 열기</h2>
+      <label>
+        <span>프로젝트 이름</span>
+        <input type="text" id="inputTeacherLessonProjectName" maxlength="200" placeholder="프로젝트 이름을 입력하세요">
+      </label>
+      <div class="modal-actions">
+        <button class="btn-cancel" id="btnTeacherLessonStartCancel">취소</button>
+        <button class="btn-create" id="btnTeacherLessonStartSubmit">열기</button>
       </div>
     </div>
   </div>
@@ -1588,6 +1605,7 @@
         if (!curriculum.ok) throw new Error('cms')
         const { data: currData } = await curriculum.json()
         const lessons = currData.lessons || []
+        const curriculumTitle = currData.title || ''
 
         // 커리큘럼 정보 표시
         const thumbEl = document.getElementById('detailCurriculumThumb')
@@ -1618,6 +1636,17 @@
           summaryEl.style.display = ''
         } else {
           summaryEl.style.display = 'none'
+        }
+
+        // 교사용 차시 목록 렌더링
+        const teacherLessonEl = document.getElementById('teacherLessonListEl')
+        teacherLessonEl.innerHTML = ''
+        if (lessons.length === 0) {
+          teacherLessonEl.innerHTML = '<div class="empty-msg">차시가 없습니다.</div>'
+        } else {
+          lessons.forEach((lesson, idx) => {
+            teacherLessonEl.appendChild(makeTeacherLessonItem(lesson, idx + 1, classId, curriculumTitle))
+          })
         }
 
         // 헤더 행
@@ -1902,6 +1931,80 @@
     }
 
     document.getElementById('btnBackToMyClassList').addEventListener('click', loadMyClasses)
+
+    // ── 교사용 차시 아이템 생성
+    function makeTeacherLessonItem(lesson, order, classId, curriculumTitle) {
+      const item = document.createElement('div')
+      item.className = 'lesson-item'
+
+      const defaultProjectName = [curriculumTitle, lesson.title].filter(Boolean).join('_')
+      const encodedDefault = encodeURIComponent(defaultProjectName)
+
+      const pdfHtml = lesson.pdfUrl
+        ? `<a href="${lesson.pdfUrl}" target="_blank" rel="noopener"
+             style="display:inline-flex;align-items:center;gap:0.25rem;color:var(--color-primary);font-size:0.78rem;font-weight:700;padding:0.3rem 0.6rem;border-radius:0.4rem;text-decoration:none;flex-shrink:0;transition:background 0.15s;"
+             onmouseover="this.style.background='#eef0fb'" onmouseout="this.style.background=''"
+           ><span class="material-symbols-rounded" style="font-size:16px;">picture_as_pdf</span>PDF</a>`
+        : ''
+
+      item.innerHTML = `
+        <div class="lesson-order">${order}</div>
+        <div class="lesson-info">
+          <div class="lesson-title">${escapeHtml(lesson.title)}</div>
+          ${lesson.desc ? `<div class="lesson-desc">${escapeHtml(lesson.desc)}</div>` : ''}
+        </div>
+        ${pdfHtml}
+        <div class="lesson-actions">
+          <button class="btn-start" onclick="openTeacherLessonStartModal('${escapeHtml(classId)}','${escapeHtml(lesson.id)}',decodeURIComponent('${encodedDefault}'))">열기</button>
+        </div>
+      `
+      return item
+    }
+
+    // ── 교사 차시 시작 모달
+    let pendingTeacherStartClassId = null
+    let pendingTeacherStartLessonId = null
+
+    function openTeacherLessonStartModal(classId, lessonId, defaultName = '') {
+      pendingTeacherStartClassId = classId
+      pendingTeacherStartLessonId = lessonId
+      const input = document.getElementById('inputTeacherLessonProjectName')
+      input.value = defaultName
+      document.getElementById('teacherLessonStartModalOverlay').classList.add('open')
+      input.focus()
+      input.select()
+    }
+
+    function closeTeacherLessonStartModal() {
+      document.getElementById('teacherLessonStartModalOverlay').classList.remove('open')
+      pendingTeacherStartClassId = null
+      pendingTeacherStartLessonId = null
+    }
+
+    document.getElementById('btnTeacherLessonStartCancel').addEventListener('click', closeTeacherLessonStartModal)
+    document.getElementById('teacherLessonStartModalOverlay').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('teacherLessonStartModalOverlay')) closeTeacherLessonStartModal()
+    })
+
+    document.getElementById('btnTeacherLessonStartSubmit').addEventListener('click', async () => {
+      const project_name = document.getElementById('inputTeacherLessonProjectName').value.trim()
+      if (!project_name) return
+      const res = await fetch(`/api/class/${pendingTeacherStartClassId}/lessons/${pendingTeacherStartLessonId}/teacher-start`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ project_name }),
+      })
+      if (res.ok) {
+        const { project_id } = await res.json()
+        closeTeacherLessonStartModal()
+        if (project_id) {
+          window.open(`/editor?projectId=${project_id}`, '_blank')
+        }
+      } else {
+        const { error } = await res.json().catch(() => ({}))
+        alert(error || '열기 실패')
+      }
+    })
 
     function openEditor(projectId) {
       window.open(`/editor?projectId=${projectId}`, '_blank')

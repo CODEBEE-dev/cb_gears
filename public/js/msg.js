@@ -4681,6 +4681,10 @@ let MSGS = {
     en: 'An error occurred.',
     ko: '오류가 발생했습니다.',
   },
+  '#admin-select_group#': {
+    en: '-- Select group --',
+    ko: '-- 반 선택 --',
+  },
   '#nav-curriculum#': {
     en: 'Curriculum',
     ko: '커리큘럼',

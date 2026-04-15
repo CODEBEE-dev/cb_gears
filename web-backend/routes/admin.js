@@ -47,34 +47,44 @@ router.get('/users', requireRole(...ADMIN_ROLES), async (req, res) => {
 
     const ALLOWED_ROLES = ['school_admin', 'teacher', 'student']
 
-    // teacher: 자기 그룹 멤버만 조회
+    // teacher: 자기 그룹 멤버 조회 (여러 그룹 모두 포함)
     if (sessionRole === 'teacher') {
-      if (!sessionGroup) return res.json({ users: [] })
+      const sessionGroups = req.session.user.groups || (sessionGroup ? [sessionGroup] : [])
+      if (!sessionGroups.length) return res.json({ users: [] })
 
-      // 그룹 id 조회
-      const groupName = sessionGroup.split('/').pop()
-      const searchR = await keycloakFetch(`/groups?search=${encodeURIComponent(groupName)}&exact=true`)
-      if (!searchR.ok) return res.status(500).json({ error: '그룹 조회 실패' })
-      const candidates = await searchR.json()
-      const normalizedSession = sessionGroup.startsWith('/') ? sessionGroup : `/${sessionGroup}`
-      const findByPath = (nodes) => {
-        for (const g of nodes) {
-          if (g.path === normalizedSession) return g
-          if (g.subGroups?.length) {
-            const found = findByPath(g.subGroups)
-            if (found) return found
+      // 각 그룹 path → id 조회
+      const resolvedGroups = await Promise.all(sessionGroups.map(async (groupPath) => {
+        const gName = groupPath.split('/').pop()
+        const searchR = await keycloakFetch(`/groups?search=${encodeURIComponent(gName)}&exact=true`)
+        if (!searchR.ok) return null
+        const candidates = await searchR.json()
+        const normalized = groupPath.startsWith('/') ? groupPath : `/${groupPath}`
+        const findByPath = (nodes) => {
+          for (const g of nodes) {
+            if (g.path === normalized) return g
+            if (g.subGroups?.length) {
+              const found = findByPath(g.subGroups)
+              if (found) return found
+            }
           }
+          return null
         }
-        return null
-      }
-      const group = findByPath(candidates)
-      if (!group) return res.json({ users: [] })
+        return findByPath(candidates)
+      }))
 
-      const params = new URLSearchParams({ first, max })
-      if (search) params.set('search', search)
-      const membersR = await keycloakFetch(`/groups/${group.id}/members?${params}`)
-      if (!membersR.ok) return res.status(500).json({ error: '그룹 멤버 조회 실패' })
-      const members = await membersR.json()
+      const validGroups = resolvedGroups.filter(Boolean)
+      if (!validGroups.length) return res.json({ users: [] })
+
+      // 각 그룹 멤버 조회 후 중복 제거
+      const memberArrays = await Promise.all(validGroups.map(g =>
+        keycloakFetch(`/groups/${g.id}/members?max=500`).then(r => r.ok ? r.json() : [])
+      ))
+      const seenIds = new Set()
+      const members = memberArrays.flat().filter(u => {
+        if (seenIds.has(u.id)) return false
+        seenIds.add(u.id)
+        return true
+      })
 
       const usersWithRoles = await Promise.all(members.map(async u => {
         const [rolesR, groupsR] = await Promise.all([
@@ -171,36 +181,34 @@ router.post('/users', requireRole(...ADMIN_ROLES), async (req, res) => {
       return res.status(400).json({ error: 'username과 password는 필수입니다' })
     }
 
-    // teacher: 자기 그룹 자동 할당 / school_admin: 프론트에서 전달한 groupId 사용
+    // teacher/school_admin 모두 프론트에서 전달한 groupId 사용
     const sessionRole = req.session.user.role
     let resolvedGroupId = groupId || null
-    if (sessionRole === 'teacher' && !resolvedGroupId) {
-      const sessionGroup = req.session.user.group  // ex) "/python_middle_school/1st_grade/class_1"
-      if (sessionGroup) {
-        const groupsR = await keycloakFetch('/groups?briefRepresentation=false')
-        if (groupsR.ok) {
-          const groups = await groupsR.json()
-          const normalizedSession = sessionGroup.startsWith('/') ? sessionGroup : `/${sessionGroup}`
 
-          // subGroups가 lazy라 path로 직접 검색
-          const searchR = await keycloakFetch(`/groups?search=${encodeURIComponent(normalizedSession.split('/').pop())}&exact=true`)
-          if (searchR.ok) {
-            const candidates = await searchR.json()
-            // path 정확히 일치하는 것 찾기 (재귀로 subGroups 포함)
-            const findByPath = (nodes) => {
-              for (const g of nodes) {
-                if (g.path === normalizedSession) return g
-                if (g.subGroups?.length) {
-                  const found = findByPath(g.subGroups)
-                  if (found) return found
-                }
+    // teacher: groupId가 없으면 단일 그룹인 경우 자동 할당 (하위호환)
+    if (sessionRole === 'teacher' && !resolvedGroupId) {
+      const sessionGroups = req.session.user.groups || []
+      const sessionGroup = req.session.user.group
+      // 그룹이 정확히 1개인 경우에만 자동 할당
+      const singleGroup = sessionGroups.length === 1 ? sessionGroups[0] : (sessionGroups.length === 0 ? sessionGroup : null)
+      if (singleGroup) {
+        const normalizedSession = singleGroup.startsWith('/') ? singleGroup : `/${singleGroup}`
+        const searchR = await keycloakFetch(`/groups?search=${encodeURIComponent(normalizedSession.split('/').pop())}&exact=true`)
+        if (searchR.ok) {
+          const candidates = await searchR.json()
+          const findByPath = (nodes) => {
+            for (const g of nodes) {
+              if (g.path === normalizedSession) return g
+              if (g.subGroups?.length) {
+                const found = findByPath(g.subGroups)
+                if (found) return found
               }
-              return null
             }
-            const matched = findByPath(candidates)
-            resolvedGroupId = matched?.id || null
-            console.log(`[Admin] teacher 그룹 자동 할당: session.group=${sessionGroup}, matched=${matched?.name}, id=${resolvedGroupId}`)
+            return null
           }
+          const matched = findByPath(candidates)
+          resolvedGroupId = matched?.id || null
+          console.log(`[Admin] teacher 그룹 자동 할당(단일): group=${singleGroup}, matched=${matched?.name}, id=${resolvedGroupId}`)
         }
       }
     }
@@ -348,7 +356,42 @@ async function collectSubGroupsFlat(groupId) {
 // 그룹 목록 조회 (트리 구조)
 router.get('/groups', requireRole(...ADMIN_ROLES), async (req, res) => {
   try {
+    const sessionRole = req.session.user.role
     const sessionGroup = req.session.user.group
+    const sessionGroups = req.session.user.groups || (sessionGroup ? [sessionGroup] : [])
+
+    // teacher: 본인이 속한 그룹들을 flat 목록으로 반환
+    if (sessionRole === 'teacher') {
+      if (!sessionGroups.length) return res.json({ groups: [] })
+
+      const resolvedGroups = await Promise.all(sessionGroups.map(async (groupPath) => {
+        const groupName = groupPath.split('/').pop()
+        const searchR = await keycloakFetch(`/groups?search=${encodeURIComponent(groupName)}&exact=true`)
+        if (!searchR.ok) return null
+        const candidates = await searchR.json()
+        const normalized = groupPath.startsWith('/') ? groupPath : `/${groupPath}`
+        const findByPath = (nodes) => {
+          for (const g of nodes) {
+            if (g.path === normalized) return g
+            if (g.subGroups?.length) {
+              const found = findByPath(g.subGroups)
+              if (found) return found
+            }
+          }
+          return null
+        }
+        return findByPath(candidates)
+      }))
+
+      const groups = resolvedGroups.filter(Boolean).map(g => ({
+        id: g.id,
+        name: g.name,
+        path: g.path,
+      }))
+      return res.json({ groups })
+    }
+
+    // school_admin: root 그룹 하위 전체 트리/flat 반환
     if (!sessionGroup) return res.json({ groups: [] })
     const rootGroup = await getRootGroup(sessionGroup)
     if (!rootGroup) return res.json({ groups: [] })

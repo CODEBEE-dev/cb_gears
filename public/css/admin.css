@@ -259,6 +259,62 @@
   padding-left: 2rem;
 }
 
+/* ── My Info Card ── */
+.my-info-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  padding: 1rem 1.2rem;
+  margin-bottom: 1.2rem;
+}
+
+.my-info-icon {
+  font-size: 2.4rem;
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.my-info-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.my-info-name {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--color-text);
+}
+
+.my-info-meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.my-info-groups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.my-info-group-tag {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 0.9rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  background: #f0f2fa;
+  color: var(--color-primary);
+  border: 1px solid #d8ddf5;
+  white-space: nowrap;
+}
+
 /* ── Responsive ── */
 @media (max-width: 768px) {
   .admin-container {

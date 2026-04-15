@@ -73,7 +73,9 @@ router.get('/callback', async (req, res) => {
     const ALLOWED_ROLES = ['school_admin', 'teacher', 'student']
     const role = (userInfo.realm_roles || []).find(r => ALLOWED_ROLES.includes(r)) || null
 
-    const group = (userInfo.groups || []).reduce((a, b) =>
+    const allGroups = userInfo.groups || []
+    // 하위호환: 가장 depth 깊은 단일 그룹 (class.js 등에서 사용)
+    const group = allGroups.reduce((a, b) =>
       a.split('/').length > b.split('/').length ? a : b
     , '') || null
 
@@ -86,6 +88,7 @@ router.get('/callback', async (req, res) => {
       name: displayName,
       role,
       group,
+      groups: allGroups,  // 모든 그룹 경로 배열
     }
     req.session.idToken = tokenSet.id_token
 

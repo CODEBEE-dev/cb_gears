@@ -189,6 +189,10 @@ var simPanel = new function() {
     $('#simSplitToggle').toggleClass('active', self.splitSimOpen);
 
     if (self.splitSimOpen) {
+      // Close code view when opening simulator split
+      if (typeof main !== 'undefined' && main.codeViewOpen) {
+        main.closeCodeView();
+      }
       $('.panels').addClass('splitSim');
       $('#simPanel').addClass('splitActive');
       if (babylon.engine._activeRenderLoops.length === 0) {

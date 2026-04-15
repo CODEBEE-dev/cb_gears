@@ -19,6 +19,7 @@ var main = new function() {
 
     self.$navs.click(self.tabClicked);
     $('#simSplitToggle').click(simPanel.toggleSplitSim);
+    $('#codeViewToggle').click(self.toggleCodeView);
     $('#pythonSplitToggle').click(simPanel.togglePythonSplitSim);
     self.$fileMenu.click(self.toggleFileMenu);
     self.$pythonMenu.click(self.togglePythonMenu);
@@ -39,6 +40,8 @@ var main = new function() {
     $('.panels').addClass('splitSim');
     $('#simPanel').addClass('splitActive');
     $('#simSplitToggle').addClass('active');
+
+    self.codeViewOpen = false;
 
 
     if (self.isReadOnly) {
@@ -1153,14 +1156,19 @@ var main = new function() {
 
     // Show toggle buttons by tab
     if (match === 'navBlocks') {
-      $('#simSplitToggle').show();
+      $('#blockSplitToggleGroup').show();
       $('#pythonSplitToggle').hide();
     } else if (match === 'navPython') {
-      $('#simSplitToggle').hide();
+      $('#blockSplitToggleGroup').hide();
       $('#pythonSplitToggle').show();
     } else {
-      $('#simSplitToggle').hide();
+      $('#blockSplitToggleGroup').hide();
       $('#pythonSplitToggle').hide();
+    }
+
+    // Close code view when leaving blocks tab
+    if (match !== 'navBlocks' && self.codeViewOpen) {
+      self.closeCodeView();
     }
 
     function getPanelByNav(nav) {
@@ -1194,6 +1202,82 @@ var main = new function() {
     if (typeof active.onActive == 'function') {
       active.onActive();
     }
+  };
+
+  // Apply absolute layout for code view split (mirrors applySimSplitLayout)
+  this.applyCodeViewLayout = function(blockW) {
+    var panels = document.querySelector('.panels');
+    var blocklyEl = document.querySelector('.blocklyEditor.panel');
+    var codeViewEl = document.getElementById('codeViewPanel');
+    var handleEl = document.getElementById('codeViewHandle');
+    if (!panels || !blocklyEl || !codeViewEl) return;
+
+    var handleW = 5;
+    var totalW = panels.offsetWidth;
+    if (typeof blockW === 'undefined') {
+      blockW = totalW - Math.round(totalW * 0.4) - handleW;
+    }
+    var codeW = totalW - blockW - handleW;
+
+    blocklyEl.style.cssText = 'position:absolute; left:0; top:0; width:' + blockW + 'px; height:100%; z-index:0;';
+    if (handleEl) handleEl.style.cssText = 'display:block; position:absolute; left:' + blockW + 'px; top:0; width:' + handleW + 'px; height:100%; z-index:2;';
+    codeViewEl.style.cssText = 'position:absolute; left:' + (blockW + handleW) + 'px; top:0; width:' + codeW + 'px; height:100%; z-index:1;';
+  };
+
+  // Close the code view panel
+  this.closeCodeView = function() {
+    self.codeViewOpen = false;
+    $('#codeViewToggle').removeClass('active');
+    $('#codeViewPanel').addClass('hide');
+    $('.panels').removeClass('splitCodeView');
+
+    var blocklyEl = document.querySelector('.blocklyEditor.panel');
+    if (blocklyEl) blocklyEl.style.cssText = '';
+    var codeViewEl = document.getElementById('codeViewPanel');
+    if (codeViewEl) codeViewEl.style.cssText = '';
+    var handleEl = document.getElementById('codeViewHandle');
+    if (handleEl) handleEl.style.cssText = 'display:none;';
+
+    if (blockly.displayedWorkspace) {
+      setTimeout(function() { Blockly.svgResize(blockly.displayedWorkspace); }, 50);
+    }
+  };
+
+  // Toggle code view panel alongside blockly editor
+  this.toggleCodeView = function() {
+    self.codeViewOpen = !self.codeViewOpen;
+    $('#codeViewToggle').toggleClass('active', self.codeViewOpen);
+
+    if (self.codeViewOpen) {
+      // Close simulator split when opening code view
+      if (simPanel.splitSimOpen) {
+        simPanel.toggleSplitSim();
+      }
+      $('#codeViewPanel').removeClass('hide');
+      $('.panels').addClass('splitCodeView');
+      self.applyCodeViewLayout();
+      self.updateCodeView();
+      setTimeout(function() {
+        if (blockly.displayedWorkspace) Blockly.svgResize(blockly.displayedWorkspace);
+      }, 50);
+    } else {
+      self.closeCodeView();
+    }
+  };
+
+  // Update the code view panel content from blockly workspace
+  this.updateCodeView = function() {
+    if (!self.codeViewOpen) return;
+    try {
+      var code = blockly.generator.genCode();
+      var el = document.getElementById('codeViewContent');
+      if (el) {
+        el.textContent = code;
+        if (window.Prism) {
+          Prism.highlightElement(el);
+        }
+      }
+    } catch(e) {}
   };
 
   this.showDialog = function(title, message) {

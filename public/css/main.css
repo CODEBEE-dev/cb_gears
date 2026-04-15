@@ -413,14 +413,13 @@ nav .panelControlsArea .panelControls.active {
 .blocklyEditor.panel {
   transition: none;
 }
-.simSplitToggle {
+/* ── Block split toggle group: sim + code view buttons ─────────────────── */
+.blockSplitToggleGroup {
   position: absolute;
   top: 50%;
   right: 0;
   transform: translateY(-50%);
   z-index: 100;
-  cursor: pointer;
-  user-select: none;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -428,20 +427,105 @@ nav .panelControlsArea .panelControls.active {
   border: 1px solid #ddd;
   border-right: none;
   border-radius: 6px 0 0 6px;
-  padding: 0.5em 0.3em;
   box-shadow: -2px 0 6px rgba(0,0,0,0.12);
+  overflow: hidden;
+}
+.simSplitToggle,
+.codeViewToggle {
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5em 0.3em;
   color: #555;
   font-size: 1.1em;
   opacity: 0.7;
   transition: opacity 0.2s, color 0.2s;
+  width: 100%;
 }
-.simSplitToggle:hover {
+.simSplitToggle + .codeViewToggle {
+  border-top: 1px solid #eee;
+}
+.simSplitToggle:hover,
+.codeViewToggle:hover {
   opacity: 1;
 }
-.simSplitToggle.active {
+.simSplitToggle.active,
+.codeViewToggle.active {
   opacity: 1;
   color: var(--color-primary);
 }
+
+/* ── Code view panel — Ace monokai 일치 ────────────────────────────────── */
+.codeViewPanel {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 40%;
+  height: 100%;
+  background: #272822;
+  border-left: 1px solid #3a3a30;
+  display: flex;
+  flex-direction: column;
+  z-index: 5;
+  overflow: hidden;
+}
+.codeViewPanel.hide {
+  display: none;
+}
+.codeViewHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.5em 0.8em;
+  background: #2F3129;
+  color: #8F908A;
+  font-size: 0.85em;
+  font-weight: bold;
+  flex-shrink: 0;
+  border-bottom: 1px solid #3a3a30;
+}
+.codeViewHeader .material-symbols-rounded {
+  font-size: 1.1em;
+  color: #A6E22E;
+}
+/* pre wrapper */
+.codeViewPanel > pre.codeViewContent {
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  flex: 1;
+  background: #272822 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+/* code element */
+.codeViewPanel > pre.codeViewContent > code {
+  display: block;
+  padding: 0.8em 1em;
+  font-family: 'Menlo', 'Monaco', 'Consolas', 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  white-space: pre;
+  tab-size: 4;
+  color: #F8F8F2;
+  background: transparent !important;
+  text-shadow: none !important;
+}
+/* Prism 토큰 색상을 Ace monokai에 맞춤 */
+.codeViewPanel .token.keyword        { color: #F92672; }
+.codeViewPanel .token.builtin        { color: #66D9EF; }
+.codeViewPanel .token.function       { color: #A6E22E; }
+.codeViewPanel .token.class-name     { color: #A6E22E; font-style: italic; }
+.codeViewPanel .token.string         { color: #E6DB74; }
+.codeViewPanel .token.number         { color: #AE81FF; }
+.codeViewPanel .token.boolean        { color: #AE81FF; }
+.codeViewPanel .token.comment        { color: #75715E; font-style: italic; }
+.codeViewPanel .token.operator       { color: #F8F8F2; }
+.codeViewPanel .token.punctuation    { color: #F8F8F2; }
+.codeViewPanel .token.decorator      { color: #A6E22E; }
+.codeViewPanel .token.parameter      { color: #FD971F; font-style: italic; }
 
 /* ── Split handle ─────────────────────────────────────────────────────────── */
 .split-handle {

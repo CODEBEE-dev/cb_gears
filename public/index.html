@@ -254,9 +254,26 @@
         </div>
       </div>
 
-      <div id="simSplitToggle" class="simSplitToggle active">
-        <span class="material-symbols-rounded">view_in_ar</span>
+      <!-- 블록 모드 우측: 코드뷰 핸들 + 패널 -->
+      <div id="codeViewHandle" class="split-handle" style="display:none;"></div>
+      <div id="codeViewPanel" class="codeViewPanel hide">
+        <div class="codeViewHeader">
+          <span class="material-symbols-rounded">code</span>
+          <span class="codeViewTitle">Python Code</span>
+        </div>
+        <pre class="codeViewContent"><code id="codeViewContent" class="language-python"></code></pre>
       </div>
+
+      <!-- 블록 모드 우측 토글 버튼들 -->
+      <div id="blockSplitToggleGroup" class="blockSplitToggleGroup">
+        <div id="simSplitToggle" class="simSplitToggle active" data-tooltip="Simulator">
+          <span class="material-symbols-rounded">view_in_ar</span>
+        </div>
+        <div id="codeViewToggle" class="codeViewToggle" data-tooltip="Code">
+          <span class="material-symbols-rounded">code</span>
+        </div>
+      </div>
+
       <div id="pythonSplitToggle" class="pythonSplitToggle" style="display:none;">
         <span class="material-symbols-rounded toggleTutorIcon active">forum</span>
         <span class="material-symbols-rounded toggleSimIcon hide">view_in_ar</span>
@@ -556,6 +573,8 @@
           panels.classList.contains('splitSim'),
           panels.classList.contains('pythonSplitSim')
         );
+        // Code view layout is managed by main.applyCodeViewLayout()
+        // called from toggleCodeView/blocklyPanel.onActive
       }
 
       const observer = new MutationObserver(onSplitToggle);
@@ -563,7 +582,63 @@
       // observer 등록 후 현재 상태 즉시 반영 (페이지 로드 시 이미 splitSim인 경우 대비)
       onSplitToggle();
 
-      // ── 2) Python + AI Tutor ──
+      // Re-apply code view layout on window resize (maintain current ratio)
+      window.addEventListener('resize', function() {
+        if (typeof main !== 'undefined' && main.codeViewOpen) {
+          const blocklyEl = document.querySelector('.blocklyEditor.panel');
+          const codeViewEl = document.getElementById('codeViewPanel');
+          const handleW = 5;
+          if (blocklyEl && codeViewEl) {
+            const oldTotal = blocklyEl.offsetWidth + handleW + codeViewEl.offsetWidth;
+            const ratio = oldTotal > 0 ? blocklyEl.offsetWidth / oldTotal : 0.6;
+            const newTotal = panels.offsetWidth;
+            const newBlockW = Math.round(newTotal * ratio);
+            main.applyCodeViewLayout(newBlockW);
+          } else {
+            main.applyCodeViewLayout();
+          }
+          if (blockly && blockly.displayedWorkspace) {
+            Blockly.svgResize(blockly.displayedWorkspace);
+          }
+        }
+      });
+
+      // ── 2) Code view handle (Blockly ↔ Code) ──
+      ;(function() {
+        const codeHandle = document.getElementById('codeViewHandle');
+        let dragging = false, startX = 0, startBlockW = 0;
+
+        codeHandle.addEventListener('mousedown', function(e) {
+          dragging = true;
+          startX = e.clientX;
+          // 핸들의 현재 left 위치 = 블록리 에디터의 실제 너비
+          startBlockW = codeHandle.getBoundingClientRect().left - panels.getBoundingClientRect().left;
+          codeHandle.classList.add('dragging');
+          document.body.style.cursor = 'col-resize';
+          document.body.style.userSelect = 'none';
+          e.preventDefault();
+        });
+
+        document.addEventListener('mousemove', function(e) {
+          if (!dragging) return;
+          const handleW = 5;
+          const totalW = panels.offsetWidth;
+          const delta = e.clientX - startX;
+          const newBlockW = Math.max(minW, Math.min(totalW - minW - handleW, startBlockW + delta));
+          main.applyCodeViewLayout(newBlockW);
+          blockly.displayedWorkspace && Blockly.svgResize(blockly.displayedWorkspace);
+        });
+
+        document.addEventListener('mouseup', function() {
+          if (!dragging) return;
+          dragging = false;
+          codeHandle.classList.remove('dragging');
+          document.body.style.cursor = '';
+          document.body.style.userSelect = '';
+        });
+      })();
+
+      // ── 3) Python + AI Tutor ──
       makeDraggable(
         document.getElementById('pythonSplitHandle'),
         () => document.querySelector('.pythonSplitContainer .python'),

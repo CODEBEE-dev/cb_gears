@@ -224,7 +224,15 @@ var main = new function() {
       if (i == -1) {
         robotTemplates.push({...data});
       } else {
-        robotTemplates[i] = {...data};
+        // description 필드는 기존 템플릿 것을 유지 (robot_options에는 저장 안 됨)
+        var existing = robotTemplates[i];
+        robotTemplates[i] = {
+          ...data,
+          shortDescription: existing.shortDescription,
+          longDescription: existing.longDescription,
+          longerDescription: existing.longerDescription,
+          thumbnail: existing.thumbnail,
+        };
       }
       babylon.resetScene();
       skulpt.hardInterrupt = true;
@@ -356,6 +364,7 @@ var main = new function() {
     let $configurations = $('<div class="configurations"></div>');
 
     function displayRobotDescriptions(robot) {
+      if (!robot) return;
       $description.find('.text').html(i18n.get(robot.longDescription));
       if (robot.thumbnail) {
         $description.find('.thumbnail').attr('src', robot.thumbnail);
@@ -363,7 +372,7 @@ var main = new function() {
         $description.find('.thumbnail').attr('src', 'images/robots/default_thumbnail.png');
       }
 
-      $configurations.html(i18n.replace(robot.longerDescription));
+      $configurations.html(robot.longerDescription ? i18n.replace(robot.longerDescription) : '');
     }
 
     robotTemplates.forEach(function(robotTemplate){

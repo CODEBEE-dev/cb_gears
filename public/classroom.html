@@ -19,6 +19,25 @@
   <script src="js/common/ui.js"></script>
 
   <style>
+    /* ── 반 선택 드롭다운 ── */
+    .group-select-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.9rem;
+    }
+    .group-select-bar select {
+      padding: 0.4rem 0.7rem;
+      border: 1px solid var(--color-border);
+      border-radius: 0.5rem;
+      font-family: inherit;
+      font-size: 0.88rem;
+      background: var(--color-surface);
+      color: var(--color-text);
+      cursor: pointer;
+    }
+    .group-select-bar select:focus { outline: none; border-color: var(--color-primary); }
+
     /* ── 그룹 배지 ── */
     .group-badges {
       display: flex;
@@ -791,6 +810,9 @@
 
         <!-- 공지사항 탭 -->
         <div id="viewAnnouncements">
+          <div id="announcementGroupBar" class="group-select-bar" style="display:none;">
+            <select id="announcementGroupSelect"></select>
+          </div>
           <div style="display:flex; justify-content:flex-end; margin-bottom:0.75rem;">
             <button class="btn-new" id="btnNewAnnouncement" style="display:none;">
               <span class="material-symbols-rounded">add</span>
@@ -802,6 +824,9 @@
 
         <!-- 자료실 탭 -->
         <div id="viewMaterials" style="display:none;">
+          <div id="materialGroupBar" class="group-select-bar" style="display:none;">
+            <select id="materialGroupSelect"></select>
+          </div>
           <div style="display:flex; justify-content:flex-end; margin-bottom:0.75rem;">
             <button class="btn-new" id="btnNewMaterial" style="display:none;">
               <span class="material-symbols-rounded">add</span>
@@ -813,6 +838,9 @@
 
         <!-- 학생 프로젝트 탭 (teacher 전용) -->
         <div id="viewStudentProjects" style="display:none;">
+          <div id="studentProjectGroupBar" class="group-select-bar" style="display:none;">
+            <select id="studentProjectGroupSelect"></select>
+          </div>
           <div class="student-search-wrap">
             <span class="material-symbols-rounded">search</span>
             <input type="text" class="student-search" id="studentSearch" placeholder="">
@@ -822,6 +850,9 @@
 
         <!-- 리더보드 탭 -->
         <div id="viewLeaderboard" style="display:none;">
+          <div id="leaderboardGroupBar" class="group-select-bar" style="display:none;">
+            <select id="leaderboardGroupSelect"></select>
+          </div>
           <table class="leaderboard-table">
             <thead>
               <tr>
@@ -1081,6 +1112,7 @@
     let currentUser = null
     let isTeacher = false
     let editingId = null
+    let currentTeacherGroup = null  // 선생님이 현재 선택한 반 (group path)
 
     // ── 탭 전환 ──
     const TAB_IDS = ['announcements', 'leaderboard', 'materials', 'student-projects', 'class-manage', 'my-class']
@@ -1106,10 +1138,10 @@
         document.getElementById(TAB_VIEW[t]).style.display = t === tab ? '' : 'none'
         document.getElementById(TAB_BTN[t]).classList.toggle('active', t === tab)
       })
-      if (tab === 'announcements')    loadAnnouncements()
-      if (tab === 'leaderboard')      loadLeaderboard()
-      if (tab === 'materials')        loadMaterials()
-      if (tab === 'student-projects') loadStudentProjects()
+      if (tab === 'announcements')    loadAnnouncements(currentTeacherGroup)
+      if (tab === 'leaderboard')      loadLeaderboard(currentTeacherGroup)
+      if (tab === 'materials')        loadMaterials(currentTeacherGroup)
+      if (tab === 'student-projects') loadStudentProjects(currentTeacherGroup)
       if (tab === 'class-manage')     loadClassManage()
       if (tab === 'my-class')         loadMyClasses()
     }
@@ -1165,11 +1197,12 @@
       return card
     }
 
-    async function loadAnnouncements() {
+    async function loadAnnouncements(group) {
       const listEl = document.getElementById('announcementList')
       listEl.innerHTML = ''
       try {
-        const res = await fetch('/api/classroom/announcements')
+        const url = group ? `/api/classroom/announcements?group=${encodeURIComponent(group)}` : '/api/classroom/announcements'
+        const res = await fetch(url)
         if (!res.ok) throw new Error(res.status)
         const { announcements } = await res.json()
         if (announcements.length === 0) {
@@ -1183,11 +1216,12 @@
     }
 
     // ── 리더보드 ──
-    async function loadLeaderboard() {
+    async function loadLeaderboard(group) {
       const tbody = document.getElementById('leaderboardBody')
       tbody.innerHTML = ''
       try {
-        const res = await fetch('/api/classroom/leaderboard')
+        const url = group ? `/api/classroom/leaderboard?group=${encodeURIComponent(group)}` : '/api/classroom/leaderboard'
+        const res = await fetch(url)
         if (!res.ok) throw new Error(res.status)
         const { leaderboard } = await res.json()
         if (leaderboard.length === 0) {
@@ -1270,11 +1304,12 @@
       })
     }
 
-    async function loadStudentProjects() {
+    async function loadStudentProjects(group) {
       const listEl = document.getElementById('studentProjectList')
       listEl.innerHTML = ''
       try {
-        const res = await fetch('/api/classroom/student-projects')
+        const url = group ? `/api/classroom/student-projects?group=${encodeURIComponent(group)}` : '/api/classroom/student-projects'
+        const res = await fetch(url)
         if (!res.ok) throw new Error(res.status)
         const { students } = await res.json()
         allStudents = students
@@ -1327,11 +1362,11 @@
       const res = await fetch(url, {
         method,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title, content }),
+        body: JSON.stringify({ title, content, group: currentTeacherGroup }),
       })
       if (res.ok) {
         closeAnnouncementModal()
-        loadAnnouncements()
+        loadAnnouncements(currentTeacherGroup)
       }
     })
 
@@ -1391,11 +1426,12 @@
       return card
     }
 
-    async function loadMaterials() {
+    async function loadMaterials(group) {
       const listEl = document.getElementById('materialList')
       listEl.innerHTML = ''
       try {
-        const res = await fetch('/api/classroom/materials')
+        const url = group ? `/api/classroom/materials?group=${encodeURIComponent(group)}` : '/api/classroom/materials'
+        const res = await fetch(url)
         if (!res.ok) throw new Error(res.status)
         const { materials } = await res.json()
         if (materials.length === 0) {
@@ -1468,12 +1504,13 @@
       const formData = new FormData()
       formData.append('title', title)
       formData.append('content', content)
+      if (currentTeacherGroup) formData.append('group', currentTeacherGroup)
       for (const file of selectedFiles) formData.append('files', file)
 
       const res = await fetch('/api/classroom/materials', { method: 'POST', body: formData })
       if (res.ok) {
         closeMaterialModal()
-        loadMaterials()
+        loadMaterials(currentTeacherGroup)
       } else {
         const { error } = await res.json().catch(() => ({}))
         alert(error || 'Upload failed')
@@ -1484,7 +1521,8 @@
     function openMaterialDeleteModal(id, cardEl) {
       document.getElementById('deleteModalTitle').textContent = i18n.get('#classroom-material_delete_confirm#')
       openConfirmModal('deleteModalOverlay', 'btnDeleteConfirm', 'btnDeleteCancel', () => {
-        fetch(`/api/classroom/materials/${id}`, { method: 'DELETE' })
+        const url = currentTeacherGroup ? `/api/classroom/materials/${id}?group=${encodeURIComponent(currentTeacherGroup)}` : `/api/classroom/materials/${id}`
+        fetch(url, { method: 'DELETE' })
           .then(r => { if (r.ok) cardEl.remove() })
       })
     }
@@ -1493,7 +1531,8 @@
     function openDeleteModal(id, cardEl) {
       document.getElementById('deleteModalTitle').textContent = i18n.get('#classroom-delete_confirm#')
       openConfirmModal('deleteModalOverlay', 'btnDeleteConfirm', 'btnDeleteCancel', () => {
-        fetch(`/api/classroom/announcements/${id}`, { method: 'DELETE' })
+        const url = currentTeacherGroup ? `/api/classroom/announcements/${id}?group=${encodeURIComponent(currentTeacherGroup)}` : `/api/classroom/announcements/${id}`
+        fetch(url, { method: 'DELETE' })
           .then(r => { if (r.ok) cardEl.remove() })
       })
     }
@@ -2174,6 +2213,41 @@
         document.getElementById('btnNewMaterial').style.display = ''
         document.getElementById('tabStudentProjects').style.display = ''
         document.getElementById('tabClassManage').style.display = ''
+
+        // 다중 그룹 선생님: 각 탭 드롭다운 초기화
+        const allGroups = user.groups || (user.group ? [user.group] : [])
+        currentTeacherGroup = allGroups[0] || null
+
+        if (allGroups.length > 1) {
+          const optionsHtml = allGroups.map(path => {
+            const parts = path.split('/').filter(Boolean)
+            const label = parts.slice(1).join(' / ') || parts[0]
+            return `<option value="${escapeHtml(path)}">${escapeHtml(label)}</option>`
+          }).join('')
+
+          const tabSelects = [
+            { barId: 'announcementGroupBar',     selId: 'announcementGroupSelect',     tab: 'announcements' },
+            { barId: 'materialGroupBar',         selId: 'materialGroupSelect',         tab: 'materials' },
+            { barId: 'studentProjectGroupBar',   selId: 'studentProjectGroupSelect',   tab: 'student-projects' },
+            { barId: 'leaderboardGroupBar',      selId: 'leaderboardGroupSelect',      tab: 'leaderboard' },
+          ]
+
+          tabSelects.forEach(({ barId, selId, tab }) => {
+            const bar = document.getElementById(barId)
+            const sel = document.getElementById(selId)
+            sel.innerHTML = optionsHtml
+            bar.style.display = ''
+            sel.addEventListener('change', () => {
+              currentTeacherGroup = sel.value
+              // 같은 탭의 다른 select도 동기화
+              tabSelects.forEach(s => {
+                if (s.selId !== selId) document.getElementById(s.selId).value = currentTeacherGroup
+              })
+              switchTab(tab)
+            })
+          })
+        }
+
         switchTab('class-manage')
       } else {
         document.getElementById('tabMyClass').style.display = ''

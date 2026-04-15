@@ -66,11 +66,11 @@ router.get('/:id', requireAuth, async (req, res) => {
 // 학생 프로젝트 단건 조회 (teacher/school_admin만, 같은 group 소속 학생 것만)
 router.get('/student/:id', requireRole(...ADMIN_ROLES), async (req, res) => {
   try {
-    const { group } = req.session.user
+    const allGroups = req.session.user.groups || (req.session.user.group ? [req.session.user.group] : [])
     const { id } = req.params
     const result = await query(
-      'SELECT id, name, block_xml, python, world_options, robot_options FROM projects WHERE id = $1 AND group_name = $2',
-      [id, group]
+      'SELECT id, name, block_xml, python, world_options, robot_options FROM projects WHERE id = $1 AND group_name = ANY($2)',
+      [id, allGroups]
     )
     if (result.rows.length === 0) return res.status(404).json({ error: 'Not found' })
     res.json({ project: result.rows[0] })

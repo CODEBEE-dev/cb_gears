@@ -87,30 +87,47 @@ async function fetchLesson(lessonId) {
 
 // ── [교사] 수업 개설
 // POST /api/class
-// body: { api_curriculum_id, title }
+// body: { api_curriculum_id, title, groupPath? }
 router.post('/', requireRole(...ADMIN_ROLES), async (req, res) => {
   try {
-    const { id: teacherId, group: sessionGroup } = req.session.user
-    const { api_curriculum_id, title } = req.body
+    const { id: teacherId, group: sessionGroup, groups: sessionGroups } = req.session.user
+    const { api_curriculum_id, title, groupPath } = req.body
 
     if (!api_curriculum_id?.trim() || !title?.trim()) {
       return res.status(400).json({ error: 'api_curriculum_id and title are required' })
     }
-    if (!sessionGroup) {
+
+    const allGroups = sessionGroups || (sessionGroup ? [sessionGroup] : [])
+    if (allGroups.length === 0) {
       return res.status(400).json({ error: 'No group assigned to teacher' })
     }
 
-    // Keycloak 그룹에서 학생 목록 조회
-    const group = await getGroupIdByPath(sessionGroup)
+    // 사용할 그룹 path 결정
+    let targetPath
+    if (groupPath) {
+      // 전달된 path가 본인 소속 그룹인지 검증
+      const normalized = groupPath.startsWith('/') ? groupPath : `/${groupPath}`
+      const valid = allGroups.some(g => (g.startsWith('/') ? g : `/${g}`) === normalized)
+      if (!valid) return res.status(403).json({ error: '접근 권한이 없는 그룹입니다' })
+      targetPath = normalized
+    } else if (allGroups.length === 1) {
+      targetPath = allGroups[0]
+    } else {
+      return res.status(400).json({ error: 'groupPath is required for teachers with multiple groups' })
+    }
+
+    const group = await getGroupIdByPath(targetPath)
     if (!group) return res.status(400).json({ error: '그룹을 찾을 수 없습니다' })
+
+    // Keycloak 그룹에서 학생 목록 조회
     const students = await getStudentsInGroup(group.id)
 
     // 수업 인스턴스 생성
     const classId = makeId('cls')
     await query(
-      `INSERT INTO class_instances (id, api_curriculum_id, teacher_id, title, status)
-       VALUES ($1, $2, $3, $4, 'ACTIVE')`,
-      [classId, api_curriculum_id.trim(), teacherId, title.trim()]
+      `INSERT INTO class_instances (id, api_curriculum_id, teacher_id, title, group_path, status)
+       VALUES ($1, $2, $3, $4, $5, 'ACTIVE')`,
+      [classId, api_curriculum_id.trim(), teacherId, title.trim(), targetPath]
     )
 
     // 학생 명단 bulk insert
@@ -131,7 +148,7 @@ router.post('/', requireRole(...ADMIN_ROLES), async (req, res) => {
     }
 
     const result = await query(
-      `SELECT id, api_curriculum_id, teacher_id, title, status, created_at FROM class_instances WHERE id = $1`,
+      `SELECT id, api_curriculum_id, teacher_id, title, group_path, status, created_at FROM class_instances WHERE id = $1`,
       [classId]
     )
     res.status(201).json({ class: result.rows[0], rosterCount: students.length })
@@ -149,7 +166,7 @@ router.get('/', requireRole(...ADMIN_ROLES), async (req, res) => {
 
     const result = await query(
       `SELECT
-         ci.id, ci.api_curriculum_id, ci.title, ci.status, ci.created_at,
+         ci.id, ci.api_curriculum_id, ci.title, ci.group_path, ci.status, ci.created_at,
          (SELECT COUNT(*) FROM class_rosters WHERE class_id = ci.id) AS student_count,
          (SELECT COUNT(*) FROM student_lesson_instances WHERE class_id = ci.id AND status = 'COMPLETED') AS completed_lessons
        FROM class_instances ci

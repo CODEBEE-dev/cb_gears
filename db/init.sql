@@ -65,6 +65,7 @@ CREATE TABLE IF NOT EXISTS class_instances (
   api_curriculum_id VARCHAR(50) NOT NULL,
   teacher_id        VARCHAR(36) NOT NULL,
   title             VARCHAR(255) NOT NULL,
+  group_path        VARCHAR(255),
   status            VARCHAR(20) NOT NULL DEFAULT 'ACTIVE',
   created_at        TIMESTAMP NOT NULL DEFAULT NOW(),
   updated_at        TIMESTAMP NOT NULL DEFAULT NOW()

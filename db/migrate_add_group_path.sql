@@ -1,0 +1,1 @@
+ALTER TABLE class_instances ADD COLUMN IF NOT EXISTS group_path VARCHAR(255);

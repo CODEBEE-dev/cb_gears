@@ -682,7 +682,8 @@ var main = new function() {
         {html: 'Pybricks Mode', line: true, callback: self.switchToPybricks},
         {html: 'Zoom In', line: false, callback: pythonPanel.zoomIn},
         {html: 'Zoom Out', line: false, callback: pythonPanel.zoomOut},
-        {html: 'Reset Zoom', line: false, callback: pythonPanel.zoomReset},
+        {html: 'Reset Zoom', line: true, callback: pythonPanel.zoomReset},
+        {html: '&#x1F4F6; Upload to Spike Prime', line: false, callback: self.uploadToSpikePrime},
       ];
       var tickIndex;
       if (blockly.generator == ev3dev2_generator) {
@@ -714,6 +715,113 @@ var main = new function() {
     if (! filesManager.modified) {
       pythonPanel.loadPythonFromBlockly();
     }
+  };
+
+  // Upload to Spike Prime via WebBluetooth
+  this.uploadToSpikePrime = function() {
+    if (typeof spikeUploader === 'undefined') {
+      showErrorModal('spikeUploader를 찾을 수 없습니다.');
+      return;
+    }
+
+    self._showSpikeUploadDialog();
+  };
+
+  // Step 1: Port mapping modal
+  this._showSpikePortModal = function(onConfirm) {
+    var SPIKE_PORTS = ['A', 'B', 'C', 'D', 'E', 'F'];
+
+    // Device options per port
+    var DEVICE_OPTIONS = [
+      { val: 'NONE',       label: '사용 안 함' },
+      { val: 'left_motor', label: '모터 (왼쪽 바퀴)' },
+      { val: 'right_motor',label: '모터 (오른쪽 바퀴)' },
+      { val: 'motor',      label: '모터' },
+      { val: 'ColorSensor',      label: '컬러 센서' },
+      { val: 'GyroSensor',       label: '자이로 센서' },
+      { val: 'UltrasonicSensor', label: '초음파 센서' },
+      { val: 'TouchSensor',      label: '터치 센서' },
+    ];
+
+    // Build mapping table: one row per Spike port (A~F)
+    var $table = $('<table class="spike-port-table"></table>');
+    $table.append($('<thead><tr><th>Spike 포트</th><th>연결 장치</th></tr></thead>'));
+    var $tbody = $('<tbody></tbody>');
+
+    SPIKE_PORTS.forEach(function(port) {
+      var $select = $('<select class="spike-port-select"></select>');
+      DEVICE_OPTIONS.forEach(function(opt) {
+        $select.append($('<option></option>').val(opt.val).text(opt.label));
+      });
+      $select.val('NONE');
+      $select.attr('data-spike-port', port);
+
+      var $row = $('<tr></tr>')
+        .append($('<td class="spike-port-label"></td>').text('포트 ' + port))
+        .append($('<td></td>').append($select));
+      $tbody.append($row);
+    });
+
+    $table.append($tbody);
+
+    var $hint = $('<div class="spike-port-hint">실제 Spike Prime 허브에 연결된 장치를 선택하세요.</div>');
+    var $body = $('<div class="spike-port-body"></div>').append($hint).append($table);
+
+    var $cancelBtn = $('<button type="button" class="btn btn-light">취소</button>');
+    var $confirmBtn = $('<button type="button" class="btn btn-primary">업로드</button>');
+
+    var $dlg = dialog('Spike Prime 포트 설정', $body, $cancelBtn.add($confirmBtn));
+
+    $cancelBtn.click(function() { $dlg.close(); });
+
+    $confirmBtn.click(function() {
+      // Build portMap: { spikePort -> deviceType }
+      // e.g. { 'A': 'left_motor', 'C': 'ColorSensor', 'D': 'NONE' }
+      var portMap = {};
+      $tbody.find('select').each(function() {
+        portMap[$(this).attr('data-spike-port')] = $(this).val();
+      });
+      $dlg.close();
+      onConfirm(portMap);
+    });
+  };
+
+  // Upload progress dialog
+  this._showSpikeUploadDialog = function() {
+    var $statusText = $('<div class="spike-upload-status">준비 중...</div>');
+    var $progressBar = $('<div class="spike-upload-progress"><div class="spike-upload-progress-bar"></div></div>');
+    var $body = $('<div class="spike-upload-body"></div>').append($statusText).append($progressBar);
+    var $cancelBtn = $('<button type="button" class="btn btn-light">취소</button>');
+    var $closeBtn = $('<button type="button" class="btn btn-success hide">닫기</button>');
+
+    var $dlg = dialog('Spike Prime 업로드', $body, $cancelBtn.add($closeBtn));
+
+    $cancelBtn.click(function() {
+      spikeUploader.disconnect();
+      $dlg.close();
+    });
+    $closeBtn.click(function() {
+      $dlg.close();
+    });
+
+    var onStatus = function(state, message) {
+      $statusText.text(message);
+      if (state === 'done') {
+        $cancelBtn.addClass('hide');
+        $closeBtn.removeClass('hide');
+        $progressBar.find('.spike-upload-progress-bar').css('width', '100%');
+      } else if (state === 'error') {
+        $statusText.addClass('spike-upload-error');
+        $cancelBtn.text('닫기');
+        $cancelBtn.off('click').click(function() { $dlg.close(); });
+      }
+    };
+
+    var onProgress = function(ratio) {
+      $progressBar.find('.spike-upload-progress-bar').css('width', (ratio * 100).toFixed(1) + '%');
+    };
+
+    spikeUploader.uploadFromEditor(onStatus, onProgress);
   };
 
   // Toggle filemenu

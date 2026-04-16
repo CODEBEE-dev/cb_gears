@@ -152,3 +152,102 @@
   transform: scale(0.95);
   transition: all 0.1s;
 }
+
+// Spike Prime Port Mapping Modal
+.spike-port-body {
+  min-width: 340px;
+  padding: 8px 0;
+}
+
+.spike-port-hint {
+  font-size: 13px;
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 12px;
+}
+
+.spike-port-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+
+  thead tr {
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+  }
+
+  th {
+    padding: 6px 8px;
+    text-align: left;
+    color: rgba(255,255,255,0.5);
+    font-weight: normal;
+    font-size: 12px;
+  }
+
+  td {
+    padding: 7px 8px;
+    vertical-align: middle;
+  }
+
+  .spike-port-label {
+    font-weight: bold;
+    color: rgba(255,255,255,0.85);
+    width: 80px;
+  }
+
+  tr + tr td {
+    border-top: 1px solid rgba(255,255,255,0.07);
+  }
+}
+
+.spike-port-select {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #fff;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 13px;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+    border-color: rgba(255,255,255,0.5);
+  }
+
+  option {
+    background: #333;
+    color: #fff;
+  }
+}
+
+// Spike Prime Upload Dialog
+.spike-upload-body {
+  min-width: 320px;
+  padding: 8px 0;
+}
+
+.spike-upload-status {
+  font-size: 14px;
+  margin-bottom: 16px;
+  min-height: 40px;
+  white-space: pre-line;
+  line-height: 1.5;
+
+  &.spike-upload-error {
+    color: #ff6b6b;
+  }
+}
+
+.spike-upload-progress {
+  width: 100%;
+  height: 8px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 4px;
+  overflow: hidden;
+
+  .spike-upload-progress-bar {
+    height: 100%;
+    width: 0%;
+    background: #4caf50;
+    border-radius: 4px;
+    transition: width 0.2s ease;
+  }
+}

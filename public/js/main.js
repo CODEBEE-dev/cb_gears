@@ -724,7 +724,9 @@ var main = new function() {
       return;
     }
 
-    self._showSpikeUploadDialog();
+    self._showSpikePortModal(function(portMap) {
+      self._showSpikeUploadDialog(portMap);
+    });
   };
 
   // Step 1: Port mapping modal
@@ -787,7 +789,7 @@ var main = new function() {
   };
 
   // Upload progress dialog
-  this._showSpikeUploadDialog = function() {
+  this._showSpikeUploadDialog = function(portMap) {
     var $statusText = $('<div class="spike-upload-status">준비 중...</div>');
     var $progressBar = $('<div class="spike-upload-progress"><div class="spike-upload-progress-bar"></div></div>');
     var $body = $('<div class="spike-upload-body"></div>').append($statusText).append($progressBar);
@@ -821,7 +823,7 @@ var main = new function() {
       $progressBar.find('.spike-upload-progress-bar').css('width', (ratio * 100).toFixed(1) + '%');
     };
 
-    spikeUploader.uploadFromEditor(onStatus, onProgress);
+    spikeUploader.uploadFromEditor(portMap, onStatus, onProgress);
   };
 
   // Toggle filemenu

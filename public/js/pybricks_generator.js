@@ -189,8 +189,8 @@ var pybricks_generator = new function() {
       var dropdown_units = block.getFieldValue('units');
 
       if (dropdown_units == 'PERCENT') {
-        var leftStr = '(' + value_left + ' / 100) * 1050';
-        var rightStr = '(' + value_right + ' / 100) * 1050';
+        var leftStr = '(' + value_left + ' / 100.0) * 1050';
+        var rightStr = '(' + value_right + ' / 100.0) * 1050';
       } else if (dropdown_units == 'DEGREES') {
         var leftStr = value_left;
         var rightStr = value_right;
@@ -213,8 +213,8 @@ var pybricks_generator = new function() {
       var dropdown_units2 = block.getFieldValue('units2');
 
       if (dropdown_units == 'PERCENT') {
-        var leftStr = '(' + value_left + ' / 100) * 1050';
-        var rightStr = '(' + value_right + ' / 100) * 1050';
+        var leftStr = '(' + value_left + ' / 100.0) * 1050';
+        var rightStr = '(' + value_right + ' / 100.0) * 1050';
       } else if (dropdown_units == 'DEGREES') {
         var leftStr = value_left;
         var rightStr = value_right;
@@ -249,7 +249,7 @@ var pybricks_generator = new function() {
       var dropdown_units = block.getFieldValue('units');
 
       if (dropdown_units == 'PERCENT') {
-        var speedStr = '(' + value_speed + ' / 100) * 1050';
+        var speedStr = '(' + value_speed + ' / 100.0) * 1050';
       } else if (dropdown_units == 'DEGREES') {
         var speedStr = value_speed;
       } else if (dropdown_units == 'ROTATIONS') {
@@ -270,7 +270,7 @@ var pybricks_generator = new function() {
       var dropdown_units2 = block.getFieldValue('units2');
 
       if (dropdown_units == 'PERCENT') {
-        var speedStr = '(' + value_speed + ' / 100) * 1050';
+        var speedStr = '(' + value_speed + ' / 100.0) * 1050';
       } else if (dropdown_units == 'DEGREES') {
         var speedStr = value_speed;
       } else if (dropdown_units == 'ROTATIONS') {
@@ -336,7 +336,7 @@ var pybricks_generator = new function() {
       var dropdown_unit = block.getFieldValue('unit');
 
       if (dropdown_unit == 'PERCENT') {
-        var speedStr = '(' + value_speed + ' / 100) * 1050';
+        var speedStr = '(' + value_speed + ' / 100.0) * 1050';
       } else if (dropdown_unit == 'DEGREES') {
         var speedStr = value_speed;
       } else if (dropdown_unit == 'ROTATIONS') {
@@ -357,7 +357,7 @@ var pybricks_generator = new function() {
       var dropdown_unit2 = block.getFieldValue('unit2');
 
       if (dropdown_unit == 'PERCENT') {
-        var speedStr = '(' + value_speed + ' / 100) * 1050';
+        var speedStr = '(' + value_speed + ' / 100.0) * 1050';
       } else if (dropdown_unit == 'DEGREES') {
         var speedStr = value_speed;
       } else if (dropdown_unit == 'ROTATIONS') {
@@ -391,7 +391,7 @@ var pybricks_generator = new function() {
       var value_degrees = Blockly.Python.valueToCode(block, 'degrees', Blockly.Python.ORDER_ATOMIC);
 
       if (dropdown_unit == 'PERCENT') {
-        var speedStr = '(' + value_speed + ' / 100) * 1050';
+        var speedStr = '(' + value_speed + ' / 100.0) * 1050';
       } else if (dropdown_unit == 'DEGREES') {
         var speedStr = value_speed;
       } else if (dropdown_unit == 'ROTATIONS') {

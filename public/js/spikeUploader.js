@@ -39,166 +39,142 @@ var spikeUploader = new function() {
   this.preprocessCode = function(code, portMap) {
     portMap = portMap || {};
 
-    // Invert portMap for easy lookup by device role
-    // e.g. leftMotorPort = 'A', rightMotorPort = 'B', sensorPorts = { ColorSensor: 'C', ... }
+    // portMap에서 역할별 포트 추출
     var leftMotorPort = null;
     var rightMotorPort = null;
-    var extraMotorPorts = []; // additional motors beyond left/right
-    var sensorPorts = {}; // { 'ColorSensor': 'C', 'GyroSensor': 'D', ... }
+    var extraMotorPorts = [];
+    var sensorPorts = {}; // { 'ColorSensor': 'C', ... }
 
     Object.keys(portMap).forEach(function(port) {
       var device = portMap[port];
       if (device === 'NONE') return;
-      if (device === 'left_motor')  { leftMotorPort = port; }
+      if (device === 'left_motor')       { leftMotorPort = port; }
       else if (device === 'right_motor') { rightMotorPort = port; }
-      else if (device === 'motor')  { extraMotorPorts.push(port); }
-      else { sensorPorts[device] = port; }
+      else if (device === 'motor')       { extraMotorPorts.push(port); }
+      else                               { sensorPorts[device] = port; }
     });
 
-    // Which pupdevices classes are actually needed
-    var usedClasses = new Set();
-    if (leftMotorPort || rightMotorPort || extraMotorPorts.length) usedClasses.add('Motor');
-    Object.keys(sensorPorts).forEach(function(cls) { usedClasses.add(cls); });
+    // ── 1. # Here is where your code starts 아래 사용자 코드만 추출 ──────────
+    var marker = '# Here is where your code starts';
+    var markerIdx = code.indexOf(marker);
+    var userCode = markerIdx !== -1 ? code.slice(markerIdx + marker.length) : code;
 
-    var virtualOnlySensors = ['GPSSensor', 'CameraSensor', 'LidarSensor', 'LaserRangeSensor', 'Pen'];
-    var warnings = [];
-    virtualOnlySensors.forEach(function(cls) {
-      if (new RegExp('\\b' + cls + '\\b').test(code)) warnings.push(cls);
-    });
+    // ev3.* → hub.* 치환
+    userCode = userCode.replace(/\bev3\.speaker\b/g, 'hub.speaker');
+    userCode = userCode.replace(/\bev3\.buttons\b/g, 'hub.buttons');
+    userCode = userCode.replace(/\bev3\.screen\b/g,  'hub.display');
+    userCode = userCode.replace(/\bev3\.battery\b/g, 'hub.battery');
 
-    var lines = code.split('\n');
-    var result = [];
-    var headerDone = false; // track whether we've emitted the new header block
+    // float(x) → x
+    userCode = userCode.replace(/\bfloat\s*\(\s*([^)]+)\s*\)/g, '$1');
 
-    for (var i = 0; i < lines.length; i++) {
-      var line = lines[i];
-
-      // ── Imports / header replacements ──────────────────────────────────────
-
-      if (line.trim() === 'from ev3dev2.sensor.virtual import *') continue;
-      if (line.trim() === 'from pybricks.hubs import EV3Brick') {
-        result.push('from pybricks.hubs import PrimeHub');
-        continue;
-      }
-      if (line.trim() === 'from pybricks.ev3devices import *') {
-        if (usedClasses.size > 0) {
-          result.push('from pybricks.pupdevices import ' + Array.from(usedClasses).join(', '));
-        }
-        continue;
-      }
-
-      // ── Hub instance ────────────────────────────────────────────────────────
-
-      if (line.trim() === 'ev3 = EV3Brick()') {
-        result.push('hub = PrimeHub()');
-        continue;
-      }
-
-      // ── Motor/sensor initialization lines — replace with portMap-based code ─
-
-      // motorA = Motor(Port.A)  (hard-coded in genCode header)
-      if (/^\s*motorA\s*=\s*Motor\s*\(Port\.A\)/.test(line)) {
-        if (leftMotorPort) {
-          result.push('motorA = Motor(Port.' + leftMotorPort + ')');
-        }
-        // else: no left motor → skip
-        continue;
-      }
-      if (/^\s*motorB\s*=\s*Motor\s*\(Port\.B\)/.test(line)) {
-        if (rightMotorPort) {
-          result.push('motorB = Motor(Port.' + rightMotorPort + ')');
-        }
-        continue;
-      }
-      if (/^\s*left_motor\s*=\s*motorA/.test(line)) {
-        if (leftMotorPort) result.push('left_motor = motorA');
-        continue;
-      }
-      if (/^\s*right_motor\s*=\s*motorB/.test(line)) {
-        if (rightMotorPort) result.push('right_motor = motorB');
-        continue;
-      }
-
-      // motorC = Motor(Port.C) ... extra motors from genCode
-      var extraMotorMatch = line.match(/^\s*motor([A-F])\s*=\s*Motor\s*\(Port\.([A-F])\)/);
-      if (extraMotorMatch) {
-        // Only keep if this port is assigned as 'motor' in portMap
-        var evPort = extraMotorMatch[1];
-        if (portMap[evPort] === 'motor') {
-          result.push(line);
-        }
-        continue;
-      }
-
-      // Sensor initialization: color_sensor_in1 = ColorSensor(Port.S1) etc.
-      var sensorInitMatch = line.match(/^\s*(\w+_in\d+)\s*=\s*(\w+Sensor)\s*\(Port\.S(\d+)\)/);
-      if (sensorInitMatch) {
-        var varBase = sensorInitMatch[1]; // e.g. color_sensor_in1
-        var cls     = sensorInitMatch[2]; // e.g. ColorSensor
-        var num     = sensorInitMatch[3]; // e.g. '1'
-        var assignedPort = sensorPorts[cls];
-        if (assignedPort) {
-          // Rename variable to use port letter: color_sensor_A
-          var newVar = varBase.replace(/_in\d+$/, '_' + assignedPort);
-          result.push(newVar + ' = ' + cls + '(Port.' + assignedPort + ')');
-        }
-        // else: sensor not assigned → skip line
-        continue;
-      }
-
-      // ── Body: rename sensor variables to match assigned port ───────────────
-
-      Object.keys(sensorPorts).forEach(function(cls) {
-        var assignedPort = sensorPorts[cls];
-        // Replace _in1, _in2... with _<port> for any variable referencing this sensor
-        line = line.replace(new RegExp('(\\b\\w+)_in(\\d+)\\b', 'g'), function(match, prefix, num) {
-          // Check the sensor that was at this sim port
-          // We match by class from the original init lines already rewritten above;
-          // here we simply replace any _inN suffix with the assigned port for known sensor vars
-          return match; // safe default — handled per-sensor below
-        });
-      });
-
-      // Simpler: replace all _inN occurrences where that sim sensor is assigned a port
-      // Re-build a num→port lookup from sensorPorts (reverse via original robot config order)
-      // Since genCode assigns sensors to in1, in2... in order, and we know which sensor type
-      // is at each port, map sim sensor number to spike port by matching types.
-      // For body code, variable names like color_sensor_in1 need → color_sensor_<assignedPort>
-      // We do this by checking which sim port number had which sensor type.
-      var i2 = 1;
-      while (robot.getComponentByPort('in' + i2)) {
-        var comp = robot.getComponentByPort('in' + i2);
-        var assignedPort = sensorPorts[comp.type];
-        if (assignedPort) {
-          line = line.replace(new RegExp('_in' + i2 + '\\b', 'g'), '_' + assignedPort);
-        }
-        i2++;
-      }
-
-      // ── ev3.* → hub.* ───────────────────────────────────────────────────────
-
-      line = line.replace(/\bev3\.speaker\b/g, 'hub.speaker');
-      line = line.replace(/\bev3\.buttons\b/g, 'hub.buttons');
-      line = line.replace(/\bev3\.screen\b/g,  'hub.display');
-      line = line.replace(/\bev3\.battery\b/g, 'hub.battery');
-
-      // ── Remove virtual-only lines ───────────────────────────────────────────
-
-      if (/^\s*radio\s*=\s*Radio\s*\(\s*\)/.test(line)) continue;
-      if (/^\s*obtr\s*=\s*ObjectTracker\s*\(\s*\)/.test(line)) continue;
-
-      var skipLine = false;
-      virtualOnlySensors.forEach(function(cls) {
-        if (new RegExp('=\\s*' + cls + '\\s*\\(').test(line)) skipLine = true;
-      });
-      if (skipLine) continue;
-
-      result.push(line);
+    // 계속 돌기(run/dc) 호출이 있으면 프로그램이 종료되지 않도록 끝에 무한루프 추가
+    if (/\b(?:motor\w*|left_motor|right_motor)\.(?:run|dc)\s*\(/.test(userCode)) {
+      userCode = userCode.trimEnd() + '\nwhile True:\n    wait(100)\n';
     }
 
+    // ── 2. 헤더 생성 ─────────────────────────────────────────────────────────
+    var header = [];
+
+    // imports
+    header.push('from pybricks.parameters import Port');
+    header.push('from pybricks.hubs import PrimeHub');
+
+    var pupdevices = [];
+    if (leftMotorPort || rightMotorPort || extraMotorPorts.length) pupdevices.push('Motor');
+    Object.keys(sensorPorts).forEach(function(cls) { pupdevices.push(cls); });
+    if (pupdevices.length > 0) {
+      header.push('from pybricks.pupdevices import ' + pupdevices.join(', '));
+    }
+    header.push('from pybricks.tools import wait');
+    header.push('');
+
+    // hub
+    header.push('hub = PrimeHub()');
+
+    // 모터 초기화
+    if (leftMotorPort) {
+      header.push('motorA = Motor(Port.' + leftMotorPort + ')');
+      header.push('left_motor = motorA');
+    }
+    if (rightMotorPort) {
+      header.push('motorB = Motor(Port.' + rightMotorPort + ')');
+      header.push('right_motor = motorB');
+    }
+    extraMotorPorts.forEach(function(port) {
+      header.push('motor' + port + ' = Motor(Port.' + port + ')');
+    });
+
+    // 센서 초기화
+    Object.keys(sensorPorts).forEach(function(cls) {
+      var port = sensorPorts[cls];
+      var varName = cls.replace('Sensor', '').toLowerCase() + '_sensor_' + port;
+      header.push(varName + ' = ' + cls + '(Port.' + port + ')');
+    });
+
+    // move_tank 등 헬퍼 함수 (모터가 있을 때만)
+    if (leftMotorPort || rightMotorPort) {
+      header.push('');
+      header.push('def move_tank(left, right):');
+      header.push('    left_motor.run(left)');
+      header.push('    right_motor.run(right)');
+      header.push('');
+      header.push('def move_tank_for_degrees(left, right, degrees):');
+      header.push('    if degrees == 0 or (left == 0 and right == 0):');
+      header.push('        left_degrees = 0');
+      header.push('        right_degrees = 0');
+      header.push('    elif abs(left) > abs(right):');
+      header.push('        left_degrees = degrees');
+      header.push('        right_degrees = abs(right / left) * degrees');
+      header.push('    else:');
+      header.push('        left_degrees = abs(left / right) * degrees');
+      header.push('        right_degrees = degrees');
+      header.push('    if abs(left) > abs(right):');
+      header.push('        right_motor.run_angle(right, right_degrees, wait=False)');
+      header.push('        left_motor.run_angle(left, left_degrees, wait=True)');
+      header.push('    else:');
+      header.push('        left_motor.run_angle(left, left_degrees, wait=False)');
+      header.push('        right_motor.run_angle(right, right_degrees, wait=True)');
+      header.push('');
+      header.push('def move_tank_for_milliseconds(left, right, milliseconds):');
+      header.push('    left_motor.run_time(left, milliseconds, wait=False)');
+      header.push('    right_motor.run_time(right, milliseconds, wait=True)');
+      header.push('');
+      header.push('def get_speed_steering(steer, speed):');
+      header.push('    left_speed = speed');
+      header.push('    right_speed = speed');
+      header.push('    speed_factor = (50 - abs(steer)) / 50.0');
+      header.push('    if steer >= 0:');
+      header.push('        right_speed *= speed_factor');
+      header.push('    else:');
+      header.push('        left_speed *= speed_factor');
+      header.push('    return (left_speed, right_speed)');
+      header.push('');
+      header.push('def move_tank_dc(left, right):');
+      header.push('    left_motor.dc(left)');
+      header.push('    right_motor.dc(right)');
+      header.push('');
+      header.push('def move_steering(steer, speed):');
+      header.push('    (left_speed, right_speed) = get_speed_steering(steer, speed)');
+      header.push('    move_tank(left_speed, right_speed)');
+      header.push('');
+      header.push('def move_steering_for_degrees(steer, speed, degrees):');
+      header.push('    (left_speed, right_speed) = get_speed_steering(steer, speed)');
+      header.push('    move_tank_for_degrees(left_speed, right_speed, degrees)');
+      header.push('');
+      header.push('def move_steering_for_milliseconds(steer, speed, milliseconds):');
+      header.push('    (left_speed, right_speed) = get_speed_steering(steer, speed)');
+      header.push('    move_tank_for_milliseconds(left_speed, right_speed, milliseconds)');
+    }
+
+    header.push('');
+    header.push(marker);
+
+    var finalCode = header.join('\n') + userCode;
+
     return {
-      code: result.join('\n'),
-      warnings: warnings
+      code: finalCode,
+      warnings: []
     };
   };
 
@@ -429,16 +405,30 @@ var spikeUploader = new function() {
 
   // ─── 5. Main Entry Point ──────────────────────────────────────────────────
 
-  // Full flow: get code from python editor → compile → upload → run
-  this.uploadFromEditor = function(onStatus, onProgress) {
+  // Full flow: generate code from blocks → preprocess → compile → upload → run
+  this.uploadFromEditor = function(portMap, onStatus, onProgress) {
     onStatus = onStatus || function() {};
     onProgress = onProgress || function() {};
 
-    // Get code directly from the python editor (ace editor)
-    var rawCode = pythonPanel.editor.getValue();
+    var rawCode;
+
+    if (filesManager.modified) {
+      // Python 탭에서 직접 수정한 경우 → 그대로 사용
+      rawCode = pythonPanel.editor.getValue();
+      console.log('[Spike] Using manual Python tab code (skipping preprocess)');
+    } else {
+      // 블록에서 생성한 경우 → 전처리
+      var blockCode = pybricks_generator.genCode();
+      var preprocessed = self.preprocessCode(blockCode, portMap);
+      rawCode = preprocessed.code;
+      if (preprocessed.warnings.length > 0) {
+        console.warn('[Spike] Virtual-only sensors in code:', preprocessed.warnings.join(', '));
+      }
+      console.log('[Spike] Using preprocessed block code');
+    }
 
     if (!rawCode.trim()) {
-      onStatus('error', '코드가 없습니다.\nPython 탭에서 코드를 작성해주세요.');
+      onStatus('error', '코드가 없습니다.');
       return;
     }
 

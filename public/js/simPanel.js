@@ -139,7 +139,15 @@ var simPanel = new function() {
     babylon.engine.runRenderLoop(function(){
       babylon.scene.render();
     });
-    babylon.engine.resize();
+    var canvas = babylon.engine.getRenderingCanvas();
+    if (canvas) {
+      var ro = new ResizeObserver(function() {
+        ro.unobserve(canvas);
+        babylon.engine.resize();
+        window.dispatchEvent(new Event('resize'));
+      });
+      ro.observe(canvas);
+    }
   };
 
   // Toggle split view in Python tab: AI Tutor <-> Simulator

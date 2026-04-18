@@ -599,6 +599,38 @@
       border-radius: 0.75rem;
       overflow: hidden;
     }
+    .collapsible-wrap {
+      position: relative;
+    }
+    .collapsible-wrap .collapsible-inner {
+      overflow: hidden;
+      transition: max-height 0.35s ease;
+    }
+    .collapsible-wrap .collapsible-fade {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3.5rem;
+      background: linear-gradient(to bottom, transparent, var(--color-bg));
+      pointer-events: none;
+      transition: opacity 0.25s;
+    }
+    .collapsible-wrap.expanded .collapsible-fade {
+      opacity: 0;
+    }
+    .btn-collapsible {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      margin-top: 0.5rem;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--color-primary);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.2rem 0;
+    }
+    .btn-collapsible:hover { opacity: 0.75; }
     .roster-row {
       display: flex;
       align-items: center;
@@ -908,14 +940,32 @@
               <div id="classProgressDetail" style="font-size:0.78rem; color:var(--color-text-muted); margin-top:0.4rem;"></div>
             </div>
             <div class="section-subtitle">학생 명단</div>
-            <div class="roster-list" id="rosterListEl"></div>
-            <div class="section-subtitle" style="margin-top:1.5rem;">차시 진도 현황</div>
-            <div class="lesson-matrix-wrap">
-              <table class="lesson-matrix" id="lessonMatrixTable">
-                <thead id="lessonMatrixHead"></thead>
-                <tbody id="lessonMatrixBody"></tbody>
-              </table>
+            <div class="collapsible-wrap" id="rosterWrap">
+              <div class="collapsible-inner" id="rosterInner">
+                <div class="roster-list" id="rosterListEl"></div>
+              </div>
+              <div class="collapsible-fade" id="rosterFade"></div>
             </div>
+            <button class="btn-collapsible" id="rosterToggleBtn" style="display:none;">
+              <span class="material-symbols-rounded" style="font-size:1rem;" id="rosterToggleIcon">expand_more</span>
+              <span id="rosterToggleLabel">더보기</span>
+            </button>
+            <div class="section-subtitle" style="margin-top:1.5rem;">차시 진도 현황</div>
+            <div class="collapsible-wrap" id="matrixWrap">
+              <div class="collapsible-inner" id="matrixInner">
+                <div class="lesson-matrix-wrap">
+                  <table class="lesson-matrix" id="lessonMatrixTable">
+                    <thead id="lessonMatrixHead"></thead>
+                    <tbody id="lessonMatrixBody"></tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="collapsible-fade" id="matrixFade"></div>
+            </div>
+            <button class="btn-collapsible" id="matrixToggleBtn" style="display:none;">
+              <span class="material-symbols-rounded" style="font-size:1rem;" id="matrixToggleIcon">expand_more</span>
+              <span id="matrixToggleLabel">더보기</span>
+            </button>
             <div class="section-subtitle" style="margin-top:1.5rem;">차시 목록</div>
             <div class="lesson-list" id="teacherLessonListEl"></div>
           </div>
@@ -1156,6 +1206,47 @@
     // ── 공지사항 ──
     function formatDate(iso) {
       return new Date(iso).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })
+    }
+
+    function initCollapsible(innerId, wrapperId, btnId, iconId, labelId, collapseHeight) {
+      const inner = document.getElementById(innerId)
+      const wrap = document.getElementById(wrapperId)
+      const btn = document.getElementById(btnId)
+      const icon = document.getElementById(iconId)
+      const label = document.getElementById(labelId)
+      if (!inner || !wrap || !btn) return
+
+      // 이전 리스너 제거를 위해 버튼 복제
+      const newBtn = btn.cloneNode(true)
+      btn.parentNode.replaceChild(newBtn, btn)
+      const freshIcon = document.getElementById(iconId)
+      const freshLabel = document.getElementById(labelId)
+
+      requestAnimationFrame(function() {
+        const fullHeight = inner.scrollHeight
+        if (fullHeight <= collapseHeight) {
+          inner.style.maxHeight = fullHeight + 'px'
+          newBtn.style.display = 'none'
+          document.getElementById(wrapperId.replace('Wrap', 'Fade') + 'El') // no-op
+          wrap.classList.add('expanded')
+          return
+        }
+
+        inner.style.maxHeight = collapseHeight + 'px'
+        wrap.classList.remove('expanded')
+        newBtn.style.display = 'flex'
+        freshIcon.textContent = 'expand_more'
+        freshLabel.textContent = '더보기'
+        let expanded = false
+
+        newBtn.addEventListener('click', function() {
+          expanded = !expanded
+          wrap.classList.toggle('expanded', expanded)
+          inner.style.maxHeight = expanded ? inner.scrollHeight + 'px' : collapseHeight + 'px'
+          freshIcon.textContent = expanded ? 'expand_less' : 'expand_more'
+          freshLabel.textContent = expanded ? '접기' : '더보기'
+        })
+      })
     }
 
     function makeAnnouncementCard(a) {
@@ -1670,6 +1761,7 @@
             rosterEl.appendChild(row)
           })
         }
+        initCollapsible('rosterInner', 'rosterWrap', 'rosterToggleBtn', 'rosterToggleIcon', 'rosterToggleLabel', 5 * 44)
 
         // 차시 매트릭스: CMS에서 레슨 목록 조회
         const curriculum = await fetch(`${CMS_BASE}/curriculums/${cls.api_curriculum_id}`)
@@ -1739,6 +1831,8 @@
           }).join('')
           matBody.appendChild(tr)
         })
+        // thead(38) + 4행(38 * 4) = 190px 기준
+        initCollapsible('matrixInner', 'matrixWrap', 'matrixToggleBtn', 'matrixToggleIcon', 'matrixToggleLabel', 190)
 
       } catch (e) {
         rosterEl.innerHTML = '<div class="empty-msg">불러오기 실패</div>'

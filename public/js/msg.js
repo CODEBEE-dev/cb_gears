@@ -1756,6 +1756,94 @@ let MSGS = {
     it: 'archivio',
     ko: '파일(File)',
   },
+  '#main-cancel#': {
+    en: 'Cancel',
+    ko: '취소',
+  },
+  '#main-close#': {
+    en: 'Close',
+    ko: '닫기',
+  },
+
+  '#main-upload_spike#': {
+    en: 'Upload to Spike Prime',
+    ko: 'Spike Prime 업로드',
+  },
+
+  '#spike-port_modal_title#': {
+    en: 'Spike Prime Port Settings',
+    ko: 'Spike Prime 포트 설정',
+  },
+  '#spike-port_hint#': {
+    en: 'Select the device connected to each Spike Prime hub port.',
+    ko: '실제 Spike Prime 허브에 연결된 장치를 선택하세요.',
+  },
+  '#spike-port_col_port#': {
+    en: 'Spike Port',
+    ko: 'Spike 포트',
+  },
+  '#spike-port_col_device#': {
+    en: 'Device',
+    ko: '연결 장치',
+  },
+  '#spike-port_label#': {
+    en: 'Port ',
+    ko: '포트 ',
+  },
+  '#spike-device_none#': {
+    en: 'Not used',
+    ko: '사용 안 함',
+  },
+  '#spike-device_motor#': {
+    en: 'Motor',
+    ko: '모터',
+  },
+  '#spike-device_color#': {
+    en: 'Color Sensor',
+    ko: '컬러 센서',
+  },
+  '#spike-device_ultrasonic#': {
+    en: 'Ultrasonic Sensor',
+    ko: '초음파 센서',
+  },
+
+  '#spike-upload_title#': {
+    en: 'Spike Prime Upload',
+    ko: 'Spike Prime 업로드',
+  },
+  '#spike-status_ready#': {
+    en: 'Preparing...',
+    ko: '준비 중...',
+  },
+  '#spike-status_compiling#': {
+    en: 'Compiling .mpy...',
+    ko: '.mpy 컴파일 중...',
+  },
+  '#spike-status_connecting#': {
+    en: 'Connecting to Spike Prime...\nPress the Bluetooth button on the hub.',
+    ko: 'Spike Prime 연결 중...\n허브의 블루투스 버튼을 누르세요.',
+  },
+  '#spike-status_uploading#': {
+    en: 'Uploading...',
+    ko: '업로드 중...',
+  },
+  '#spike-status_done#': {
+    en: 'Upload complete! Program is starting.',
+    ko: '업로드 완료! 프로그램이 시작됩니다.',
+  },
+  '#spike-status_no_code#': {
+    en: 'No code to upload.',
+    ko: '코드가 없습니다.',
+  },
+  '#spike-status_upload_failed#': {
+    en: 'Upload failed.',
+    ko: '업로드 실패',
+  },
+  '#spike-status_unsupported_sensors#': {
+    en: 'Unsupported sensors for Spike: {sensors}\nThese sensors may not work.',
+    ko: 'Spike에서 지원하지 않는 센서가 있습니다: {sensors}\n해당 센서 관련 코드는 동작하지 않을 수 있습니다.',
+  },
+
   '#main-new_program#': {
     en: 'New Program',
     fr: 'Nouveau programme',

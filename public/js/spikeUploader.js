@@ -40,9 +40,7 @@ var spikeUploader = new function() {
     portMap = portMap || {};
 
     // portMap에서 역할별 포트 추출
-    var leftMotorPort = null;
-    var rightMotorPort = null;
-    var extraMotorPorts = [];
+    var motorPorts = [];
     var sensorPorts = {}; // { 'ColorSensor': 'C', ... }
 
     // Spike에서 지원하는 센서 목록
@@ -57,10 +55,8 @@ var spikeUploader = new function() {
     Object.keys(portMap).forEach(function(port) {
       var device = portMap[port];
       if (device === 'NONE') return;
-      if (device === 'left_motor')       { leftMotorPort = port; }
-      else if (device === 'right_motor') { rightMotorPort = port; }
-      else if (device === 'motor')       { extraMotorPorts.push(port); }
-      else                               { sensorPorts[device] = port; }
+      if (device === 'motor') { motorPorts.push(port); }
+      else                    { sensorPorts[device] = port; }
     });
 
     // ── 1. # Here is where your code starts 아래 사용자 코드만 추출 ──────────
@@ -78,7 +74,7 @@ var spikeUploader = new function() {
     userCode = userCode.replace(/\bfloat\s*\(\s*([^)]+)\s*\)/g, '$1');
 
     // 계속 돌기(run/dc) 호출이 있으면 프로그램이 종료되지 않도록 끝에 무한루프 추가
-    if (/\b(?:motor\w*|left_motor|right_motor)\.(?:run|dc)\s*\(/.test(userCode)) {
+    if (/\bmotor\w*\.(?:run|dc)\s*\(/.test(userCode)) {
       userCode = userCode.trimEnd() + '\nwhile True:\n    wait(100)\n';
     }
 
@@ -90,7 +86,7 @@ var spikeUploader = new function() {
     header.push('from pybricks.hubs import PrimeHub');
 
     var pupdevices = [];
-    if (leftMotorPort || rightMotorPort || extraMotorPorts.length) pupdevices.push('Motor');
+    if (motorPorts.length) pupdevices.push('Motor');
     Object.keys(sensorPorts).forEach(function(cls) { pupdevices.push(cls); });
     if (pupdevices.length > 0) {
       header.push('from pybricks.pupdevices import ' + pupdevices.join(', '));
@@ -102,15 +98,7 @@ var spikeUploader = new function() {
     header.push('hub = PrimeHub()');
 
     // 모터 초기화
-    if (leftMotorPort) {
-      header.push('motorA = Motor(Port.' + leftMotorPort + ')');
-      header.push('left_motor = motorA');
-    }
-    if (rightMotorPort) {
-      header.push('motorB = Motor(Port.' + rightMotorPort + ')');
-      header.push('right_motor = motorB');
-    }
-    extraMotorPorts.forEach(function(port) {
+    motorPorts.forEach(function(port) {
       header.push('motor' + port + ' = Motor(Port.' + port + ')');
     });
 
@@ -137,60 +125,6 @@ var spikeUploader = new function() {
       }
     });
 
-    // move_tank 등 헬퍼 함수 (모터가 있을 때만)
-    if (leftMotorPort || rightMotorPort) {
-      header.push('');
-      header.push('def move_tank(left, right):');
-      header.push('    left_motor.run(left)');
-      header.push('    right_motor.run(right)');
-      header.push('');
-      header.push('def move_tank_for_degrees(left, right, degrees):');
-      header.push('    if degrees == 0 or (left == 0 and right == 0):');
-      header.push('        left_degrees = 0');
-      header.push('        right_degrees = 0');
-      header.push('    elif abs(left) > abs(right):');
-      header.push('        left_degrees = degrees');
-      header.push('        right_degrees = abs(right / left) * degrees');
-      header.push('    else:');
-      header.push('        left_degrees = abs(left / right) * degrees');
-      header.push('        right_degrees = degrees');
-      header.push('    if abs(left) > abs(right):');
-      header.push('        right_motor.run_angle(right, right_degrees, wait=False)');
-      header.push('        left_motor.run_angle(left, left_degrees, wait=True)');
-      header.push('    else:');
-      header.push('        left_motor.run_angle(left, left_degrees, wait=False)');
-      header.push('        right_motor.run_angle(right, right_degrees, wait=True)');
-      header.push('');
-      header.push('def move_tank_for_milliseconds(left, right, milliseconds):');
-      header.push('    left_motor.run_time(left, milliseconds, wait=False)');
-      header.push('    right_motor.run_time(right, milliseconds, wait=True)');
-      header.push('');
-      header.push('def get_speed_steering(steer, speed):');
-      header.push('    left_speed = speed');
-      header.push('    right_speed = speed');
-      header.push('    speed_factor = (50 - abs(steer)) / 50.0');
-      header.push('    if steer >= 0:');
-      header.push('        right_speed *= speed_factor');
-      header.push('    else:');
-      header.push('        left_speed *= speed_factor');
-      header.push('    return (left_speed, right_speed)');
-      header.push('');
-      header.push('def move_tank_dc(left, right):');
-      header.push('    left_motor.dc(left)');
-      header.push('    right_motor.dc(right)');
-      header.push('');
-      header.push('def move_steering(steer, speed):');
-      header.push('    (left_speed, right_speed) = get_speed_steering(steer, speed)');
-      header.push('    move_tank(left_speed, right_speed)');
-      header.push('');
-      header.push('def move_steering_for_degrees(steer, speed, degrees):');
-      header.push('    (left_speed, right_speed) = get_speed_steering(steer, speed)');
-      header.push('    move_tank_for_degrees(left_speed, right_speed, degrees)');
-      header.push('');
-      header.push('def move_steering_for_milliseconds(steer, speed, milliseconds):');
-      header.push('    (left_speed, right_speed) = get_speed_steering(steer, speed)');
-      header.push('    move_tank_for_milliseconds(left_speed, right_speed, milliseconds)');
-    }
 
     header.push('');
     header.push(marker);
@@ -451,35 +385,35 @@ var spikeUploader = new function() {
       rawCode = preprocessed.code;
       if (preprocessed.warnings.length > 0) {
         console.warn('[Spike] Unsupported sensors:', preprocessed.warnings.join(', '));
-        onStatus('warning', 'Spike에서 지원하지 않는 센서가 있습니다: ' + preprocessed.warnings.join(', ') + '\n해당 센서 관련 코드는 동작하지 않을 수 있습니다.');
+        onStatus('warning', i18n.get('#spike-status_unsupported_sensors#').replace('{sensors}', preprocessed.warnings.join(', ')));
       }
       console.log('[Spike] Using preprocessed block code');
     }
 
     if (!rawCode.trim()) {
-      onStatus('error', '코드가 없습니다.');
+      onStatus('error', i18n.get('#spike-status_no_code#'));
       return;
     }
 
     console.log('[Spike] Uploading code:\n' + rawCode);
 
-    onStatus('compiling', '.mpy 컴파일 중...');
+    onStatus('compiling', i18n.get('#spike-status_compiling#'));
 
     self.compileMpy(rawCode)
     .then(function(mpyData) {
-      onStatus('connecting', 'Spike Prime 연결 중...\n허브의 블루투스 버튼을 누르세요.');
+      onStatus('connecting', i18n.get('#spike-status_connecting#'));
 
       return self.connect().then(function() {
-        onStatus('uploading', '업로드 중...');
+        onStatus('uploading', i18n.get('#spike-status_uploading#'));
         return self.uploadAndRun(mpyData, onProgress);
       });
     })
     .then(function() {
-      onStatus('done', '업로드 완료! 프로그램이 시작됩니다.');
+      onStatus('done', i18n.get('#spike-status_done#'));
     })
     .catch(function(err) {
       console.error('[Spike] Upload failed:', err);
-      onStatus('error', err.message || '업로드 실패');
+      onStatus('error', err.message || i18n.get('#spike-status_upload_failed#'));
     });
   };
 };

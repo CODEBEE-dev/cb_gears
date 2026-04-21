@@ -683,7 +683,7 @@ var main = new function() {
         {html: 'Zoom In', line: false, callback: pythonPanel.zoomIn},
         {html: 'Zoom Out', line: false, callback: pythonPanel.zoomOut},
         {html: 'Reset Zoom', line: true, callback: pythonPanel.zoomReset},
-        {html: '&#x1F4F6; Upload to Spike Prime', line: false, callback: self.uploadToSpikePrime},
+        {html: i18n.get('#main-upload_spike#'), line: false, callback: self.uploadToSpikePrime},
       ];
       var tickIndex;
       if (blockly.generator == ev3dev2_generator) {
@@ -733,21 +733,17 @@ var main = new function() {
   this._showSpikePortModal = function(onConfirm) {
     var SPIKE_PORTS = ['A', 'B', 'C', 'D', 'E', 'F'];
 
-    // Device options per port
+    // Device options per port (Spike Prime 지원 장치만)
     var DEVICE_OPTIONS = [
-      { val: 'NONE',       label: '사용 안 함' },
-      { val: 'left_motor', label: '모터 (왼쪽 바퀴)' },
-      { val: 'right_motor',label: '모터 (오른쪽 바퀴)' },
-      { val: 'motor',      label: '모터' },
-      { val: 'ColorSensor',      label: '컬러 센서' },
-      { val: 'GyroSensor',       label: '자이로 센서' },
-      { val: 'UltrasonicSensor', label: '초음파 센서' },
-      { val: 'TouchSensor',      label: '터치 센서' },
+      { val: 'NONE',             label: i18n.get('#spike-device_none#') },
+      { val: 'motor',            label: i18n.get('#spike-device_motor#') },
+      { val: 'ColorSensor',      label: i18n.get('#spike-device_color#') },
+      { val: 'UltrasonicSensor', label: i18n.get('#spike-device_ultrasonic#') },
     ];
 
     // Build mapping table: one row per Spike port (A~F)
     var $table = $('<table class="spike-port-table"></table>');
-    $table.append($('<thead><tr><th>Spike 포트</th><th>연결 장치</th></tr></thead>'));
+    $table.append($('<thead><tr><th>' + i18n.get('#spike-port_col_port#') + '</th><th>' + i18n.get('#spike-port_col_device#') + '</th></tr></thead>'));
     var $tbody = $('<tbody></tbody>');
 
     SPIKE_PORTS.forEach(function(port) {
@@ -759,20 +755,20 @@ var main = new function() {
       $select.attr('data-spike-port', port);
 
       var $row = $('<tr></tr>')
-        .append($('<td class="spike-port-label"></td>').text('포트 ' + port))
+        .append($('<td class="spike-port-label"></td>').text(i18n.get('#spike-port_label#') + port))
         .append($('<td></td>').append($select));
       $tbody.append($row);
     });
 
     $table.append($tbody);
 
-    var $hint = $('<div class="spike-port-hint">실제 Spike Prime 허브에 연결된 장치를 선택하세요.</div>');
+    var $hint = $('<div class="spike-port-hint"></div>').text(i18n.get('#spike-port_hint#'));
     var $body = $('<div class="spike-port-body"></div>').append($hint).append($table);
 
-    var $cancelBtn = $('<button type="button" class="btn btn-light">취소</button>');
-    var $confirmBtn = $('<button type="button" class="btn btn-primary">업로드</button>');
+    var $cancelBtn = $('<button type="button" class="btn btn-light"></button>').text(i18n.get('#main-cancel#'));
+    var $confirmBtn = $('<button type="button" class="btn btn-primary"></button>').text(i18n.get('#main-upload_spike#'));
 
-    var $dlg = dialog('Spike Prime 포트 설정', $body, $cancelBtn.add($confirmBtn));
+    var $dlg = dialog(i18n.get('#spike-port_modal_title#'), $body, $cancelBtn.add($confirmBtn));
 
     $cancelBtn.click(function() { $dlg.close(); });
 
@@ -790,13 +786,13 @@ var main = new function() {
 
   // Upload progress dialog
   this._showSpikeUploadDialog = function(portMap) {
-    var $statusText = $('<div class="spike-upload-status">준비 중...</div>');
+    var $statusText = $('<div class="spike-upload-status"></div>').text(i18n.get('#spike-status_ready#'));
     var $progressBar = $('<div class="spike-upload-progress"><div class="spike-upload-progress-bar"></div></div>');
     var $body = $('<div class="spike-upload-body"></div>').append($statusText).append($progressBar);
-    var $cancelBtn = $('<button type="button" class="btn btn-light">취소</button>');
-    var $closeBtn = $('<button type="button" class="btn btn-success hide">닫기</button>');
+    var $cancelBtn = $('<button type="button" class="btn btn-light"></button>').text(i18n.get('#main-cancel#'));
+    var $closeBtn = $('<button type="button" class="btn btn-success hide"></button>').text(i18n.get('#main-close#'));
 
-    var $dlg = dialog('Spike Prime 업로드', $body, $cancelBtn.add($closeBtn));
+    var $dlg = dialog(i18n.get('#spike-upload_title#'), $body, $cancelBtn.add($closeBtn));
 
     $cancelBtn.click(function() {
       spikeUploader.disconnect();
@@ -814,7 +810,7 @@ var main = new function() {
         $progressBar.find('.spike-upload-progress-bar').css('width', '100%');
       } else if (state === 'error') {
         $statusText.addClass('spike-upload-error');
-        $cancelBtn.text('닫기');
+        $cancelBtn.text(i18n.get('#main-close#'));
         $cancelBtn.off('click').click(function() { $dlg.close(); });
       } else if (state === 'warning') {
         $statusText.addClass('spike-upload-warning');

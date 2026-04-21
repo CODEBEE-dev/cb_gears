@@ -45,6 +45,15 @@ var spikeUploader = new function() {
     var extraMotorPorts = [];
     var sensorPorts = {}; // { 'ColorSensor': 'C', ... }
 
+    // Spike에서 지원하는 센서 목록
+    var SUPPORTED_SENSORS = {
+      'ColorSensor':      'color_sensor',
+      'UltrasonicSensor': 'ultrasonic_sensor',
+    };
+
+    // Spike에서 미지원 센서 (경고만)
+    var UNSUPPORTED_SENSORS = ['GyroSensor', 'TouchSensor', 'GPSSensor', 'CameraSensor', 'LidarSensor', 'Pen'];
+
     Object.keys(portMap).forEach(function(port) {
       var device = portMap[port];
       if (device === 'NONE') return;
@@ -77,7 +86,7 @@ var spikeUploader = new function() {
     var header = [];
 
     // imports
-    header.push('from pybricks.parameters import Port');
+    header.push('from pybricks.parameters import Port, Color, Direction, Stop');
     header.push('from pybricks.hubs import PrimeHub');
 
     var pupdevices = [];
@@ -106,10 +115,26 @@ var spikeUploader = new function() {
     });
 
     // 센서 초기화
+    var warnings = [];
     Object.keys(sensorPorts).forEach(function(cls) {
       var port = sensorPorts[cls];
-      var varName = cls.replace('Sensor', '').toLowerCase() + '_sensor_' + port;
+
+      if (UNSUPPORTED_SENSORS.indexOf(cls) !== -1) {
+        warnings.push(cls);
+        return;
+      }
+
+      if (!SUPPORTED_SENSORS[cls]) return;
+
+      // 블록 본문에서 실제 사용하는 변수명 찾기 (예: color_sensor_in1)
+      var prefix = SUPPORTED_SENSORS[cls];
+      var varNameMatch = userCode.match(new RegExp('\\b(' + prefix + '_in\\d+)\\b'));
+      var varName = varNameMatch ? varNameMatch[1] : prefix + '_' + port;
+
       header.push(varName + ' = ' + cls + '(Port.' + port + ')');
+      if (cls === 'ColorSensor') {
+        header.push(varName + '.detectable_colors([Color.BLACK, Color.WHITE, Color.RED, Color.BLUE, Color.GREEN, Color.YELLOW, Color.BROWN])');
+      }
     });
 
     // move_tank 등 헬퍼 함수 (모터가 있을 때만)
@@ -174,7 +199,7 @@ var spikeUploader = new function() {
 
     return {
       code: finalCode,
-      warnings: []
+      warnings: warnings
     };
   };
 
@@ -417,12 +442,16 @@ var spikeUploader = new function() {
       rawCode = pythonPanel.editor.getValue();
       console.log('[Spike] Using manual Python tab code (skipping preprocess)');
     } else {
-      // 블록에서 생성한 경우 → 전처리
+      // 블록에서 생성한 경우 → 전처리 (pybricks generator로 강제 전환 후 복원)
+      var prevGenerator = blockly.generator;
+      pybricks_generator.load();
       var blockCode = pybricks_generator.genCode();
+      if (prevGenerator !== pybricks_generator) prevGenerator.load();
       var preprocessed = self.preprocessCode(blockCode, portMap);
       rawCode = preprocessed.code;
       if (preprocessed.warnings.length > 0) {
-        console.warn('[Spike] Virtual-only sensors in code:', preprocessed.warnings.join(', '));
+        console.warn('[Spike] Unsupported sensors:', preprocessed.warnings.join(', '));
+        onStatus('warning', 'Spike에서 지원하지 않는 센서가 있습니다: ' + preprocessed.warnings.join(', ') + '\n해당 센서 관련 코드는 동작하지 않을 수 있습니다.');
       }
       console.log('[Spike] Using preprocessed block code');
     }

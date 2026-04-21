@@ -481,6 +481,24 @@ var pybricks_generator = new function() {
       return [code, Blockly.Python.ORDER_ATOMIC];
     },
 
+    'tw_color': function(block) {
+      var dropdown_port = self.getPort('AUTO', 'ColorSensor');
+      var color = block.getFieldValue('color');
+
+      const map_to_color = {
+        'BLACK':  'Color.BLACK',
+        'BLUE':   'Color.BLUE',
+        'GREEN':  'Color.GREEN',
+        'YELLOW': 'Color.YELLOW',
+        'RED':    'Color.RED',
+        'WHITE':  'Color.WHITE',
+        'BROWN':  'Color.BROWN',
+      };
+
+      var code = 'color_sensor_in' + dropdown_port + '.color() == ' + (map_to_color[color] || 'None');
+      return [code, Blockly.Python.ORDER_ATOMIC];
+    },
+
     // ultrasonic
     'ultrasonic_sensor': function(block) {
       var dropdown_port = block.getFieldValue('port');

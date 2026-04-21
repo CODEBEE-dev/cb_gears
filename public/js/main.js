@@ -816,6 +816,8 @@ var main = new function() {
         $statusText.addClass('spike-upload-error');
         $cancelBtn.text('닫기');
         $cancelBtn.off('click').click(function() { $dlg.close(); });
+      } else if (state === 'warning') {
+        $statusText.addClass('spike-upload-warning');
       }
     };
 

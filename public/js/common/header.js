@@ -53,6 +53,6 @@ async function initHeader(title) {
     document.getElementById('loginLabel').textContent = i18n.get('#main-login#');
   }
 
-  initActivityBar(user ? user.role : null);
+  initActivityBar(user ? user.role : null, user ? (user.roles || [user.role]) : []);
   return user;
 }

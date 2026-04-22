@@ -4601,6 +4601,10 @@ let MSGS = {
     en: 'Account Management',
     ko: '계정 관리',
   },
+  '#nav-curriculum-mgmt#': {
+    en: 'Curriculum Management',
+    ko: '커리큘럼 관리',
+  },
   '#admin-title#': {
     en: 'Account Management',
     ko: '계정 관리',

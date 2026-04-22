@@ -18,6 +18,7 @@ const ACTIVITY_BAR_ITEMS = [
   { key: 'challenges', icon: 'emoji_events',    label: '#nav-challenges#', href: '/challenges' },
   { key: 'classroom',  icon: 'school',          label: '#nav-classroom#',  href: '/classroom', adminHidden: true },
   { key: 'curriculum', icon: 'menu_book',       label: '#nav-curriculum#', href: '/curriculum', adminOnly: true },
+  { key: 'curriculum-mgmt', icon: 'edit_note', label: '#nav-curriculum-mgmt#', href: 'https://bridgebot.cms.codebridge.ai.kr/', external: true, superAdminOnly: true },
   { key: 'settings',   icon: 'settings',        label: '#nav-settings#', href: '/settings' },
   { key: 'admin',      icon: 'manage_accounts', label: '#nav-admin#',    href: '/admin', adminOnly: true },
 ];
@@ -36,12 +37,13 @@ function _getActiveKey() {
   return 'home';
 }
 
-function initActivityBar(role) {
+function initActivityBar(role, roles = []) {
   const bar = document.getElementById('activityBar');
   if (!bar) return;
 
   const activeKey = _getActiveKey();
   const isAdmin = role === 'school_admin' || role === 'teacher';
+  const isSuperAdmin = roles.includes('super_admin');
 
   // 토글 버튼
   const toggle = document.createElement('div');
@@ -53,6 +55,7 @@ function initActivityBar(role) {
 
   // 메뉴 항목
   ACTIVITY_BAR_ITEMS.forEach(item => {
+    if (item.superAdminOnly && !isSuperAdmin) return;
     if (item.adminOnly && !isAdmin) return;
     if (item.adminHidden && role === 'school_admin') return;
 
@@ -68,7 +71,11 @@ function initActivityBar(role) {
     `;
 
     el.addEventListener('click', () => {
-      window.location.href = item.href;
+      if (item.external) {
+        window.open(item.href, '_blank');
+      } else {
+        window.location.href = item.href;
+      }
     });
 
     bar.appendChild(el);

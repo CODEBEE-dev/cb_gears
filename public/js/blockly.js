@@ -308,6 +308,11 @@ var blockly = new function() {
     if (e.type != Blockly.Events.UI) {
       self.unsaved = true;
       blocklyPanel.showSave();
+      // Update code view panel if open (debounced)
+      if (typeof main !== 'undefined' && main.codeViewOpen) {
+        clearTimeout(self.codeViewTimer);
+        self.codeViewTimer = setTimeout(main.updateCodeView, 300);
+      }
     }
   };
 

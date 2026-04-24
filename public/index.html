@@ -108,6 +108,7 @@
         <div id="blocklyDiv" style="height: 100%; width: 100%;"></div>
         <div id="blocklyHiddenDiv" style="height: 100%; width: 100%; position: absolute; top: -10000px;"></div>
       </div>
+      <div id="simSplitHandle" class="split-handle" style="display:none;"></div>
 
       <div class="panel" aria-labelledby="navPython">
         <div class="pythonSplitContainer">
@@ -118,6 +119,7 @@
               <div id="addNewFile"><span class="icon-plus"></span></div>
             </div>
           </div>
+          <div id="pythonSplitHandle" class="split-handle"></div>
           <div id="aiTutorPanel" class="aiTutorPanel">
             <div class="aiTutorHeader">
               <span class="material-symbols-rounded">forum</span>
@@ -227,9 +229,26 @@
         </div>
       </div>
 
-      <div id="simSplitToggle" class="simSplitToggle active">
-        <span class="material-symbols-rounded">view_in_ar</span>
+      <!-- 블록 모드 우측: 코드뷰 핸들 + 패널 -->
+      <div id="codeViewHandle" class="split-handle" style="display:none;"></div>
+      <div id="codeViewPanel" class="codeViewPanel hide">
+        <div class="codeViewHeader">
+          <span class="material-symbols-rounded">code</span>
+          <span class="codeViewTitle">Python Code</span>
+        </div>
+        <pre class="codeViewContent"><code id="codeViewContent" class="language-python"></code></pre>
       </div>
+
+      <!-- 블록 모드 우측 토글 버튼들 -->
+      <div id="blockSplitToggleGroup" class="blockSplitToggleGroup">
+        <div id="simSplitToggle" class="simSplitToggle active" data-tooltip="Simulator">
+          <span class="material-symbols-rounded">view_in_ar</span>
+        </div>
+        <div id="codeViewToggle" class="codeViewToggle" data-tooltip="Code">
+          <span class="material-symbols-rounded">code</span>
+        </div>
+      </div>
+
       <div id="pythonSplitToggle" class="pythonSplitToggle" style="display:none;">
         <span class="material-symbols-rounded toggleTutorIcon active">forum</span>
         <span class="material-symbols-rounded toggleSimIcon hide">view_in_ar</span>
@@ -361,6 +380,229 @@
     }
 
     loadWhenReady();
+  </script>
+  <script>
+    // ── Split-view drag resize ────────────────────────────────────────────────
+    ;(function() {
+      const panels = document.querySelector('.panels');
+      const minW = 200;
+
+      // ── 공통 드래그 헬퍼 ──
+      function makeDraggable(handle, getLeftEl, getRightEl, onMove) {
+        let dragging = false, startX = 0, startLeftW = 0, totalW = 0;
+
+        handle.addEventListener('mousedown', function(e) {
+          const left = getLeftEl(), right = getRightEl();
+          if (!left || !right) return;
+          dragging = true;
+          startX = e.clientX;
+          startLeftW = left.offsetWidth;
+          totalW = left.offsetWidth + handle.offsetWidth + right.offsetWidth;
+          handle.classList.add('dragging');
+          document.body.style.cursor = 'col-resize';
+          document.body.style.userSelect = 'none';
+          e.preventDefault();
+        });
+
+        document.addEventListener('mousemove', function(e) {
+          if (!dragging) return;
+          const left = getLeftEl(), right = getRightEl();
+          if (!left || !right) return;
+          const delta = e.clientX - startX;
+          const newLeftW = Math.max(minW, Math.min(totalW - minW - handle.offsetWidth, startLeftW + delta));
+          left.style.width  = newLeftW + 'px';
+          left.style.flex   = 'none';
+          right.style.width = (totalW - newLeftW - handle.offsetWidth) + 'px';
+          right.style.flex  = 'none';
+          if (onMove) onMove();
+        });
+
+        document.addEventListener('mouseup', function() {
+          if (!dragging) return;
+          dragging = false;
+          handle.classList.remove('dragging');
+          document.body.style.cursor = '';
+          document.body.style.userSelect = '';
+        });
+      }
+
+      // ── 1) Blockly/Python + Sim ──
+      const simHandle = document.getElementById('simSplitHandle');
+
+      function getSimLeftEl() {
+        if (panels.classList.contains('pythonSplitSim'))
+          return document.querySelector('.panel[aria-labelledby="navPython"]');
+        return document.querySelector('.blocklyEditor.panel');
+      }
+
+      // sim 핸들 전용 드래그 — absolute 좌표 기반
+      ;(function() {
+        let dragging = false, startX = 0, startLeftW = 0;
+        simHandle.addEventListener('mousedown', function(e) {
+          const leftEl = getSimLeftEl();
+          if (!leftEl) return;
+          dragging = true;
+          startX = e.clientX;
+          startLeftW = leftEl.offsetWidth;
+          simHandle.classList.add('dragging');
+          document.body.style.cursor = 'col-resize';
+          document.body.style.userSelect = 'none';
+          e.preventDefault();
+        });
+        document.addEventListener('mousemove', function(e) {
+          if (!dragging) return;
+          const leftEl = getSimLeftEl();
+          if (!leftEl) return;
+          const handleW = 5;
+          const totalW  = panels.offsetWidth;
+          const delta   = e.clientX - startX;
+          const newLeftW = Math.max(minW, Math.min(totalW - minW - handleW, startLeftW + delta));
+          setSplitWidths(leftEl, newLeftW);
+          if (panels.classList.contains('splitSim')) {
+            blockly.displayedWorkspace && Blockly.svgResize(blockly.displayedWorkspace);
+          } else if (panels.classList.contains('pythonSplitSim')) {
+            pythonPanel.editor && pythonPanel.editor.resize();
+          }
+        });
+        document.addEventListener('mouseup', function() {
+          if (!dragging) return;
+          dragging = false;
+          simHandle.classList.remove('dragging');
+          document.body.style.cursor = '';
+          document.body.style.userSelect = '';
+          babylon.engine && babylon.engine.resize();
+        });
+      })();
+
+      // absolute 기반으로 left/sim 패널과 핸들을 직접 배치
+      function applySimSplitLayout(isSim, isPySim) {
+        const blocklyEl = document.querySelector('.blocklyEditor.panel');
+        const simEl     = document.getElementById('simPanel');
+        const pyEl      = document.querySelector('.panel[aria-labelledby="navPython"]');
+        const totalW    = panels.offsetWidth;
+        const handleW   = 5;
+
+        const pythonInnerEl = document.querySelector('.pythonSplitContainer .python');
+        if (isSim || isPySim) {
+          const leftEl  = isSim ? blocklyEl : pyEl;
+          const leftW   = Math.round(totalW * 60 / 100);
+          const rightW  = totalW - leftW - handleW;
+
+          leftEl.style.cssText =
+            `position:absolute; left:0; top:0; width:${leftW}px; height:100%; z-index:0;`;
+          simEl.style.cssText =
+            `position:absolute; left:${leftW + handleW}px; top:0; width:${rightW}px; height:100%; z-index:1; border-left:1px solid #ddd;`;
+          simHandle.style.cssText =
+            `display:block; position:absolute; left:${leftW}px; top:0; width:${handleW}px; height:100%; z-index:2;`;
+
+          // pythonSplitSim: AI Tutor 숨고 시뮬레이터가 오른쪽 차지 → .python이 패널 전체 채우도록
+          if (isPySim && pythonInnerEl) {
+            pythonInnerEl.style.cssText = 'flex:none; width:100%; height:100%;';
+          }
+        } else {
+          blocklyEl.style.cssText = '';
+          simEl.style.cssText     = '';
+          pyEl.style.cssText      = '';
+          simHandle.style.cssText = 'display:none;';
+          if (pythonInnerEl) pythonInnerEl.style.cssText = '';
+        }
+      }
+
+      function setSplitWidths(leftEl, leftW) {
+        const totalW  = panels.offsetWidth;
+        const handleW = 5;
+        const rightW  = totalW - leftW - handleW;
+        leftEl.style.width   = leftW + 'px';
+        const simEl = document.getElementById('simPanel');
+        simEl.style.left  = (leftW + handleW) + 'px';
+        simEl.style.width = rightW + 'px';
+        simHandle.style.left = leftW + 'px';
+
+        // pythonSplitSim: .python 내부도 패널 너비에 맞게 갱신
+        if (panels.classList.contains('pythonSplitSim')) {
+          const pythonInnerEl = document.querySelector('.pythonSplitContainer .python');
+          if (pythonInnerEl) pythonInnerEl.style.width = leftW + 'px';
+        }
+      }
+
+      function onSplitToggle() {
+        applySimSplitLayout(
+          panels.classList.contains('splitSim'),
+          panels.classList.contains('pythonSplitSim')
+        );
+        // Code view layout is managed by main.applyCodeViewLayout()
+        // called from toggleCodeView/blocklyPanel.onActive
+      }
+
+      const observer = new MutationObserver(onSplitToggle);
+      observer.observe(panels, { attributes: true, attributeFilter: ['class'] });
+      // observer 등록 후 현재 상태 즉시 반영 (페이지 로드 시 이미 splitSim인 경우 대비)
+      onSplitToggle();
+
+      // Re-apply code view layout on window resize (maintain current ratio)
+      window.addEventListener('resize', function() {
+        if (typeof main !== 'undefined' && main.codeViewOpen) {
+          const blocklyEl = document.querySelector('.blocklyEditor.panel');
+          const codeViewEl = document.getElementById('codeViewPanel');
+          const handleW = 5;
+          if (blocklyEl && codeViewEl) {
+            const oldTotal = blocklyEl.offsetWidth + handleW + codeViewEl.offsetWidth;
+            const ratio = oldTotal > 0 ? blocklyEl.offsetWidth / oldTotal : 0.6;
+            const newTotal = panels.offsetWidth;
+            const newBlockW = Math.round(newTotal * ratio);
+            main.applyCodeViewLayout(newBlockW);
+          } else {
+            main.applyCodeViewLayout();
+          }
+          if (blockly && blockly.displayedWorkspace) {
+            Blockly.svgResize(blockly.displayedWorkspace);
+          }
+        }
+      });
+
+      // ── 2) Code view handle (Blockly ↔ Code) ──
+      ;(function() {
+        const codeHandle = document.getElementById('codeViewHandle');
+        let dragging = false, startX = 0, startBlockW = 0;
+
+        codeHandle.addEventListener('mousedown', function(e) {
+          dragging = true;
+          startX = e.clientX;
+          // 핸들의 현재 left 위치 = 블록리 에디터의 실제 너비
+          startBlockW = codeHandle.getBoundingClientRect().left - panels.getBoundingClientRect().left;
+          codeHandle.classList.add('dragging');
+          document.body.style.cursor = 'col-resize';
+          document.body.style.userSelect = 'none';
+          e.preventDefault();
+        });
+
+        document.addEventListener('mousemove', function(e) {
+          if (!dragging) return;
+          const handleW = 5;
+          const totalW = panels.offsetWidth;
+          const delta = e.clientX - startX;
+          const newBlockW = Math.max(minW, Math.min(totalW - minW - handleW, startBlockW + delta));
+          main.applyCodeViewLayout(newBlockW);
+          blockly.displayedWorkspace && Blockly.svgResize(blockly.displayedWorkspace);
+        });
+
+        document.addEventListener('mouseup', function() {
+          if (!dragging) return;
+          dragging = false;
+          codeHandle.classList.remove('dragging');
+          document.body.style.cursor = '';
+          document.body.style.userSelect = '';
+        });
+      })();
+
+      // ── 3) Python + AI Tutor ──
+      makeDraggable(
+        document.getElementById('pythonSplitHandle'),
+        () => document.querySelector('.pythonSplitContainer .python'),
+        () => document.getElementById('aiTutorPanel'),
+        () => { pythonPanel.editor && pythonPanel.editor.resize(); }
+      );
+    })();
   </script>
   <script>
     /** 

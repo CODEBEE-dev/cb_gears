@@ -213,6 +213,16 @@ var blocklyPanel = new function() {
     }
     self.$panel.removeClass('hide');
     self.$pagesMenu.addClass('visible');
+    // Restore code view if it was open
+    if (typeof main !== 'undefined' && main.codeViewOpen) {
+      $('#codeViewPanel').removeClass('hide');
+      $('.panels').addClass('splitCodeView');
+      main.applyCodeViewLayout();
+      main.updateCodeView();
+      setTimeout(function() {
+        if (blockly.displayedWorkspace) Blockly.svgResize(blockly.displayedWorkspace);
+      }, 170);
+    }
     // Restore split sim if it was open
     if (simPanel.splitSimOpen) {
       $('.panels').addClass('splitSim');
@@ -238,6 +248,14 @@ var blocklyPanel = new function() {
     Blockly.WidgetDiv.hide()
     self.$panel.addClass('hide');
     self.$pagesMenu.removeClass('visible');
+    // Hide code view visually but keep codeViewOpen flag intact
+    var codeViewEl = document.getElementById('codeViewPanel');
+    if (codeViewEl) { codeViewEl.classList.add('hide'); codeViewEl.style.cssText = ''; }
+    $('.panels').removeClass('splitCodeView');
+    var blocklyEl = document.querySelector('.blocklyEditor.panel');
+    if (blocklyEl && typeof main !== 'undefined' && main.codeViewOpen) {
+      blocklyEl.style.cssText = '';
+    }
     // Hide split visually but keep splitSimOpen flag intact
     $('.panels').removeClass('splitSim');
     $('#simPanel').removeClass('splitActive');

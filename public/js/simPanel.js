@@ -139,7 +139,15 @@ var simPanel = new function() {
     babylon.engine.runRenderLoop(function(){
       babylon.scene.render();
     });
-    babylon.engine.resize();
+    var canvas = babylon.engine.getRenderingCanvas();
+    if (canvas) {
+      var ro = new ResizeObserver(function() {
+        ro.unobserve(canvas);
+        babylon.engine.resize();
+        window.dispatchEvent(new Event('resize'));
+      });
+      ro.observe(canvas);
+    }
   };
 
   // Toggle split view in Python tab: AI Tutor <-> Simulator
@@ -189,6 +197,10 @@ var simPanel = new function() {
     $('#simSplitToggle').toggleClass('active', self.splitSimOpen);
 
     if (self.splitSimOpen) {
+      // Close code view when opening simulator split
+      if (typeof main !== 'undefined' && main.codeViewOpen) {
+        main.closeCodeView();
+      }
       $('.panels').addClass('splitSim');
       $('#simPanel').addClass('splitActive');
       if (babylon.engine._activeRenderLoops.length === 0) {
